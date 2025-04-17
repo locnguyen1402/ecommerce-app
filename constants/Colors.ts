@@ -1,26 +1,22 @@
-/**
- * Below are the colors that are used in the app. The colors are defined in the light and dark mode.
- * There are many other ways to style your app. For example, [Nativewind](https://www.nativewind.dev/), [Tamagui](https://tamagui.dev/), [unistyles](https://reactnativeunistyles.vercel.app), etc.
- */
-
-const tintColorLight = '#0a7ea4';
-const tintColorDark = '#fff';
-
-export const Colors = {
-  light: {
-    text: '#11181C',
-    background: '#fff',
-    tint: tintColorLight,
-    icon: '#687076',
-    tabIconDefault: '#687076',
-    tabIconSelected: tintColorLight,
+// Define your colors here - this is the single source of truth
+// When client requirements change, you only need to update this file
+const colors = {
+  primary: {
+    DEFAULT: '#F05365', // The red color from your login button
+    light: '#F47983',
+    dark: '#D3394A',
   },
-  dark: {
-    text: '#ECEDEE',
-    background: '#151718',
-    tint: tintColorDark,
-    icon: '#9BA1A6',
-    tabIconDefault: '#9BA1A6',
-    tabIconSelected: tintColorDark,
+  secondary: {
+    DEFAULT: '#3B82F6', // Blue color
+    light: '#60A5FA',
+    dark: '#2563EB',
+  },
+  background: '#FFFFFF',
+  surface: '#F5F5F5',
+  text: {
+    primary: '#000000',
+    secondary: '#6B7280',
   },
 };
+
+export default colors;
