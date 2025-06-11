@@ -4,8 +4,9 @@ import { router } from 'expo-router';
 import { Heart, ShoppingCart } from 'lucide-react-native';
 import { Product } from '@/src/types';
 import { formatCurrency } from '@/src/utils/currency';
-import { Button } from '@/src/components/ui/Button';
-import { cn } from '@/src/utils/cn';
+import { Button } from '@/components/ui/button';
+import { Text as UIText } from '@/components/ui/text';
+import { cn } from '@/lib/utils';
 import useCartStore from '@/src/stores/cartStore';
 import Toast from 'react-native-toast-message';
 
@@ -140,14 +141,18 @@ export function ProductCard({ product, onPress, className }: ProductCardProps) {
         
         {/* Add to Cart Button */}
         <Button
-          variant="primary"
+          variant="default"
           size="sm"
           onPress={handleAddToCart}
           disabled={!product.inStock}
-          leftIcon={<ShoppingCart size={16} className="text-white" />}
           className="w-full"
         >
-          {product.inStock ? 'Add to Cart' : 'Out of Stock'}
+          <View className="flex-row items-center">
+            <ShoppingCart size={16} color="white" />
+            <UIText className="text-primary-foreground font-medium ml-2">
+              {product.inStock ? 'Add to Cart' : 'Out of Stock'}
+            </UIText>
+          </View>
         </Button>
       </View>
     </TouchableOpacity>

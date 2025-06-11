@@ -14,7 +14,7 @@ import { useTranslation } from 'react-i18next';
 
 // Import our components and hooks
 import { ProductCard } from '@/src/components/ecommerce/ProductCard';
-import { Button } from '@/src/components/ui/Button';
+import { Button } from '@/components/ui/button';
 import { useFeaturedProducts } from '@/src/services/productService';
 import useCartStore from '@/src/stores/cartStore';
 import { Product } from '@/src/types';

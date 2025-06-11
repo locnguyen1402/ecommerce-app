@@ -9,12 +9,17 @@ export interface Product {
   currency: string;
   images: string[];
   category: string;
+  subcategory?: string;
   brand?: string;
+  sku?: string;
   rating?: number;
   reviewCount?: number;
   inStock: boolean;
+  stockQuantity?: number;
   quantity?: number;
   variants?: ProductVariant[];
+  features?: string[];
+  specifications?: Record<string, string>;
   tags?: string[];
   createdAt: string;
   updatedAt: string;

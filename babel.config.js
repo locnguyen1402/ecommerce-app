@@ -3,12 +3,10 @@ module.exports = function (api) {
   return {
     presets: [
       ["babel-preset-expo", { jsxImportSource: "nativewind" }],
+      "nativewind/babel",
     ],
     plugins: [
-      // Required for Expo Router
       "expo-router/babel",
-      // NativeWind v4 plugin
-      "nativewind/babel",
     ],
   };
 };
