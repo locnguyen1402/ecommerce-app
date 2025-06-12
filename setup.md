@@ -216,19 +216,16 @@ module.exports = function (api) {
 
 ---
 
-## Step 4: Setup React Native Reusables
+## Step 4: Manual Setup React Native Reusables
 
-### 4.1 Install CLI
+### 4.1 Install Required Dependencies
 ```bash
-npx react-native-reusables@latest init
+# Core dependencies for React Native Reusables
+yarn add class-variance-authority clsx tailwind-merge
+yarn add react-native-reanimated
 ```
 
-### 4.2 Follow prompts:
-- Choose **NativeWind** for styling
-- Select components you need: Button, Card, Input, Badge, etc.
-- Choose **TypeScript**
-
-### 4.3 Update components.json (if created)
+### 4.2 Create components.json
 ```json
 {
   "$schema": "https://react-native-reusables.vercel.app/schema.json",
@@ -245,6 +242,267 @@ npx react-native-reusables@latest init
   }
 }
 ```
+
+### 4.3 Create lib/utils.ts
+```typescript
+// lib/utils.ts
+import { clsx, type ClassValue } from "clsx";
+import { twMerge } from "tailwind-merge";
+
+export function cn(...inputs: ClassValue[]) {
+  return twMerge(clsx(inputs));
+}
+```
+
+### 4.4 Create Base Components Directory
+```bash
+mkdir -p components/ui
+mkdir -p lib
+```
+
+### 4.5 Create Essential UI Components Manually
+
+#### Button Component
+```typescript
+// components/ui/button.tsx
+import * as React from 'react';
+import { Pressable, Text } from 'react-native';
+import { cva, type VariantProps } from 'class-variance-authority';
+import { cn } from '~/lib/utils';
+
+const buttonVariants = cva(
+  'inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none ring-offset-background',
+  {
+    variants: {
+      variant: {
+        default: 'bg-primary text-primary-foreground hover:bg-primary/90',
+        destructive: 'bg-destructive text-destructive-foreground hover:bg-destructive/90',
+        outline: 'border border-input hover:bg-accent hover:text-accent-foreground',
+        secondary: 'bg-secondary text-secondary-foreground hover:bg-secondary/80',
+        ghost: 'hover:bg-accent hover:text-accent-foreground',
+        link: 'underline-offset-4 hover:underline text-primary',
+      },
+      size: {
+        default: 'h-10 py-2 px-4',
+        sm: 'h-9 px-3 rounded-md',
+        lg: 'h-11 px-8 rounded-md',
+        icon: 'h-10 w-10',
+      },
+    },
+    defaultVariants: {
+      variant: 'default',
+      size: 'default',
+    },
+  }
+);
+
+const buttonTextVariants = cva('text-sm font-medium', {
+  variants: {
+    variant: {
+      default: 'text-primary-foreground',
+      destructive: 'text-destructive-foreground',
+      outline: 'text-foreground',
+      secondary: 'text-secondary-foreground',
+      ghost: 'text-foreground',
+      link: 'text-primary underline-offset-4',
+    },
+    size: {
+      default: 'text-sm',
+      sm: 'text-xs',
+      lg: 'text-base',
+      icon: 'text-sm',
+    },
+  },
+  defaultVariants: {
+    variant: 'default',
+    size: 'default',
+  },
+});
+
+export interface ButtonProps
+  extends React.ComponentPropsWithoutRef<typeof Pressable>,
+    VariantProps<typeof buttonVariants> {
+  title?: string;
+}
+
+const Button = React.forwardRef<
+  React.ElementRef<typeof Pressable>,
+  ButtonProps
+>(({ className, variant, size, title, children, ...props }, ref) => {
+  return (
+    <Pressable
+      className={cn(buttonVariants({ variant, size, className }))}
+      ref={ref}
+      {...props}
+    >
+      {title ? (
+        <Text className={cn(buttonTextVariants({ variant, size }))}>
+          {title}
+        </Text>
+      ) : (
+        children
+      )}
+    </Pressable>
+  );
+});
+
+Button.displayName = 'Button';
+
+export { Button, buttonVariants, buttonTextVariants };
+```
+
+#### Card Component
+```typescript
+// components/ui/card.tsx
+import * as React from 'react';
+import { View } from 'react-native';
+import { cn } from '~/lib/utils';
+
+const Card = React.forwardRef<
+  React.ElementRef<typeof View>,
+  React.ComponentPropsWithoutRef<typeof View>
+>(({ className, ...props }, ref) => (
+  <View
+    ref={ref}
+    className={cn(
+      'rounded-lg border bg-card text-card-foreground shadow-sm',
+      className
+    )}
+    {...props}
+  />
+));
+Card.displayName = 'Card';
+
+const CardHeader = React.forwardRef<
+  React.ElementRef<typeof View>,
+  React.ComponentPropsWithoutRef<typeof View>
+>(({ className, ...props }, ref) => (
+  <View ref={ref} className={cn('flex flex-col space-y-1.5 p-6', className)} {...props} />
+));
+CardHeader.displayName = 'CardHeader';
+
+const CardContent = React.forwardRef<
+  React.ElementRef<typeof View>,
+  React.ComponentPropsWithoutRef<typeof View>
+>(({ className, ...props }, ref) => (
+  <View ref={ref} className={cn('p-6 pt-0', className)} {...props} />
+));
+CardContent.displayName = 'CardContent';
+
+const CardFooter = React.forwardRef<
+  React.ElementRef<typeof View>,
+  React.ComponentPropsWithoutRef<typeof View>
+>(({ className, ...props }, ref) => (
+  <View ref={ref} className={cn('flex flex-row items-center p-6 pt-0', className)} {...props} />
+));
+CardFooter.displayName = 'CardFooter';
+
+export { Card, CardHeader, CardContent, CardFooter };
+```
+
+#### Input Component
+```typescript
+// components/ui/input.tsx
+import * as React from 'react';
+import { TextInput } from 'react-native';
+import { cn } from '~/lib/utils';
+
+export interface InputProps
+  extends React.ComponentPropsWithoutRef<typeof TextInput> {}
+
+const Input = React.forwardRef<React.ElementRef<typeof TextInput>, InputProps>(
+  ({ className, placeholderTextColor, ...props }, ref) => {
+    return (
+      <TextInput
+        ref={ref}
+        className={cn(
+          'web:flex h-10 native:h-12 web:w-full rounded-md border border-input bg-background px-3 web:py-2 text-base lg:text-sm native:text-lg native:leading-[1.25] text-foreground placeholder:text-muted-foreground web:ring-offset-background file:border-0 file:bg-transparent file:font-medium web:focus-visible:outline-none web:focus-visible:ring-2 web:focus-visible:ring-ring web:focus-visible:ring-offset-2',
+          props.editable === false && 'opacity-50 web:cursor-not-allowed',
+          className
+        )}
+        placeholderTextColor={placeholderTextColor ?? '#64748B'}
+        {...props}
+      />
+    );
+  }
+);
+
+Input.displayName = 'Input';
+
+export { Input };
+```
+
+#### Badge Component
+```typescript
+// components/ui/badge.tsx
+import * as React from 'react';
+import { Text, View } from 'react-native';
+import { cva, type VariantProps } from 'class-variance-authority';
+import { cn } from '~/lib/utils';
+
+const badgeVariants = cva(
+  'inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2',
+  {
+    variants: {
+      variant: {
+        default: 'border-transparent bg-primary text-primary-foreground',
+        secondary: 'border-transparent bg-secondary text-secondary-foreground',
+        destructive: 'border-transparent bg-destructive text-destructive-foreground',
+        outline: 'text-foreground',
+      },
+    },
+    defaultVariants: {
+      variant: 'default',
+    },
+  }
+);
+
+const badgeTextVariants = cva('text-xs font-semibold', {
+  variants: {
+    variant: {
+      default: 'text-primary-foreground',
+      secondary: 'text-secondary-foreground', 
+      destructive: 'text-destructive-foreground',
+      outline: 'text-foreground',
+    },
+  },
+  defaultVariants: {
+    variant: 'default',
+  },
+});
+
+export interface BadgeProps
+  extends React.ComponentPropsWithoutRef<typeof View>,
+    VariantProps<typeof badgeVariants> {
+  label?: string;
+}
+
+function Badge({ className, variant, label, children, ...props }: BadgeProps) {
+  return (
+    <View className={cn(badgeVariants({ variant }), className)} {...props}>
+      {label ? (
+        <Text className={cn(badgeTextVariants({ variant }))}>
+          {label}
+        </Text>
+      ) : (
+        children
+      )}
+    </View>
+  );
+}
+
+export { Badge, badgeVariants };
+```
+
+### 4.6 Add More Components As Needed
+You can manually add more components like:
+- `Alert` for notifications
+- `Dialog` for modals  
+- `Select` for dropdowns
+- `Switch` for toggles
+- `Progress` for loading states
+
+Reference the [React Native Reusables documentation](https://rn-reusables.vercel.app/) for component code.
 
 ---
 
