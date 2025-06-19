@@ -1,0 +1,3 @@
+- npx create-expo-app@latest . --example with-router-tailwind
+- npx expo-doctor
+- npx expo install --check
