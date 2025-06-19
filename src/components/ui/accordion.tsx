@@ -28,7 +28,9 @@ function Accordion({
         {...(props as AccordionPrimitive.RootProps)}
         asChild={Platform.OS !== 'web'}
       >
-        <Animated.View layout={LinearTransition.duration(200)}>{children}</Animated.View>
+        <Animated.View layout={LinearTransition.duration(200)}>
+          {children}
+        </Animated.View>
       </AccordionPrimitive.Root>
     </LayoutAnimationConfig>
   );
@@ -42,7 +44,10 @@ function AccordionItem({
   ref?: React.RefObject<AccordionPrimitive.ItemRef>;
 }) {
   return (
-    <Animated.View className={'overflow-hidden'} layout={LinearTransition.duration(200)}>
+    <Animated.View
+      className={'overflow-hidden'}
+      layout={LinearTransition.duration(200)}
+    >
       <AccordionPrimitive.Item
         className={cn('border-b border-border', className)}
         value={value}
@@ -65,7 +70,9 @@ function AccordionTrigger({
   const { isExpanded } = AccordionPrimitive.useItemContext();
 
   const progress = useDerivedValue(() =>
-    isExpanded ? withTiming(1, { duration: 250 }) : withTiming(0, { duration: 200 })
+    isExpanded
+      ? withTiming(1, { duration: 250 })
+      : withTiming(0, { duration: 200 }),
   );
   const chevronStyle = useAnimatedStyle(() => ({
     transform: [{ rotate: `${progress.value * 180}deg` }],
@@ -79,7 +86,7 @@ function AccordionTrigger({
           <Trigger
             className={cn(
               'flex flex-row web:flex-1 items-center justify-between py-4 web:transition-all group web:focus-visible:outline-none web:focus-visible:ring-1 web:focus-visible:ring-muted-foreground',
-              className
+              className,
             )}
           >
             {children}
@@ -106,17 +113,27 @@ function AccordionContent({
       <AccordionPrimitive.Content
         className={cn(
           'overflow-hidden text-sm web:transition-all',
-          isExpanded ? 'web:animate-accordion-down' : 'web:animate-accordion-up'
+          isExpanded
+            ? 'web:animate-accordion-down'
+            : 'web:animate-accordion-up',
         )}
         {...props}
       >
-        <InnerContent className={cn('pb-4', className)}>{children}</InnerContent>
+        <InnerContent className={cn('pb-4', className)}>
+          {children}
+        </InnerContent>
       </AccordionPrimitive.Content>
     </TextClassContext.Provider>
   );
 }
 
-function InnerContent({ children, className }: { children: React.ReactNode; className?: string }) {
+function InnerContent({
+  children,
+  className,
+}: {
+  children: React.ReactNode;
+  className?: string;
+}) {
   if (Platform.OS === 'web') {
     return <View className={cn('pb-4', className)}>{children}</View>;
   }

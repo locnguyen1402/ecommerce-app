@@ -24,26 +24,30 @@ const toggleVariants = cva(
       variant: 'default',
       size: 'default',
     },
-  }
+  },
 );
 
-const toggleTextVariants = cva('text-sm native:text-base text-foreground font-medium', {
-  variants: {
-    variant: {
-      default: '',
-      outline: 'web:group-hover:text-accent-foreground web:group-active:text-accent-foreground',
+const toggleTextVariants = cva(
+  'text-sm native:text-base text-foreground font-medium',
+  {
+    variants: {
+      variant: {
+        default: '',
+        outline:
+          'web:group-hover:text-accent-foreground web:group-active:text-accent-foreground',
+      },
+      size: {
+        default: '',
+        sm: '',
+        lg: '',
+      },
     },
-    size: {
-      default: '',
-      sm: '',
-      lg: '',
+    defaultVariants: {
+      variant: 'default',
+      size: 'default',
     },
   },
-  defaultVariants: {
-    variant: 'default',
-    size: 'default',
-  },
-});
+);
 
 function Toggle({
   className,
@@ -59,8 +63,10 @@ function Toggle({
     <TextClassContext.Provider
       value={cn(
         toggleTextVariants({ variant, size }),
-        props.pressed ? 'text-accent-foreground' : 'web:group-hover:text-muted-foreground',
-        className
+        props.pressed
+          ? 'text-accent-foreground'
+          : 'web:group-hover:text-muted-foreground',
+        className,
       )}
     >
       <TogglePrimitive.Root
@@ -68,7 +74,7 @@ function Toggle({
           toggleVariants({ variant, size }),
           props.disabled && 'web:pointer-events-none opacity-50',
           props.pressed && 'bg-accent',
-          className
+          className,
         )}
         {...props}
       />

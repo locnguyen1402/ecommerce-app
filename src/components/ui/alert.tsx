@@ -18,7 +18,7 @@ const alertVariants = cva(
     defaultVariants: {
       variant: 'default',
     },
-  }
+  },
 );
 
 function Alert({
@@ -38,7 +38,11 @@ function Alert({
   }) {
   const { colors } = useTheme();
   return (
-    <View role='alert' className={alertVariants({ variant, className })} {...props}>
+    <View
+      role='alert'
+      className={alertVariants({ variant, className })}
+      {...props}
+    >
       <View className='absolute left-3.5 top-4 -translate-y-0.5'>
         <Icon
           size={iconSize}
@@ -50,21 +54,30 @@ function Alert({
   );
 }
 
-function AlertTitle({ className, ...props }: React.ComponentProps<typeof Text>) {
+function AlertTitle({
+  className,
+  ...props
+}: React.ComponentProps<typeof Text>) {
   return (
     <Text
       className={cn(
         'pl-7 mb-1 font-medium text-base leading-none tracking-tight text-foreground',
-        className
+        className,
       )}
       {...props}
     />
   );
 }
 
-function AlertDescription({ className, ...props }: React.ComponentProps<typeof Text>) {
+function AlertDescription({
+  className,
+  ...props
+}: React.ComponentProps<typeof Text>) {
   return (
-    <Text className={cn('pl-7 text-sm leading-relaxed text-foreground', className)} {...props} />
+    <Text
+      className={cn('pl-7 text-sm leading-relaxed text-foreground', className)}
+      {...props}
+    />
   );
 }
 

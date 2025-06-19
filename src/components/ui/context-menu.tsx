@@ -33,12 +33,13 @@ function ContextMenuSubTrigger({
   inset?: boolean;
 }) {
   const { open } = ContextMenuPrimitive.useSubContext();
-  const Icon = Platform.OS === 'web' ? ChevronRight : open ? ChevronUp : ChevronDown;
+  const Icon =
+    Platform.OS === 'web' ? ChevronRight : open ? ChevronUp : ChevronDown;
   return (
     <TextClassContext.Provider
       value={cn(
         'select-none text-sm native:text-lg text-primary',
-        open && 'native:text-accent-foreground'
+        open && 'native:text-accent-foreground',
       )}
     >
       <ContextMenuPrimitive.SubTrigger
@@ -46,7 +47,7 @@ function ContextMenuSubTrigger({
           'flex flex-row web:cursor-default web:select-none items-center gap-2 web:focus:bg-accent active:bg-accent web:hover:bg-accent rounded-sm px-2 py-1.5 native:py-2 web:outline-none',
           open && 'bg-accent',
           inset && 'pl-8',
-          className
+          className,
         )}
         {...props}
       >
@@ -71,7 +72,7 @@ function ContextMenuSubContent({
         open
           ? 'web:animate-in web:fade-in-0 web:zoom-in-95'
           : 'web:animate-out web:fade-out-0 web:zoom-out',
-        className
+        className,
       )}
       {...props}
     />
@@ -101,8 +102,8 @@ function ContextMenuContent({
                 overlayStyle as typeof StyleSheet.absoluteFill,
               ])
             : Platform.OS !== 'web'
-            ? StyleSheet.absoluteFill
-            : undefined
+              ? StyleSheet.absoluteFill
+              : undefined
         }
         className={overlayClassName}
       >
@@ -112,7 +113,7 @@ function ContextMenuContent({
             open
               ? 'web:animate-in web:fade-in-0 web:zoom-in-95'
               : 'web:animate-out web:fade-out-0 web:zoom-out-95',
-            className
+            className,
           )}
           {...props}
         />
@@ -137,7 +138,7 @@ function ContextMenuItem({
           'relative flex flex-row web:cursor-default items-center gap-2 rounded-sm px-2 py-1.5 native:py-2 web:outline-none web:focus:bg-accent active:bg-accent web:hover:bg-accent group',
           inset && 'pl-8',
           props.disabled && 'opacity-50 web:pointer-events-none',
-          className
+          className,
         )}
         {...props}
       />
@@ -158,7 +159,7 @@ function ContextMenuCheckboxItem({
       className={cn(
         'relative flex flex-row web:cursor-default items-center web:group rounded-sm py-1.5 native:py-2 pl-8 pr-2 web:outline-none web:focus:bg-accent active:bg-accent',
         props.disabled && 'web:pointer-events-none opacity-50',
-        className
+        className,
       )}
       {...props}
     >
@@ -185,7 +186,7 @@ function ContextMenuRadioItem({
       className={cn(
         'relative flex flex-row web:cursor-default web:group items-center rounded-sm py-1.5 native:py-2 pl-8 pr-2 web:outline-none web:focus:bg-accent active:bg-accent',
         props.disabled && 'web:pointer-events-none opacity-50',
-        className
+        className,
       )}
       {...props}
     >
@@ -213,7 +214,7 @@ function ContextMenuLabel({
       className={cn(
         'px-2 py-1.5 text-sm native:text-base font-semibold text-foreground web:cursor-default',
         inset && 'pl-8',
-        className
+        className,
       )}
       {...props}
     />
@@ -239,7 +240,7 @@ function ContextMenuShortcut({ className, ...props }: TextProps) {
     <Text
       className={cn(
         'ml-auto text-xs native:text-sm tracking-widest text-muted-foreground',
-        className
+        className,
       )}
       {...props}
     />

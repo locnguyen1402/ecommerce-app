@@ -33,7 +33,7 @@ function HoverCardContent({
                 open
                   ? 'web:animate-in web:fade-in-0 web:zoom-in-95'
                   : 'web:animate-out web:fade-out-0 web:zoom-out-95',
-                className
+                className,
               )}
               {...props}
             />

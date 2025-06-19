@@ -15,7 +15,7 @@ function TabsList({
     <TabsPrimitive.List
       className={cn(
         'web:inline-flex h-10 native:h-12 items-center justify-center rounded-md bg-muted p-1 native:px-1.5',
-        className
+        className,
       )}
       {...props}
     />
@@ -33,15 +33,16 @@ function TabsTrigger({
     <TextClassContext.Provider
       value={cn(
         'text-sm native:text-base font-medium text-muted-foreground web:transition-all',
-        value === props.value && 'text-foreground'
+        value === props.value && 'text-foreground',
       )}
     >
       <TabsPrimitive.Trigger
         className={cn(
           'inline-flex items-center justify-center shadow-none web:whitespace-nowrap rounded-sm px-3 py-1.5 text-sm font-medium web:ring-offset-background web:transition-all web:focus-visible:outline-none web:focus-visible:ring-2 web:focus-visible:ring-ring web:focus-visible:ring-offset-2',
           props.disabled && 'web:pointer-events-none opacity-50',
-          props.value === value && 'bg-background shadow-lg shadow-foreground/10',
-          className
+          props.value === value &&
+            'bg-background shadow-lg shadow-foreground/10',
+          className,
         )}
         {...props}
       />
@@ -59,7 +60,7 @@ function TabsContent({
     <TabsPrimitive.Content
       className={cn(
         'web:ring-offset-background web:focus-visible:outline-none web:focus-visible:ring-2 web:focus-visible:ring-ring web:focus-visible:ring-offset-2',
-        className
+        className,
       )}
       {...props}
     />

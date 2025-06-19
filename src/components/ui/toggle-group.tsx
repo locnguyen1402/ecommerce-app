@@ -6,7 +6,9 @@ import { TextClassContext } from '~/components/ui/text';
 import * as ToggleGroupPrimitive from '@rn-primitives/toggle-group';
 import { cn } from '~/lib/utils';
 
-const ToggleGroupContext = React.createContext<VariantProps<typeof toggleVariants> | null>(null);
+const ToggleGroupContext = React.createContext<VariantProps<
+  typeof toggleVariants
+> | null>(null);
 
 function ToggleGroup({
   className,
@@ -20,7 +22,10 @@ function ToggleGroup({
   }) {
   return (
     <ToggleGroupPrimitive.Root
-      className={cn('flex flex-row items-center justify-center gap-1', className)}
+      className={cn(
+        'flex flex-row items-center justify-center gap-1',
+        className,
+      )}
       {...props}
     >
       <ToggleGroupContext.Provider value={{ variant, size }}>
@@ -34,7 +39,7 @@ function useToggleGroupContext() {
   const context = React.useContext(ToggleGroupContext);
   if (context === null) {
     throw new Error(
-      'ToggleGroup compound components cannot be rendered outside the ToggleGroup component'
+      'ToggleGroup compound components cannot be rendered outside the ToggleGroup component',
     );
   }
   return context;
@@ -59,7 +64,7 @@ function ToggleGroupItem({
         toggleTextVariants({ variant, size }),
         ToggleGroupPrimitive.utils.getIsSelected(value, props.value)
           ? 'text-accent-foreground'
-          : 'web:group-hover:text-muted-foreground'
+          : 'web:group-hover:text-muted-foreground',
       )}
     >
       <ToggleGroupPrimitive.Item
@@ -69,8 +74,9 @@ function ToggleGroupItem({
             size: context.size || size,
           }),
           props.disabled && 'web:pointer-events-none opacity-50',
-          ToggleGroupPrimitive.utils.getIsSelected(value, props.value) && 'bg-accent',
-          className
+          ToggleGroupPrimitive.utils.getIsSelected(value, props.value) &&
+            'bg-accent',
+          className,
         )}
         {...props}
       >

@@ -23,7 +23,10 @@ function NavigationMenu({
 }) {
   return (
     <NavigationMenuPrimitive.Root
-      className={cn('relative z-10 flex flex-row max-w-max items-center justify-center', className)}
+      className={cn(
+        'relative z-10 flex flex-row max-w-max items-center justify-center',
+        className,
+      )}
       {...props}
     >
       {children}
@@ -42,7 +45,7 @@ function NavigationMenuList({
     <NavigationMenuPrimitive.List
       className={cn(
         'web:group flex flex-1 flex-row web:list-none items-center justify-center gap-1',
-        className
+        className,
       )}
       {...props}
     />
@@ -52,7 +55,7 @@ function NavigationMenuList({
 const NavigationMenuItem = NavigationMenuPrimitive.Item;
 
 const navigationMenuTriggerStyle = cva(
-  'web:group web:inline-flex flex-row h-10 native:h-12 native:px-3 w-max items-center justify-center rounded-md bg-background px-4 py-2 text-sm font-medium web:transition-colors web:hover:bg-accent active:bg-accent web:hover:text-accent-foreground web:focus:bg-accent web:focus:text-accent-foreground web:focus:outline-none web:disabled:pointer-events-none disabled:opacity-50 web:data-[active]:bg-accent/50 web:data-[state=open]:bg-accent/50'
+  'web:group web:inline-flex flex-row h-10 native:h-12 native:px-3 w-max items-center justify-center rounded-md bg-background px-4 py-2 text-sm font-medium web:transition-colors web:hover:bg-accent active:bg-accent web:hover:text-accent-foreground web:focus:bg-accent web:focus:text-accent-foreground web:focus:outline-none web:disabled:pointer-events-none disabled:opacity-50 web:data-[active]:bg-accent/50 web:data-[state=open]:bg-accent/50',
 );
 
 function NavigationMenuTrigger({
@@ -67,7 +70,9 @@ function NavigationMenuTrigger({
   const { value: itemValue } = NavigationMenuPrimitive.useItemContext();
 
   const progress = useDerivedValue(() =>
-    value === itemValue ? withTiming(1, { duration: 250 }) : withTiming(0, { duration: 200 })
+    value === itemValue
+      ? withTiming(1, { duration: 250 })
+      : withTiming(0, { duration: 200 }),
   );
   const chevronStyle = useAnimatedStyle(() => ({
     transform: [{ rotate: `${progress.value * 180}deg` }],
@@ -80,7 +85,7 @@ function NavigationMenuTrigger({
         navigationMenuTriggerStyle(),
         'web:group gap-1.5',
         value === itemValue && 'bg-accent',
-        className
+        className,
       )}
       {...props}
     >
@@ -88,7 +93,9 @@ function NavigationMenuTrigger({
       <Animated.View style={chevronStyle}>
         <ChevronDown
           size={12}
-          className={cn('relative text-foreground h-3 w-3 web:transition web:duration-200')}
+          className={cn(
+            'relative text-foreground h-3 w-3 web:transition web:duration-200',
+          )}
           aria-hidden={true}
         />
       </Animated.View>
@@ -115,7 +122,7 @@ function NavigationMenuContent({
           value === itemValue
             ? 'web:animate-in web:fade-in web:slide-in-from-right-20'
             : 'web:animate-out web:fade-out web:slide-out-to-left-20',
-          className
+          className,
         )}
         {...props}
       >
@@ -143,7 +150,7 @@ function NavigationMenuViewport({
       <View
         className={cn(
           'web:origin-top-center relative mt-1.5 web:h-[var(--radix-navigation-menu-viewport-height)] w-full overflow-hidden rounded-md border border-border bg-popover text-popover-foreground shadow-lg web:animate-in web:zoom-in-90',
-          className
+          className,
         )}
         {...props}
       >
@@ -168,8 +175,10 @@ function NavigationMenuIndicator({
       ref={ref}
       className={cn(
         'top-full z-[1] flex h-1.5 items-end justify-center overflow-hidden',
-        value === itemValue ? 'web:animate-in web:fade-in' : 'web:animate-out web:fade-out',
-        className
+        value === itemValue
+          ? 'web:animate-in web:fade-in'
+          : 'web:animate-out web:fade-out',
+        className,
       )}
       {...props}
     >
