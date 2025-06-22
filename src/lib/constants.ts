@@ -1,3 +1,14 @@
+// Storage keys
+export const STORAGE_KEYS = {
+  FIRST_LAUNCH: '@app_first_launch',
+  USER_SESSION: '@app_user_session',
+};
+
+// App configuration
+export const APP_CONFIG = {
+  REQUIRE_LOGIN: process.env.EXPO_PUBLIC_REQUIRE_LOGIN === 'true' || false,
+};
+
 export const NAV_THEME = {
   light: {
     background: 'hsl(0 0% 100%)', // background
