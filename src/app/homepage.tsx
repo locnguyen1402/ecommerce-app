@@ -6,12 +6,13 @@ import { Card, CardContent } from '~/components/ui/card';
 import { Text } from '~/components/ui/text';
 import type { Product } from '~/lib/api/types';
 import { useCategories, useFeaturedProducts } from '~/lib/hooks/useApi';
-import { NavigationFlow } from '~/lib/navigation-flow';
+import { useAppNavigation } from '~/lib/hooks/useNavigation';
 import { useAuthStore } from '~/lib/stores/auth';
 
 export default function HomepageScreen() {
   // Use auth store as single source of truth
-  const { user, isAuthenticated, logout } = useAuthStore();
+  const { user, isAuthenticated } = useAuthStore();
+  const { handleLogout } = useAppNavigation();
 
   // Fetch real data from API
   const {
@@ -25,18 +26,6 @@ export default function HomepageScreen() {
     isLoading: categoriesLoading,
     error: categoriesError,
   } = useCategories();
-
-  const handleLogout = async () => {
-    try {
-      // Use auth store to clear state and storage
-      await logout();
-
-      // Use NavigationFlow for navigation logic
-      await NavigationFlow.handleLogout();
-    } catch (error) {
-      console.error('Logout failed:', error);
-    }
-  };
   const renderProductCard = ({ item }: { item: Product }) => (
     <Card className='mb-4 mx-2 w-40'>
       <CardContent className='p-4'>

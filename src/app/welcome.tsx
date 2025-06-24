@@ -4,16 +4,10 @@ import { Button } from '~/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '~/components/ui/card';
 import { Text } from '~/components/ui/text';
 import { APP_CONFIG } from '~/lib/constants';
-import { NavigationFlow } from '~/lib/navigation-flow';
+import { useAppNavigation } from '~/lib/hooks/useNavigation';
 
 export default function WelcomeScreen() {
-  const handleContinueWithLogin = async () => {
-    await NavigationFlow.handleWelcomeContinue();
-  };
-
-  const handleContinueWithoutLogin = async () => {
-    await NavigationFlow.handleWelcomeSkip();
-  };
+  const { handleWelcomeContinue, handleWelcomeSkip } = useAppNavigation();
   return (
     <View className='flex-1 bg-background px-6 py-8 justify-center'>
       <Card className='mx-4'>
@@ -35,14 +29,14 @@ export default function WelcomeScreen() {
           </Text>
 
           <View className='gap-3 mt-6'>
-            <Button onPress={handleContinueWithLogin} className='w-full'>
+            <Button onPress={handleWelcomeContinue} className='w-full'>
               <Text>Đăng nhập</Text>
             </Button>
 
             {!APP_CONFIG.REQUIRE_LOGIN && (
               <Button
                 variant='outline'
-                onPress={handleContinueWithoutLogin}
+                onPress={handleWelcomeSkip}
                 className='w-full'
               >
                 <Text>Tiếp tục mà không đăng nhập</Text>

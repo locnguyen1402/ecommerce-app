@@ -131,15 +131,3 @@ export class NavigationFlow {
   }
 }
 
-/**
- * Utility functions for quick access
- */
-export const navigationFlow = {
-  determineInitialRoute: NavigationFlow.determineInitialRoute,
-  handleWelcomeContinue: NavigationFlow.handleWelcomeContinue,
-  handleWelcomeSkip: NavigationFlow.handleWelcomeSkip,
-  handleLoginSuccess: NavigationFlow.handleLoginSuccess,
-  handleLogout: NavigationFlow.handleLogout,
-  shouldRequireLogin: NavigationFlow.shouldRequireLogin,
-  getNavigationState: NavigationFlow.getNavigationState,
-};

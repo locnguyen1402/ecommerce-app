@@ -1,12 +1,12 @@
 import React, { useEffect } from 'react';
 import { View } from 'react-native';
 import { Text } from '~/components/ui/text';
-import { NavigationFlow } from '~/lib/navigation-flow';
+import { useAppNavigation } from '~/lib/hooks/useNavigation';
 import { useAuthStore } from '~/lib/stores/auth';
 
 export default function Page() {
-  const { initializeAuth, isLoading, isInitialized, isAuthenticated } =
-    useAuthStore();
+  const { initializeAuth, isLoading, isInitialized } = useAuthStore();
+  const { determineInitialRoute } = useAppNavigation();
 
   useEffect(() => {
     const initializeApp = async () => {
@@ -22,10 +22,10 @@ export default function Page() {
     if (isInitialized && !isLoading) {
       // Show splash screen for 1 second before navigation
       setTimeout(() => {
-        NavigationFlow.determineInitialRoute(isAuthenticated);
+        determineInitialRoute();
       }, 1000);
     }
-  }, [isInitialized, isLoading, isAuthenticated]);
+  }, [isInitialized, isLoading, determineInitialRoute]);
 
   return (
     <View className='flex flex-1 justify-center items-center bg-background'>

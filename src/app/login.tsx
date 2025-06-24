@@ -5,7 +5,7 @@ import { Button } from '~/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '~/components/ui/card';
 import { Input } from '~/components/ui/input';
 import { Text } from '~/components/ui/text';
-import { NavigationFlow } from '~/lib/navigation-flow';
+import { useAppNavigation } from '~/lib/hooks/useNavigation';
 import { useAuthStore } from '~/lib/stores/auth';
 
 export default function LoginScreen() {
@@ -14,6 +14,7 @@ export default function LoginScreen() {
 
   // Use auth store
   const { login, isLoading, error, clearError } = useAuthStore();
+  const { handleLoginSuccess } = useAppNavigation();
 
   const handleLogin = async () => {
     try {
@@ -27,7 +28,7 @@ export default function LoginScreen() {
       });
 
       // Handle navigation explicitly
-      await NavigationFlow.handleLoginSuccess();
+      await handleLoginSuccess();
     } catch (error) {
       console.error('Login failed:', error);
       // Error is handled by auth store
