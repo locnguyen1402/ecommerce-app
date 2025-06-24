@@ -6,30 +6,31 @@ import { Card, CardContent, CardHeader, CardTitle } from '~/components/ui/card';
 import { Input } from '~/components/ui/input';
 import { Text } from '~/components/ui/text';
 import { NavigationFlow } from '~/lib/navigation-flow';
-import { AuthResponse } from '~/lib/types';
+import { useAuthStore } from '~/lib/stores/auth';
 
 export default function LoginScreen() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
+  const [username, setUsername] = useState('emilys'); // DummyJSON test user
+  const [password, setPassword] = useState('emilyspass'); // DummyJSON test password
+
+  // Use auth store
+  const { login, isLoading, error, clearError } = useAuthStore();
 
   const handleLogin = async () => {
     try {
-      setIsLoading(true);
+      clearError();
 
-      // TODO: Replace with actual API call
-      // Simulate API response
-      const mockAuthResponse: AuthResponse = {
-        accessToken: 'mock_token_' + Date.now(),
-      };
+      // Use auth store login
+      await login({
+        username,
+        password,
+        expiresInMins: 30,
+      });
 
-      // Use NavigationFlow to handle login success
-      await NavigationFlow.handleLoginSuccess(mockAuthResponse);
+      // Handle navigation explicitly
+      await NavigationFlow.handleLoginSuccess();
     } catch (error) {
       console.error('Login failed:', error);
-      // Handle error (show toast, etc.)
-    } finally {
-      setIsLoading(false);
+      // Error is handled by auth store
     }
   };
 
@@ -50,13 +51,18 @@ export default function LoginScreen() {
           </CardHeader>
 
           <CardContent className='gap-4'>
+            {error && (
+              <View className='bg-destructive/10 border border-destructive rounded-md p-3'>
+                <Text className='text-destructive text-sm'>{error}</Text>
+              </View>
+            )}
+
             <View className='gap-2'>
-              <Text className='text-sm font-medium'>Email</Text>
+              <Text className='text-sm font-medium'>Username</Text>
               <Input
-                placeholder='Nhập email của bạn'
-                value={email}
-                onChangeText={setEmail}
-                keyboardType='email-address'
+                placeholder='Nhập username (thử: emilys)'
+                value={username}
+                onChangeText={setUsername}
                 autoCapitalize='none'
               />
             </View>
@@ -64,7 +70,7 @@ export default function LoginScreen() {
             <View className='gap-2'>
               <Text className='text-sm font-medium'>Mật khẩu</Text>
               <Input
-                placeholder='Nhập mật khẩu'
+                placeholder='Nhập mật khẩu (thử: emilyspass)'
                 value={password}
                 onChangeText={setPassword}
                 secureTextEntry
@@ -74,7 +80,7 @@ export default function LoginScreen() {
             <Button
               onPress={handleLogin}
               className='w-full mt-4'
-              disabled={isLoading || !email || !password}
+              disabled={isLoading || !username || !password}
             >
               <Text>{isLoading ? 'Đang đăng nhập...' : 'Đăng nhập'}</Text>
             </Button>

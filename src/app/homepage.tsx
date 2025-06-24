@@ -1,78 +1,76 @@
-import { router } from 'expo-router';
-import React, { useEffect, useState } from 'react';
-import { FlatList, ScrollView, View } from 'react-native';
+import React from 'react';
+import { Image, ScrollView, View } from 'react-native';
 import { Badge } from '~/components/ui/badge';
 import { Button } from '~/components/ui/button';
 import { Card, CardContent } from '~/components/ui/card';
-import { Input } from '~/components/ui/input';
 import { Text } from '~/components/ui/text';
+import type { Product } from '~/lib/api/types';
+import { useCategories, useFeaturedProducts } from '~/lib/hooks/useApi';
 import { NavigationFlow } from '~/lib/navigation-flow';
-import { getUserSession } from '~/lib/storage';
-import { UserSession } from '~/lib/types';
-
-// Mock data for products
-const featuredProducts = [
-  {
-    id: '1',
-    name: 'iPhone 15 Pro',
-    price: '25,000,000 VNĐ',
-    category: 'Điện thoại',
-  },
-  {
-    id: '2',
-    name: 'MacBook Air M2',
-    price: '28,000,000 VNĐ',
-    category: 'Laptop',
-  },
-  {
-    id: '3',
-    name: 'AirPods Pro',
-    price: '6,500,000 VNĐ',
-    category: 'Phụ kiện',
-  },
-  { id: '4', name: 'iPad Air', price: '15,000,000 VNĐ', category: 'Tablet' },
-];
-
-const categories = [
-  'Điện thoại',
-  'Laptop',
-  'Tablet',
-  'Phụ kiện',
-  'Đồng hồ',
-  'Tai nghe',
-];
+import { useAuthStore } from '~/lib/stores/auth';
 
 export default function HomepageScreen() {
-  const [userSession, setUserSession] = useState<UserSession | null>(null);
+  // Use auth store as single source of truth
+  const { user, isAuthenticated, logout } = useAuthStore();
 
-  useEffect(() => {
-    const loadUserSession = async () => {
-      const session = await getUserSession();
-      setUserSession(session);
-    };
-    loadUserSession();
-  }, []);
+  // Fetch real data from API
+  const {
+    data: featuredProducts = [],
+    isLoading: productsLoading,
+    error: productsError,
+  } = useFeaturedProducts();
+
+  const {
+    data: categories = [],
+    isLoading: categoriesLoading,
+    error: categoriesError,
+  } = useCategories();
 
   const handleLogout = async () => {
-    await NavigationFlow.handleLogout();
+    try {
+      // Use auth store to clear state and storage
+      await logout();
+
+      // Use NavigationFlow for navigation logic
+      await NavigationFlow.handleLogout();
+    } catch (error) {
+      console.error('Logout failed:', error);
+    }
   };
-  const renderProductCard = ({
-    item,
-  }: {
-    item: (typeof featuredProducts)[0];
-  }) => (
+  const renderProductCard = ({ item }: { item: Product }) => (
     <Card className='mb-4 mx-2 w-40'>
       <CardContent className='p-4'>
-        <View className='h-24 bg-muted rounded mb-2' />
+        {item.thumbnail ? (
+          <Image
+            source={{ uri: item.thumbnail }}
+            className='h-24 w-full rounded mb-2'
+            resizeMode='cover'
+          />
+        ) : (
+          <View className='h-24 bg-muted rounded mb-2' />
+        )}
         <Text className='font-semibold text-sm' numberOfLines={2}>
-          {item.name}
+          {item.title}
         </Text>
         <Badge variant='secondary' className='mt-1 self-start'>
           <Text className='text-xs'>{item.category}</Text>
         </Badge>
         <Text className='text-primary font-bold mt-2 text-sm'>
-          {item.price}
+          ${item.price}
         </Text>
+        {item.discountPercentage > 0 && (
+          <Text className='text-destructive text-xs line-through'>
+            ${(item.price / (1 - item.discountPercentage / 100)).toFixed(2)}
+          </Text>
+        )}
+        <View className='flex-row items-center mt-1'>
+          <Text className='text-xs text-muted-foreground'>
+            ⭐ {item.rating.toFixed(1)}
+          </Text>
+          <Text className='text-xs text-muted-foreground ml-2'>
+            Stock: {item.stock}
+          </Text>
+        </View>
       </CardContent>
     </Card>
   );
@@ -90,14 +88,16 @@ export default function HomepageScreen() {
         <View className='flex-row justify-between items-center mb-4'>
           <View>
             <Text className='text-2xl font-bold'>
-              {userSession ? 'Xin chào!' : 'Khách'}
+              {isAuthenticated && user
+                ? `Xin chào, ${user.firstName}!`
+                : 'Khách'}
             </Text>
             <Text className='text-muted-foreground'>
               Hôm nay bạn muốn mua gì?
             </Text>
           </View>
           <View className='flex-row gap-2'>
-            {userSession && (
+            {isAuthenticated && (
               <Button variant='outline' onPress={handleLogout}>
                 <Text>Đăng xuất</Text>
               </Button>
@@ -109,11 +109,11 @@ export default function HomepageScreen() {
         </View>
 
         {/* Search */}
-        <Input placeholder='Tìm kiếm sản phẩm...' className='w-full' />
+        {/* <Input placeholder='Tìm kiếm sản phẩm...' className='w-full' /> */}
       </View>
 
       {/* Categories */}
-      <View className='py-4'>
+      {/* <View className='py-4'>
         <Text className='text-lg font-semibold px-6 mb-3'>Danh mục</Text>
         <FlatList
           data={categories}
@@ -122,11 +122,20 @@ export default function HomepageScreen() {
           horizontal
           showsHorizontalScrollIndicator={false}
           contentContainerStyle={{ paddingHorizontal: 24 }}
+          ListEmptyComponent={() => (
+            <View className='px-6'>
+              <Text className='text-muted-foreground'>
+                {categoriesLoading
+                  ? 'Loading categories...'
+                  : 'No categories found'}
+              </Text>
+            </View>
+          )}
         />
-      </View>
+      </View> */}
 
       {/* Banner */}
-      <Card className='mx-6 mb-6'>
+      {/* <Card className='mx-6 mb-6'>
         <CardContent className='p-0'>
           <View className='h-32 bg-gradient-to-r from-primary to-primary/80 rounded-lg justify-center items-center'>
             <Text className='text-primary-foreground text-xl font-bold'>
@@ -137,10 +146,10 @@ export default function HomepageScreen() {
             </Text>
           </View>
         </CardContent>
-      </Card>
+      </Card> */}
 
       {/* Featured Products */}
-      <View className='pb-6'>
+      {/* <View className='pb-6'>
         <View className='flex-row justify-between items-center px-6 mb-4'>
           <Text className='text-lg font-semibold'>Sản phẩm nổi bật</Text>
           <Button variant='link' className='p-0'>
@@ -151,15 +160,22 @@ export default function HomepageScreen() {
         <FlatList
           data={featuredProducts}
           renderItem={renderProductCard}
-          keyExtractor={(item) => item.id}
+          keyExtractor={(item) => item.id.toString()}
           horizontal
           showsHorizontalScrollIndicator={false}
           contentContainerStyle={{ paddingHorizontal: 16 }}
+          ListEmptyComponent={() => (
+            <View className='flex-1 justify-center items-center py-8'>
+              <Text className='text-muted-foreground'>
+                {productsLoading ? 'Loading products...' : 'No products found'}
+              </Text>
+            </View>
+          )}
         />
-      </View>
+      </View> */}
 
       {/* Quick Actions */}
-      <View className='px-6 pb-8'>
+      {/* <View className='px-6 pb-8'>
         <Text className='text-lg font-semibold mb-4'>Truy cập nhanh</Text>
         <View className='flex-row gap-4'>
           <Button variant='outline' className='flex-1'>
@@ -181,7 +197,7 @@ export default function HomepageScreen() {
             <Text>🚪 Đăng xuất</Text>
           </Button>
         </View>
-      </View>
+      </View> */}
     </ScrollView>
   );
 }

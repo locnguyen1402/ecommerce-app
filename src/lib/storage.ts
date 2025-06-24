@@ -1,6 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { STORAGE_KEYS } from './constants';
-import { AuthResponse, UserSession } from './types';
+
+// Pure storage layer - no business logic, only persistence
 
 // First Launch utilities
 export const checkFirstLaunch = async (): Promise<boolean> => {
@@ -16,35 +17,34 @@ export const setFirstLaunchComplete = async (): Promise<void> => {
   await AsyncStorage.setItem(STORAGE_KEYS.FIRST_LAUNCH, 'completed');
 };
 
-// Authentication utilities
-export const getUserSession = async (): Promise<UserSession | null> => {
+// Token persistence (simple key-value storage)
+export const saveAccessToken = async (token: string): Promise<void> => {
+  await AsyncStorage.setItem(STORAGE_KEYS.ACCESS_TOKEN, token);
+};
+
+export const getAccessToken = async (): Promise<string | null> => {
   try {
-    const sessionData = await AsyncStorage.getItem(STORAGE_KEYS.USER_SESSION);
-    return sessionData ? JSON.parse(sessionData) : null;
+    return await AsyncStorage.getItem(STORAGE_KEYS.ACCESS_TOKEN);
   } catch {
     return null;
   }
 };
 
-export const saveUserSession = async (
-  authResponse: AuthResponse,
-): Promise<void> => {
-  const session: UserSession = {
-    accessToken: authResponse.accessToken,
-    // expiresAt: Date.now() + (24 * 60 * 60 * 1000) // 24h
-  };
-  await AsyncStorage.setItem(
-    STORAGE_KEYS.USER_SESSION,
-    JSON.stringify(session),
-  );
+export const saveRefreshToken = async (token: string): Promise<void> => {
+  await AsyncStorage.setItem(STORAGE_KEYS.REFRESH_TOKEN, token);
 };
 
-export const isUserLoggedIn = async (): Promise<boolean> => {
-  const session = await getUserSession();
-  return session !== null && session.accessToken.length > 0;
-  // Có thể thêm check expiry: && session.expiresAt > Date.now()
+export const getRefreshToken = async (): Promise<string | null> => {
+  try {
+    return await AsyncStorage.getItem(STORAGE_KEYS.REFRESH_TOKEN);
+  } catch {
+    return null;
+  }
 };
 
-export const clearUserSession = async (): Promise<void> => {
-  await AsyncStorage.removeItem(STORAGE_KEYS.USER_SESSION);
+export const clearTokens = async (): Promise<void> => {
+  await AsyncStorage.multiRemove([
+    STORAGE_KEYS.ACCESS_TOKEN,
+    STORAGE_KEYS.REFRESH_TOKEN,
+  ]);
 };

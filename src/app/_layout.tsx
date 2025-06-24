@@ -1,17 +1,18 @@
 import '../global.css';
 
 import {
+  DarkTheme,
+  DefaultTheme,
   Theme,
   ThemeProvider,
-  DefaultTheme,
-  DarkTheme,
 } from '@react-navigation/native';
-import { Slot, Stack } from 'expo-router';
+import { PortalHost } from '@rn-primitives/portal';
+import { Slot } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import * as React from 'react';
 import { Platform } from 'react-native';
-import { PortalHost } from '@rn-primitives/portal';
 import { NAV_THEME } from '~/lib/constants';
+import { QueryProvider } from '~/lib/providers/QueryProvider';
 import { useColorScheme } from '~/lib/useColorScheme';
 
 const LIGHT_THEME: Theme = {
@@ -51,11 +52,13 @@ export default function RootLayout() {
   }
 
   return (
-    <ThemeProvider value={isDarkColorScheme ? DARK_THEME : LIGHT_THEME}>
-      <PortalHost />
-      <StatusBar style={isDarkColorScheme ? 'light' : 'dark'} />
-      <Slot />
-    </ThemeProvider>
+    <QueryProvider>
+      <ThemeProvider value={isDarkColorScheme ? DARK_THEME : LIGHT_THEME}>
+        <PortalHost />
+        <StatusBar style={isDarkColorScheme ? 'light' : 'dark'} />
+        <Slot />
+      </ThemeProvider>
+    </QueryProvider>
   );
 }
 

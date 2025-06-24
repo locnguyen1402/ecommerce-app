@@ -1,31 +1,23 @@
 import { router } from 'expo-router';
 import { APP_CONFIG } from './constants';
-import {
-  checkFirstLaunch,
-  clearUserSession,
-  isUserLoggedIn,
-  saveUserSession,
-  setFirstLaunchComplete,
-} from './storage';
-import { AuthResponse } from './types';
+import { checkFirstLaunch, setFirstLaunchComplete } from './storage';
 
 /**
  * Navigation Flow Manager
- * Centralized management for navigation flow between welcome, login, homepage screens
+ * Pure routing logic - receives state, determines navigation
  */
 export class NavigationFlow {
   /**
    * Determine initial screen when app starts
-   * Called from index.tsx
+   * Takes auth state as parameters instead of checking storage
    */
-  static async determineInitialRoute(): Promise<void> {
+  static async determineInitialRoute(isAuthenticated: boolean): Promise<void> {
     try {
       const isFirstLaunch = await checkFirstLaunch();
-      const isLoggedIn = await isUserLoggedIn();
 
       if (isFirstLaunch) {
         router.replace('/welcome');
-      } else if (APP_CONFIG.REQUIRE_LOGIN && !isLoggedIn) {
+      } else if (APP_CONFIG.REQUIRE_LOGIN && !isAuthenticated) {
         router.replace('/login');
       } else {
         router.replace('/homepage');
@@ -69,11 +61,10 @@ export class NavigationFlow {
   }
 
   /**
-   * Handle successful login
+   * Handle successful login - pure navigation
    */
-  static async handleLoginSuccess(authResponse: AuthResponse): Promise<void> {
+  static async handleLoginSuccess(): Promise<void> {
     try {
-      await saveUserSession(authResponse);
       router.replace('/homepage');
     } catch (error) {
       console.error('Error handling login success:', error);
@@ -82,12 +73,10 @@ export class NavigationFlow {
   }
 
   /**
-   * Handle user logout
+   * Handle user logout - pure navigation
    */
   static async handleLogout(): Promise<void> {
     try {
-      await clearUserSession();
-
       if (APP_CONFIG.REQUIRE_LOGIN) {
         router.replace('/login');
       } else {
@@ -100,22 +89,22 @@ export class NavigationFlow {
   }
 
   /**
-   * Check if login is required based on config and current state
+   * Check if login is required based on config and auth state
    */
-  static async shouldRequireLogin(): Promise<boolean> {
+  static shouldRequireLogin(isAuthenticated: boolean): boolean {
     if (!APP_CONFIG.REQUIRE_LOGIN) {
       return false;
     }
-
-    const isLoggedIn = await isUserLoggedIn();
-    return !isLoggedIn;
+    return !isAuthenticated;
   }
 
   /**
    * Redirect to login if needed (for protected routes)
    */
-  static async redirectToLoginIfNeeded(): Promise<boolean> {
-    const needsLogin = await this.shouldRequireLogin();
+  static async redirectToLoginIfNeeded(
+    isAuthenticated: boolean,
+  ): Promise<boolean> {
+    const needsLogin = this.shouldRequireLogin(isAuthenticated);
 
     if (needsLogin) {
       router.replace('/login');
@@ -128,17 +117,16 @@ export class NavigationFlow {
   /**
    * Get current navigation state
    */
-  static async getNavigationState() {
+  static async getNavigationState(isAuthenticated: boolean) {
     const isFirstLaunch = await checkFirstLaunch();
-    const isLoggedIn = await isUserLoggedIn();
 
     return {
       isFirstLaunch,
-      isLoggedIn,
+      isAuthenticated,
       requireLogin: APP_CONFIG.REQUIRE_LOGIN,
       shouldShowWelcome: isFirstLaunch,
-      shouldShowLogin: APP_CONFIG.REQUIRE_LOGIN && !isLoggedIn,
-      canAccessHomepage: !APP_CONFIG.REQUIRE_LOGIN || isLoggedIn,
+      shouldShowLogin: APP_CONFIG.REQUIRE_LOGIN && !isAuthenticated,
+      canAccessHomepage: !APP_CONFIG.REQUIRE_LOGIN || isAuthenticated,
     };
   }
 }
@@ -153,6 +141,5 @@ export const navigationFlow = {
   handleLoginSuccess: NavigationFlow.handleLoginSuccess,
   handleLogout: NavigationFlow.handleLogout,
   shouldRequireLogin: NavigationFlow.shouldRequireLogin,
-  redirectToLoginIfNeeded: NavigationFlow.redirectToLoginIfNeeded,
   getNavigationState: NavigationFlow.getNavigationState,
 };

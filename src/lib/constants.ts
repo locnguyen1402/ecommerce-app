@@ -1,7 +1,8 @@
 // Storage keys
 export const STORAGE_KEYS = {
   FIRST_LAUNCH: '@app_first_launch',
-  USER_SESSION: '@app_user_session',
+  ACCESS_TOKEN: '@app_access_token',
+  REFRESH_TOKEN: '@app_refresh_token',
 };
 
 // App configuration

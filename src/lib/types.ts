@@ -1,9 +1,2 @@
-// Auth types
-export interface AuthResponse {
-  accessToken: string;
-}
-
-export interface UserSession {
-  accessToken: string;
-  expiresAt?: number; // optional for token expiry
-}
+// This file is kept for future type definitions
+// Auth-related types have been moved to lib/api/types.ts

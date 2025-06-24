@@ -2,18 +2,30 @@ import React, { useEffect } from 'react';
 import { View } from 'react-native';
 import { Text } from '~/components/ui/text';
 import { NavigationFlow } from '~/lib/navigation-flow';
+import { useAuthStore } from '~/lib/stores/auth';
 
 export default function Page() {
+  const { initializeAuth, isLoading, isInitialized, isAuthenticated } =
+    useAuthStore();
+
   useEffect(() => {
     const initializeApp = async () => {
-      // Show splash screen for 1 second before navigation
-      setTimeout(() => {
-        NavigationFlow.determineInitialRoute();
-      }, 1000);
+      // Initialize auth state first
+      await initializeAuth();
     };
 
     initializeApp();
-  }, []);
+  }, [initializeAuth]);
+
+  // Navigate when auth is initialized
+  useEffect(() => {
+    if (isInitialized && !isLoading) {
+      // Show splash screen for 1 second before navigation
+      setTimeout(() => {
+        NavigationFlow.determineInitialRoute(isAuthenticated);
+      }, 1000);
+    }
+  }, [isInitialized, isLoading, isAuthenticated]);
 
   return (
     <View className='flex flex-1 justify-center items-center bg-background'>
