@@ -1,30 +1,12 @@
 import '../global.css';
 
-import {
-  DarkTheme,
-  DefaultTheme,
-  Theme,
-  ThemeProvider,
-} from '@react-navigation/native';
 import { PortalHost } from '@rn-primitives/portal';
 import { Slot } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import * as React from 'react';
-import { I18nextProvider } from 'react-i18next';
 import { Platform } from 'react-native';
-import { NAV_THEME } from '~/lib/constants';
-import i18n from '~/lib/i18n/config';
-import { QueryProvider } from '~/lib/providers/QueryProvider';
+import { AppProvider } from '~/lib/providers/AppProvider';
 import { useColorScheme } from '~/lib/useColorScheme';
-
-const LIGHT_THEME: Theme = {
-  ...DefaultTheme,
-  colors: NAV_THEME.light,
-};
-const DARK_THEME: Theme = {
-  ...DarkTheme,
-  colors: NAV_THEME.dark,
-};
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -33,7 +15,7 @@ export {
 
 export default function RootLayout() {
   const hasMounted = React.useRef(false);
-  const { colorScheme, isDarkColorScheme } = useColorScheme();
+  const { isDarkColorScheme } = useColorScheme();
   const [isColorSchemeLoaded, setIsColorSchemeLoaded] = React.useState(false);
 
   useIsomorphicLayoutEffect(() => {
@@ -54,15 +36,11 @@ export default function RootLayout() {
   }
 
   return (
-    <I18nextProvider i18n={i18n}>
-      <QueryProvider>
-        <ThemeProvider value={isDarkColorScheme ? DARK_THEME : LIGHT_THEME}>
-          <PortalHost />
-          <StatusBar style={isDarkColorScheme ? 'light' : 'dark'} />
-          <Slot />
-        </ThemeProvider>
-      </QueryProvider>
-    </I18nextProvider>
+    <AppProvider>
+      <PortalHost />
+      <StatusBar style={isDarkColorScheme ? 'light' : 'dark'} />
+      <Slot />
+    </AppProvider>
   );
 }
 
