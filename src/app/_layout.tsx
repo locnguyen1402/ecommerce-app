@@ -10,8 +10,10 @@ import { PortalHost } from '@rn-primitives/portal';
 import { Slot } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import * as React from 'react';
+import { I18nextProvider } from 'react-i18next';
 import { Platform } from 'react-native';
 import { NAV_THEME } from '~/lib/constants';
+import i18n from '~/lib/i18n/config';
 import { QueryProvider } from '~/lib/providers/QueryProvider';
 import { useColorScheme } from '~/lib/useColorScheme';
 
@@ -52,13 +54,15 @@ export default function RootLayout() {
   }
 
   return (
-    <QueryProvider>
-      <ThemeProvider value={isDarkColorScheme ? DARK_THEME : LIGHT_THEME}>
-        <PortalHost />
-        <StatusBar style={isDarkColorScheme ? 'light' : 'dark'} />
-        <Slot />
-      </ThemeProvider>
-    </QueryProvider>
+    <I18nextProvider i18n={i18n}>
+      <QueryProvider>
+        <ThemeProvider value={isDarkColorScheme ? DARK_THEME : LIGHT_THEME}>
+          <PortalHost />
+          <StatusBar style={isDarkColorScheme ? 'light' : 'dark'} />
+          <Slot />
+        </ThemeProvider>
+      </QueryProvider>
+    </I18nextProvider>
   );
 }
 

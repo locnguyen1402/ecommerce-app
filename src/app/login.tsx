@@ -5,6 +5,7 @@ import { Button } from '~/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '~/components/ui/card';
 import { Input } from '~/components/ui/input';
 import { Text } from '~/components/ui/text';
+import { useLanguage } from '~/lib/hooks/useLanguage';
 import { useAppNavigation } from '~/lib/hooks/useNavigation';
 import { useAuthStore } from '~/lib/stores/auth';
 
@@ -15,6 +16,7 @@ export default function LoginScreen() {
   // Use auth store
   const { login, isLoading, error, clearError } = useAuthStore();
   const { handleLoginSuccess } = useAppNavigation();
+  const { t } = useLanguage();
 
   const handleLogin = async () => {
     try {
@@ -45,9 +47,9 @@ export default function LoginScreen() {
                 E
               </Text>
             </View>
-            <CardTitle className='text-center text-xl'>Đăng nhập</CardTitle>
+            <CardTitle className='text-center text-xl'>{t('auth.loginTitle')}</CardTitle>
             <Text className='text-center text-muted-foreground'>
-              Nhập thông tin để tiếp tục
+              {t('auth.loginSubtitle')}
             </Text>
           </CardHeader>
 
@@ -59,9 +61,9 @@ export default function LoginScreen() {
             )}
 
             <View className='gap-2'>
-              <Text className='text-sm font-medium'>Username</Text>
+              <Text className='text-sm font-medium'>{t('auth.username')}</Text>
               <Input
-                placeholder='Nhập username (thử: emilys)'
+                placeholder={t('auth.loginPlaceholder')}
                 value={username}
                 onChangeText={setUsername}
                 autoCapitalize='none'
@@ -69,9 +71,9 @@ export default function LoginScreen() {
             </View>
 
             <View className='gap-2'>
-              <Text className='text-sm font-medium'>Mật khẩu</Text>
+              <Text className='text-sm font-medium'>{t('auth.password')}</Text>
               <Input
-                placeholder='Nhập mật khẩu (thử: emilyspass)'
+                placeholder={t('auth.passwordPlaceholder')}
                 value={password}
                 onChangeText={setPassword}
                 secureTextEntry
@@ -83,13 +85,13 @@ export default function LoginScreen() {
               className='w-full mt-4'
               disabled={isLoading || !username || !password}
             >
-              <Text>{isLoading ? 'Đang đăng nhập...' : 'Đăng nhập'}</Text>
+              <Text>{isLoading ? t('auth.loginInProgress') : t('auth.loginButton')}</Text>
             </Button>
 
             <View className='flex-row justify-center items-center mt-4'>
-              <Text className='text-muted-foreground'>Chưa có tài khoản? </Text>
+              <Text className='text-muted-foreground'>{t('auth.noAccount')}</Text>
               <Button variant='link' className='p-0'>
-                <Text>Đăng ký ngay</Text>
+                <Text>{t('auth.registerButton')}</Text>
               </Button>
             </View>
 
@@ -98,7 +100,7 @@ export default function LoginScreen() {
               onPress={() => router.back()}
               className='w-full mt-2'
             >
-              <Text>Quay lại</Text>
+              <Text>{t('common.back')}</Text>
             </Button>
           </CardContent>
         </Card>

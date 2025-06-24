@@ -1,11 +1,13 @@
 import React from 'react';
 import { Image, ScrollView, View } from 'react-native';
+import { LanguageSwitcher } from '~/components/LanguageSwitcher';
 import { Badge } from '~/components/ui/badge';
 import { Button } from '~/components/ui/button';
 import { Card, CardContent } from '~/components/ui/card';
 import { Text } from '~/components/ui/text';
 import type { Product } from '~/lib/api/types';
 import { useCategories, useFeaturedProducts } from '~/lib/hooks/useApi';
+import { useLanguage } from '~/lib/hooks/useLanguage';
 import { useAppNavigation } from '~/lib/hooks/useNavigation';
 import { useAuthStore } from '~/lib/stores/auth';
 
@@ -13,6 +15,7 @@ export default function HomepageScreen() {
   // Use auth store as single source of truth
   const { user, isAuthenticated } = useAuthStore();
   const { handleLogout } = useAppNavigation();
+  const { t } = useLanguage();
 
   // Fetch real data from API
   const {
@@ -57,7 +60,7 @@ export default function HomepageScreen() {
             ⭐ {item.rating.toFixed(1)}
           </Text>
           <Text className='text-xs text-muted-foreground ml-2'>
-            Stock: {item.stock}
+            {t('product.stock')}: {item.stock}
           </Text>
         </View>
       </CardContent>
@@ -78,17 +81,18 @@ export default function HomepageScreen() {
           <View>
             <Text className='text-2xl font-bold'>
               {isAuthenticated && user
-                ? `Xin chào, ${user.firstName}!`
-                : 'Khách'}
+                ? t('homepage.greeting', { name: user.firstName })
+                : t('homepage.guestGreeting')}
             </Text>
             <Text className='text-muted-foreground'>
-              Hôm nay bạn muốn mua gì?
+              {t('homepage.subtitle')}
             </Text>
           </View>
           <View className='flex-row gap-2'>
+            <LanguageSwitcher variant="toggle" showLabel={false} />
             {isAuthenticated && (
               <Button variant='outline' onPress={handleLogout}>
-                <Text>Đăng xuất</Text>
+                <Text>{t('auth.logout')}</Text>
               </Button>
             )}
             <Button variant='outline' size='icon'>

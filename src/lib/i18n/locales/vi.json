@@ -1,0 +1,65 @@
+{
+  "common": {
+    "loading": "Đang tải...",
+    "error": "Có lỗi xảy ra",
+    "retry": "Thử lại",
+    "cancel": "Hủy",
+    "confirm": "Xác nhận",
+    "save": "Lưu",
+    "delete": "Xóa",
+    "edit": "Sửa",
+    "back": "Quay lại",
+    "next": "Tiếp theo",
+    "done": "Hoàn thành",
+    "close": "Đóng"
+  },
+  "auth": {
+    "login": "Đăng nhập",
+    "logout": "Đăng xuất",
+    "register": "Đăng ký",
+    "username": "Tên đăng nhập",
+    "password": "Mật khẩu",
+    "loginButton": "Đăng nhập",
+    "registerButton": "Đăng ký ngay",
+    "loginPlaceholder": "Nhập username (thử: emilys)",
+    "passwordPlaceholder": "Nhập mật khẩu (thử: emilyspass)",
+    "loginInProgress": "Đang đăng nhập...",
+    "loginTitle": "Đăng nhập",
+    "loginSubtitle": "Nhập thông tin để tiếp tục",
+    "noAccount": "Chưa có tài khoản? "
+  },
+  "welcome": {
+    "title": "Chào mừng đến với ECommerce",
+    "description": "Khám phá hàng ngàn sản phẩm chất lượng với giá tốt nhất. Mua sắm dễ dàng, giao hàng nhanh chóng.",
+    "loginButton": "Đăng nhập",
+    "continueWithoutLogin": "Tiếp tục mà không đăng nhập"
+  },
+  "homepage": {
+    "greeting": "Xin chào, {{name}}!",
+    "guestGreeting": "Khách",
+    "subtitle": "Hôm nay bạn muốn mua gì?",
+    "categories": "Danh mục",
+    "featuredProducts": "Sản phẩm nổi bật",
+    "viewAll": "Xem tất cả",
+    "quickActions": "Truy cập nhanh",
+    "cart": "🛒 Giỏ hàng",
+    "orders": "📋 Đơn hàng",
+    "favorites": "❤️ Yêu thích",
+    "search": "Tìm kiếm sản phẩm..."
+  },
+  "app": {
+    "name": "ECommerce App",
+    "loading": "Đang tải..."
+  },
+  "product": {
+    "price": "Giá",
+    "stock": "Kho",
+    "rating": "Đánh giá",
+    "category": "Danh mục"
+  },
+  "language": {
+    "vietnamese": "Tiếng Việt",
+    "english": "English",
+    "switchLanguage": "Đổi ngôn ngữ"
+  }
+}

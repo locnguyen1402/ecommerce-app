@@ -4,10 +4,13 @@ import { Button } from '~/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '~/components/ui/card';
 import { Text } from '~/components/ui/text';
 import { APP_CONFIG } from '~/lib/constants';
+import { useLanguage } from '~/lib/hooks/useLanguage';
 import { useAppNavigation } from '~/lib/hooks/useNavigation';
 
 export default function WelcomeScreen() {
   const { handleWelcomeContinue, handleWelcomeSkip } = useAppNavigation();
+  const { t } = useLanguage();
+  
   return (
     <View className='flex-1 bg-background px-6 py-8 justify-center'>
       <Card className='mx-4'>
@@ -18,19 +21,18 @@ export default function WelcomeScreen() {
             </Text>
           </View>
           <CardTitle className='text-center text-2xl'>
-            Chào mừng đến với ECommerce
+            {t('welcome.title')}
           </CardTitle>
         </CardHeader>
 
         <CardContent className='gap-4'>
           <Text className='text-center text-muted-foreground text-base leading-6'>
-            Khám phá hàng ngàn sản phẩm chất lượng với giá tốt nhất. Mua sắm dễ
-            dàng, giao hàng nhanh chóng.
+            {t('welcome.description')}
           </Text>
 
           <View className='gap-3 mt-6'>
             <Button onPress={handleWelcomeContinue} className='w-full'>
-              <Text>Đăng nhập</Text>
+              <Text>{t('welcome.loginButton')}</Text>
             </Button>
 
             {!APP_CONFIG.REQUIRE_LOGIN && (
@@ -39,7 +41,7 @@ export default function WelcomeScreen() {
                 onPress={handleWelcomeSkip}
                 className='w-full'
               >
-                <Text>Tiếp tục mà không đăng nhập</Text>
+                <Text>{t('welcome.continueWithoutLogin')}</Text>
               </Button>
             )}
           </View>

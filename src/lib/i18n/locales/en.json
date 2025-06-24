@@ -1,0 +1,65 @@
+{
+  "common": {
+    "loading": "Loading...",
+    "error": "An error occurred",
+    "retry": "Retry",
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "save": "Save",
+    "delete": "Delete",
+    "edit": "Edit",
+    "back": "Back",
+    "next": "Next",
+    "done": "Done",
+    "close": "Close"
+  },
+  "auth": {
+    "login": "Login",
+    "logout": "Logout",
+    "register": "Register",
+    "username": "Username",
+    "password": "Password",
+    "loginButton": "Login",
+    "registerButton": "Register now",
+    "loginPlaceholder": "Enter username (try: emilys)",
+    "passwordPlaceholder": "Enter password (try: emilyspass)",
+    "loginInProgress": "Logging in...",
+    "loginTitle": "Login",
+    "loginSubtitle": "Enter your information to continue",
+    "noAccount": "Don't have an account? "
+  },
+  "welcome": {
+    "title": "Welcome to ECommerce",
+    "description": "Discover thousands of quality products at the best prices. Easy shopping, fast delivery.",
+    "loginButton": "Login",
+    "continueWithoutLogin": "Continue without login"
+  },
+  "homepage": {
+    "greeting": "Hello, {{name}}!",
+    "guestGreeting": "Guest",
+    "subtitle": "What would you like to buy today?",
+    "categories": "Categories",
+    "featuredProducts": "Featured Products",
+    "viewAll": "View all",
+    "quickActions": "Quick Actions",
+    "cart": "🛒 Cart",
+    "orders": "📋 Orders",
+    "favorites": "❤️ Favorites",
+    "search": "Search products..."
+  },
+  "app": {
+    "name": "ECommerce App",
+    "loading": "Loading..."
+  },
+  "product": {
+    "price": "Price",
+    "stock": "Stock",
+    "rating": "Rating",
+    "category": "Category"
+  },
+  "language": {
+    "vietnamese": "Tiếng Việt",
+    "english": "English",
+    "switchLanguage": "Switch Language"
+  }
+}

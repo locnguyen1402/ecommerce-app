@@ -3,6 +3,7 @@ export const STORAGE_KEYS = {
   FIRST_LAUNCH: '@app_first_launch',
   ACCESS_TOKEN: '@app_access_token',
   REFRESH_TOKEN: '@app_refresh_token',
+  LANGUAGE: '@app_language',
 };
 
 // App configuration
