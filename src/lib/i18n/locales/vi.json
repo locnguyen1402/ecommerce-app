@@ -40,12 +40,18 @@
     "subtitle": "Hôm nay bạn muốn mua gì?",
     "categories": "Danh mục",
     "featuredProducts": "Sản phẩm nổi bật",
+    "allProducts": "Tất cả sản phẩm",
     "viewAll": "Xem tất cả",
     "quickActions": "Truy cập nhanh",
     "cart": "🛒 Giỏ hàng",
-    "orders": "📋 Đơn hàng",
+    "orders": "📋 Đơn hàng", 
     "favorites": "❤️ Yêu thích",
-    "search": "Tìm kiếm sản phẩm..."
+    "search": "Tìm kiếm sản phẩm...",
+    "noProducts": "Không có sản phẩm nào",
+    "loadingProducts": "Đang tải sản phẩm...",
+    "loadingCategories": "Đang tải danh mục...",
+    "errorProducts": "Lỗi khi tải sản phẩm",
+    "errorCategories": "Lỗi khi tải danh mục"
   },
   "app": {
     "name": "ECommerce App",

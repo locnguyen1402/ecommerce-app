@@ -40,12 +40,18 @@
     "subtitle": "What would you like to buy today?",
     "categories": "Categories",
     "featuredProducts": "Featured Products",
+    "allProducts": "All Products",
     "viewAll": "View all",
     "quickActions": "Quick Actions",
     "cart": "🛒 Cart",
     "orders": "📋 Orders",
     "favorites": "❤️ Favorites",
-    "search": "Search products..."
+    "search": "Search products...",
+    "noProducts": "No products found",
+    "loadingProducts": "Loading products...",
+    "loadingCategories": "Loading categories...",
+    "errorProducts": "Error loading products",
+    "errorCategories": "Error loading categories"
   },
   "app": {
     "name": "ECommerce App",
