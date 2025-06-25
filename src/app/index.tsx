@@ -1,9 +1,11 @@
 import React, { useEffect } from 'react';
 import { View } from 'react-native';
-import { Text } from '~/components/ui/text';
+
 import { useLanguage } from '~/lib/hooks/useLanguage';
 import { useAppNavigation } from '~/lib/hooks/useNavigation';
 import { useAuthStore } from '~/lib/stores/auth';
+
+import { Text } from '~/components/ui/text';
 
 export default function Page() {
   const { initializeAuth, isLoading, isInitialized } = useAuthStore();

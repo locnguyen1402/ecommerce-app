@@ -67,5 +67,18 @@
     "vietnamese": "Tiếng Việt",
     "english": "English",
     "switchLanguage": "Đổi ngôn ngữ"
+  },
+  "cart": {
+    "addToCart": "Thêm vào giỏ",
+    "adding": "Đang thêm...",
+    "cart": "Giỏ hàng",
+    "viewCart": "Xem giỏ hàng",
+    "emptyCart": "Giỏ hàng trống",
+    "removeItem": "Xóa khỏi giỏ",
+    "updateQuantity": "Cập nhật số lượng",
+    "total": "Tổng cộng",
+    "subtotal": "Tạm tính",
+    "discount": "Giảm giá",
+    "quantity": "Số lượng"
   }
 }

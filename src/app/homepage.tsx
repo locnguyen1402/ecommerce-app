@@ -1,16 +1,21 @@
+import { router } from 'expo-router';
 import React, { useState } from 'react';
 import { FlatList, Image, ScrollView, View } from 'react-native';
+
+import type { Product } from '~/lib/api/types';
+import { useCategories, useFeaturedProducts, useProducts, useSearchProducts } from '~/lib/hooks/useApi';
+import { useLanguage } from '~/lib/hooks/useLanguage';
+import { useAppNavigation } from '~/lib/hooks/useNavigation';
+import { useAuthStore } from '~/lib/stores/auth';
+
+import { AddToCartButton } from '~/components/AddToCartButton';
+import { CartBadge } from '~/components/CartBadge';
 import { LanguageSwitcher } from '~/components/LanguageSwitcher';
 import { Badge } from '~/components/ui/badge';
 import { Button } from '~/components/ui/button';
 import { Card, CardContent } from '~/components/ui/card';
 import { Input } from '~/components/ui/input';
 import { Text } from '~/components/ui/text';
-import type { Product } from '~/lib/api/types';
-import { useCategories, useFeaturedProducts, useProducts, useSearchProducts } from '~/lib/hooks/useApi';
-import { useLanguage } from '~/lib/hooks/useLanguage';
-import { useAppNavigation } from '~/lib/hooks/useNavigation';
-import { useAuthStore } from '~/lib/stores/auth';
 
 export default function HomepageScreen() {
   const { user, isAuthenticated } = useAuthStore();
@@ -109,9 +114,18 @@ export default function HomepageScreen() {
           </Text>
         </View>
         
-        <Button size='sm' className='w-full'>
-          <Text className='text-xs'>Add to Cart</Text>
-        </Button>
+        <AddToCartButton
+          product={{
+            id: item.id,
+            title: item.title,
+            price: item.price,
+            thumbnail: item.thumbnail,
+            category: item.category,
+            discountPercentage: item.discountPercentage,
+          }}
+          size='sm'
+          className='w-full'
+        />
       </CardContent>
     </Card>
   );
@@ -173,6 +187,7 @@ export default function HomepageScreen() {
           
           <View className='flex-row gap-2'>
             <LanguageSwitcher variant="toggle" showLabel={false} />
+            <CartBadge size='sm' onPress={() => router.push('/cart')} />
             {isAuthenticated && (
               <Button variant='outline' size='sm' onPress={handleLogout}>
                 <Text className='text-xs'>{t('auth.logout')}</Text>

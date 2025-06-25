@@ -1,11 +1,13 @@
 import React from 'react';
 import { View } from 'react-native';
-import { Button } from '~/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '~/components/ui/card';
-import { Text } from '~/components/ui/text';
+
 import { APP_CONFIG } from '~/lib/constants';
 import { useLanguage } from '~/lib/hooks/useLanguage';
 import { useAppNavigation } from '~/lib/hooks/useNavigation';
+
+import { Button } from '~/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '~/components/ui/card';
+import { Text } from '~/components/ui/text';
 
 export default function WelcomeScreen() {
   const { handleWelcomeContinue, handleWelcomeSkip } = useAppNavigation();

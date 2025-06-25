@@ -5,6 +5,7 @@ import { Slot } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import * as React from 'react';
 import { Platform } from 'react-native';
+
 import { AppProvider } from '~/lib/providers/AppProvider';
 import { useColorScheme } from '~/lib/useColorScheme';
 

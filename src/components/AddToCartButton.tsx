@@ -1,0 +1,77 @@
+import React, { useState } from 'react';
+import { View } from 'react-native';
+import { Button } from '~/components/ui/button';
+import { Text } from '~/components/ui/text';
+import { useLanguage } from '~/lib/hooks/useLanguage';
+import { useCartStore, type CartItem } from '~/lib/stores/cart';
+
+interface AddToCartButtonProps {
+  product: Omit<CartItem, 'quantity'>;
+  quantity?: number;
+  size?: 'sm' | 'default' | 'lg';
+  variant?: 'default' | 'outline' | 'secondary';
+  disabled?: boolean;
+  className?: string;
+}
+
+export const AddToCartButton: React.FC<AddToCartButtonProps> = ({
+  product,
+  quantity = 1,
+  size = 'default',
+  variant = 'default',
+  disabled = false,
+  className,
+}) => {
+  const { t } = useLanguage();
+  const { addItem } = useCartStore();
+  const [isAdding, setIsAdding] = useState(false);
+
+  const handleAddToCart = async () => {
+    if (disabled || isAdding) return;
+
+    setIsAdding(true);
+    
+    try {
+      addItem(product, quantity);
+      
+      // Add a small delay for better UX
+      await new Promise(resolve => setTimeout(resolve, 300));
+    } catch (error) {
+      console.error('Error adding to cart:', error);
+    } finally {
+      setIsAdding(false);
+    }
+  };
+
+  return (
+    <Button
+      onPress={handleAddToCart}
+      size={size}
+      variant={variant}
+      disabled={disabled || isAdding}
+      className={className}
+    >
+      <View className="flex-row items-center">
+        {isAdding ? (
+          <>
+            <Text className={`${size === 'sm' ? 'text-xs' : 'text-sm'} mr-1`}>
+              ⏳
+            </Text>
+            <Text className={size === 'sm' ? 'text-xs' : 'text-sm'}>
+              {t('cart.adding')}
+            </Text>
+          </>
+        ) : (
+          <>
+            <Text className={`${size === 'sm' ? 'text-xs' : 'text-sm'} mr-1`}>
+              🛒
+            </Text>
+            <Text className={size === 'sm' ? 'text-xs' : 'text-sm'}>
+              {t('cart.addToCart')}
+            </Text>
+          </>
+        )}
+      </View>
+    </Button>
+  );
+};

@@ -67,5 +67,18 @@
     "vietnamese": "Tiếng Việt",
     "english": "English",
     "switchLanguage": "Switch Language"
+  },
+  "cart": {
+    "addToCart": "Add to Cart",
+    "adding": "Adding...",
+    "cart": "Cart",
+    "viewCart": "View Cart",
+    "emptyCart": "Cart is empty",
+    "removeItem": "Remove from cart",
+    "updateQuantity": "Update quantity",
+    "total": "Total",
+    "subtotal": "Subtotal",
+    "discount": "Discount",
+    "quantity": "Quantity"
   }
 }
