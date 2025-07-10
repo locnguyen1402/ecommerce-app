@@ -12,8 +12,8 @@ import { Input } from '~/components/ui/input';
 import { Text } from '~/components/ui/text';
 
 export default function LoginScreen() {
-  const [username, setUsername] = useState('emilys'); // DummyJSON test user
-  const [password, setPassword] = useState('emilyspass'); // DummyJSON test password
+  const [username, setUsername] = useState('demo'); // Mock test user
+  const [password, setPassword] = useState('demo123'); // Mock test password
 
   // Use auth store
   const { login, isLoading, error, clearError } = useAuthStore();

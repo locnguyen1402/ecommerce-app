@@ -6,7 +6,7 @@ export interface LoginRequest {
 }
 
 export interface LoginResponse {
-  id: number;
+  id: string;
   username: string;
   email: string;
   firstName: string;
@@ -28,7 +28,7 @@ export interface RefreshTokenResponse {
 }
 
 export interface User {
-  id: number;
+  id: string;
   username: string;
   email: string;
   firstName: string;
@@ -46,8 +46,8 @@ export interface User {
 }
 
 // Product Types
-export interface Product {
-  id: number;
+export interface ProductListItem {
+  id: string;
   title: string;
   description: string;
   category: string;
@@ -57,17 +57,53 @@ export interface Product {
   stock: number;
   tags: string[];
   brand?: string;
+  thumbnail: string;
+  availabilityStatus: string;
+  hasVariants: boolean;
+}
+
+export interface ProductAttribute {
+  id: string;
+  name: string;
+}
+
+export interface ProductVariant {
+  id: string;
   sku: string;
-  weight: number;
-  dimensions: {
+  price: number;
+  compareAtPrice?: number;
+  stock: number;
+  attributes: ProductAttribute[];
+  images: string[];
+  weight?: number;
+  dimensions?: {
     width: number;
     height: number;
     depth: number;
   };
+}
+
+export interface ProductAttributeGroup {
+  id: string;
+  name: string;
+  displayName: string;
+  required: boolean;
+  attributes: ProductAttribute[];
+}
+
+export interface ProductDetail {
+  id: string;
+  title: string;
+  description: string;
+  category: string;
+  basePrice: number;
+  discountPercentage: number;
+  rating: number;
+  totalStock: number;
+  tags: string[];
+  brand?: string;
   warrantyInformation: string;
   shippingInformation: string;
-  availabilityStatus: string;
-  reviews: Review[];
   returnPolicy: string;
   minimumOrderQuantity: number;
   meta: {
@@ -78,7 +114,13 @@ export interface Product {
   };
   images: string[];
   thumbnail: string;
+  reviews: Review[];
+  attributeGroups: ProductAttributeGroup[];
+  variants: ProductVariant[];
 }
+
+// For backward compatibility
+export interface Product extends ProductDetail {}
 
 export interface Review {
   rating: number;
@@ -89,10 +131,14 @@ export interface Review {
 }
 
 export interface ProductsResponse {
-  products: Product[];
+  products: ProductListItem[];
   total: number;
   skip: number;
   limit: number;
+}
+
+export interface ProductDetailResponse {
+  product: ProductDetail;
 }
 
 export interface ProductSearchParams {
@@ -106,7 +152,9 @@ export interface ProductSearchParams {
 
 // Cart Types
 export interface CartItem {
-  id: number;
+  id: string; // UUID for cart item
+  productId: string; // Changed to string UUID
+  variantId?: string;
   title: string;
   price: number;
   quantity: number;
@@ -114,14 +162,16 @@ export interface CartItem {
   discountPercentage: number;
   discountedTotal: number;
   thumbnail: string;
+  selectedAttributes?: ProductAttribute[];
+  sku?: string;
 }
 
 export interface Cart {
-  id: number;
+  id: string;
   products: CartItem[];
   total: number;
   discountedTotal: number;
-  userId: number;
+  userId: string;
   totalProducts: number;
   totalQuantity: number;
 }
@@ -134,9 +184,9 @@ export interface CartsResponse {
 }
 
 export interface AddToCartRequest {
-  userId: number;
+  userId: string;
   products: {
-    id: number;
+    id: string;
     quantity: number;
   }[];
 }
@@ -144,7 +194,7 @@ export interface AddToCartRequest {
 export interface UpdateCartRequest {
   merge?: boolean;
   products: {
-    id: number;
+    id: string;
     quantity: number;
   }[];
 }

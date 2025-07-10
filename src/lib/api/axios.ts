@@ -1,6 +1,7 @@
 import axios from 'axios';
+import { ENV } from '../config/environment';
 
-const API_BASE_URL = 'https://dummyjson.com';
+const API_BASE_URL = ENV.API_BASE_URL;
 
 // Create axios instance
 export const apiClient = axios.create({
@@ -58,6 +59,11 @@ apiClient.interceptors.response.use(
         const refreshToken = getRefreshToken();
 
         if (refreshToken) {
+          // Only attempt refresh if we have a real API configured
+          if (!API_BASE_URL) {
+            throw new Error('No API configured for token refresh');
+          }
+          
           const response = await axios.post(`${API_BASE_URL}/auth/refresh`, {
             refreshToken,
             expiresInMins: 30,

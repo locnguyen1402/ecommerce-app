@@ -2,7 +2,7 @@ import { router } from 'expo-router';
 import React, { useState } from 'react';
 import { FlatList, Image, ScrollView, View } from 'react-native';
 
-import type { Product } from '~/lib/api/types';
+import type { ProductListItem } from '~/lib/api/types';
 import { useCategories, useFeaturedProducts, useProducts, useSearchProducts } from '~/lib/hooks/useApi';
 import { useLanguage } from '~/lib/hooks/useLanguage';
 import { useAppNavigation } from '~/lib/hooks/useNavigation';
@@ -44,7 +44,7 @@ export default function HomepageScreen() {
     error: categoriesError,
   } = useCategories();
 
-  // Handle both string[] and object[] formats from DummyJSON
+  // Handle both string[] and object[] formats
   const categories = Array.isArray(categoriesData) 
     ? categoriesData.map(item => 
         typeof item === 'string' ? item : item.name || item.slug || item
@@ -69,7 +69,7 @@ export default function HomepageScreen() {
 
   const displayProducts = getDisplayProducts();
 
-  const renderProductCard = ({ item }: { item: Product }) => (
+  const renderProductCard = ({ item }: { item: ProductListItem }) => (
     <Card className='mb-4 mx-2 flex-1 min-w-[160px] max-w-[200px]'>
       <CardContent className='p-3'>
         {item.thumbnail ? (
@@ -96,7 +96,7 @@ export default function HomepageScreen() {
           <Text className='text-primary font-bold text-base'>
             ${item.price}
           </Text>
-          {item.discountPercentage > 0 && (
+          {item.discountPercentage && item.discountPercentage > 0 && (
             <Badge variant='destructive' className='px-1'>
               <Text className='text-xs'>-{item.discountPercentage.toFixed(0)}%</Text>
             </Badge>
@@ -121,7 +121,7 @@ export default function HomepageScreen() {
             price: item.price,
             thumbnail: item.thumbnail,
             category: item.category,
-            discountPercentage: item.discountPercentage,
+            discountPercentage: item.discountPercentage || 0,
           }}
           size='sm'
           className='w-full'
@@ -140,7 +140,7 @@ export default function HomepageScreen() {
     </Button>
   );
 
-  const renderFeaturedProduct = ({ item }: { item: Product }) => (
+  const renderFeaturedProduct = ({ item }: { item: ProductListItem }) => (
     <Card className='mr-4 w-48'>
       <CardContent className='p-4'>
         {item.thumbnail ? (
@@ -265,7 +265,7 @@ export default function HomepageScreen() {
           <FlatList
             data={featuredProducts}
             renderItem={renderFeaturedProduct}
-            keyExtractor={(item) => item.id.toString()}
+            keyExtractor={(item) => item.id}
             horizontal
             showsHorizontalScrollIndicator={false}
             contentContainerStyle={{ paddingHorizontal: 16 }}
@@ -301,7 +301,7 @@ export default function HomepageScreen() {
           <FlatList
             data={displayProducts}
             renderItem={renderProductCard}
-            keyExtractor={(item) => item.id.toString()}
+            keyExtractor={(item) => item.id}
             numColumns={2}
             columnWrapperStyle={{ justifyContent: 'space-between' }}
             scrollEnabled={false}
