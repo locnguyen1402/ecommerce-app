@@ -1,12 +1,12 @@
 // Export all mock data and helper functions
-export * from './products';
 export * from './categories';
-export * from './users';
 export * from './orders';
+export * from './products';
+export * from './users';
 
 // Centralized mock database
 export const MOCK_DATABASE = {
-  products: async () => (await import('./products')).MOCK_PRODUCTS,
+  products: async () => (await import('./products')).MOCK_PRODUCT_LIST,
   categories: async () => (await import('./categories')).MOCK_CATEGORIES,
   users: async () => (await import('./users')).MOCK_USERS,
   orders: async () => (await import('./orders')).MOCK_ORDERS,
@@ -14,5 +14,5 @@ export const MOCK_DATABASE = {
 
 // Mock API delay simulation
 export const simulateApiDelay = (ms: number = 300): Promise<void> => {
-  return new Promise(resolve => setTimeout(resolve, ms));
+  return new Promise((resolve) => setTimeout(resolve, ms));
 };

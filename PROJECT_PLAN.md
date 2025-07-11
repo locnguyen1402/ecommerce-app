@@ -183,15 +183,16 @@ src/lib/
 - [x] **Implement service layer** - Products và Auth services support mock/real API switch
 - [x] **Refactor Product types** - Support variant system (ProductListItem vs ProductDetail)
 - [x] **Update IDs to UUID strings** - All entities now use UUID instead of numbers
+- [x] **Register page** - Form validation and UI with minimalist design ✅
+- [x] **Forgot Password page** - Email reset flow with mock backend ✅
+- [x] **Login UI improvements** - Minimalist design system applied to all auth pages ✅
+- [x] **Homepage redesign** - Minimalist style implementation ✅
+- [x] **Tab Navigation Setup** - Home, Orders, Search, Notifications, Account ✅
 
 ### **🔄 IN PROGRESS**
-- [ ] **Register page** - Form validation and UI
-- [ ] **Forgot Password page** - Email reset flow  
-- [ ] **Login UI improvements** - Minimalist design system
+- [ ] **Welcome page redesign** - Simple onboarding flow
 
 ### **📋 PENDING (High Priority)**
-- [ ] **Homepage redesign** - Minimalist style implementation
-- [ ] **Welcome page redesign** - Simple onboarding flow
 - [ ] **Cart page improvements** - Following design system
 - [ ] **Product Details page** - With image gallery and variant selection
 - [ ] **Variant selection UI** - Components for attribute selection

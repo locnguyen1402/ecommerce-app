@@ -1,3 +1,4 @@
+import { router } from 'expo-router';
 import React from 'react';
 import { View } from 'react-native';
 
@@ -37,9 +38,17 @@ export default function WelcomeScreen() {
               <Text>{t('welcome.loginButton')}</Text>
             </Button>
 
+            <Button
+              variant='outline'
+              onPress={() => router.push('/register')}
+              className='w-full'
+            >
+              <Text>{t('welcome.registerButton')}</Text>
+            </Button>
+
             {!APP_CONFIG.REQUIRE_LOGIN && (
               <Button
-                variant='outline'
+                variant='ghost'
                 onPress={handleWelcomeSkip}
                 className='w-full'
               >

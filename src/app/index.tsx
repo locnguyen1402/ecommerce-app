@@ -33,11 +33,11 @@ export default function Page() {
 
   return (
     <View className='flex flex-1 justify-center items-center bg-background'>
-      <View className='w-20 h-20 bg-primary rounded-full items-center justify-center mb-4'>
-        <Text className='text-primary-foreground text-2xl font-bold'>E</Text>
+      <View className='w-16 h-16 bg-foreground rounded mb-6 items-center justify-center'>
+        <Text className='text-background text-xl font-semibold'>E</Text>
       </View>
-      <Text className='text-xl font-semibold'>{t('app.name')}</Text>
-      <Text className='text-muted-foreground mt-2'>{t('app.loading')}</Text>
+      <Text className='text-lg font-medium'>{t('app.name')}</Text>
+      <Text className='text-muted-foreground text-sm mt-2'>{t('app.loading')}</Text>
     </View>
   );
 }

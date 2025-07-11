@@ -4,6 +4,8 @@ import {
   getMockLoginResponse,
   getMockCurrentUser,
   refreshMockToken,
+  getMockRegisterResponse,
+  getMockForgotPasswordResponse,
   simulateApiDelay 
 } from '../mock_data';
 import type {
@@ -11,6 +13,10 @@ import type {
   LoginResponse,
   RefreshTokenRequest,
   RefreshTokenResponse,
+  RegisterRequest,
+  RegisterResponse,
+  ForgotPasswordRequest,
+  ForgotPasswordResponse,
   User,
 } from './types';
 
@@ -67,6 +73,34 @@ export const authService = {
     const response = await apiClient.post<RefreshTokenResponse>(
       '/auth/refresh',
       refreshData,
+    );
+    return response.data;
+  },
+
+  // Register user
+  register: async (userData: RegisterRequest): Promise<RegisterResponse> => {
+    if (ENV.API_MODE === 'mock') {
+      await simulateApiDelay(ENV.MOCK_DELAY);
+      return getMockRegisterResponse(userData);
+    }
+    
+    const response = await apiClient.post<RegisterResponse>(
+      '/auth/register',
+      userData,
+    );
+    return response.data;
+  },
+
+  // Forgot password
+  forgotPassword: async (request: ForgotPasswordRequest): Promise<ForgotPasswordResponse> => {
+    if (ENV.API_MODE === 'mock') {
+      await simulateApiDelay(ENV.MOCK_DELAY);
+      return getMockForgotPasswordResponse(request);
+    }
+    
+    const response = await apiClient.post<ForgotPasswordResponse>(
+      '/auth/forgot-password',
+      request,
     );
     return response.data;
   },

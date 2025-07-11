@@ -20,7 +20,7 @@ export class NavigationFlow {
       } else if (APP_CONFIG.REQUIRE_LOGIN && !isAuthenticated) {
         router.replace('/login');
       } else {
-        router.replace('/homepage');
+        router.replace('/(tabs)');
       }
     } catch (error) {
       console.error('Error determining initial route:', error);
@@ -52,11 +52,11 @@ export class NavigationFlow {
       if (APP_CONFIG.REQUIRE_LOGIN) {
         router.replace('/login');
       } else {
-        router.replace('/homepage');
+        router.replace('/(tabs)');
       }
     } catch (error) {
       console.error('Error handling welcome skip:', error);
-      router.replace('/homepage'); // Fallback
+      router.replace('/(tabs)'); // Fallback
     }
   }
 
@@ -65,7 +65,7 @@ export class NavigationFlow {
    */
   static async handleLoginSuccess(): Promise<void> {
     try {
-      router.replace('/homepage');
+      router.replace('/(tabs)');
     } catch (error) {
       console.error('Error handling login success:', error);
       throw error; // Re-throw for login screen to handle error
@@ -80,7 +80,7 @@ export class NavigationFlow {
       if (APP_CONFIG.REQUIRE_LOGIN) {
         router.replace('/login');
       } else {
-        router.replace('/homepage'); // Can still access homepage if login not required
+        router.replace('/(tabs)'); // Can still access tabs if login not required
       }
     } catch (error) {
       console.error('Error handling logout:', error);

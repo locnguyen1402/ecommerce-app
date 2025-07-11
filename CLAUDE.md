@@ -62,3 +62,32 @@ import { Header } from '~/components/layout/Header';
 import { LocalComponent } from './LocalComponent';
 import type { Props } from '../types';
 ```
+
+# Project Context
+
+## Quick Reference
+- **Project**: React Native ecommerce app with Expo
+- **Current Status**: Auth system + Tab Navigation completed, working on remaining UI improvements
+- **Architecture**: Mock/Real API toggle, Zustand stores, NativeWind styling
+- **Key Files**: Check @PROJECT_PLAN.md @DESIGN_SYSTEM.md @ARCHITECTURE.md
+- **Languages**: Vietnamese (default) + English
+- **API Mode**: Mock (development) - toggle via EXPO_PUBLIC_API_MODE
+
+## Current Sprint
+- [x] Register page implementation ✅
+- [x] Forgot password page ✅
+- [x] Login UI improvements ✅
+- [x] Homepage redesign ✅
+- [x] Tab Navigation Setup ✅
+- [ ] Welcome page redesign
+- [ ] Product details page
+- [ ] Checkout flow
+
+## Common Tasks
+- `npm run start` - Start dev server
+- Auth files: `src/app/login.tsx`, `src/app/register.tsx`, `src/app/forgot-password.tsx`
+- Main files: `src/app/index.tsx`, `src/app/homepage.tsx`
+- Tab files: `src/app/(tabs)/home.tsx`, `src/app/(tabs)/orders.tsx`, `src/app/(tabs)/search.tsx`, `src/app/(tabs)/notifications.tsx`, `src/app/(tabs)/account.tsx`
+- API: `src/lib/api/auth.ts`, `src/lib/stores/auth.ts`
+- Mock data: `src/lib/mock_data/users.ts`
+- Translations: `src/lib/i18n/locales/`

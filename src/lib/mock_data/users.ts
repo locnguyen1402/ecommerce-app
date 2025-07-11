@@ -1,4 +1,4 @@
-import type { User, LoginRequest, LoginResponse } from '../api/types';
+import type { User, LoginRequest, LoginResponse, RegisterRequest, RegisterResponse, ForgotPasswordRequest, ForgotPasswordResponse } from '../api/types';
 import { generateMockUUID } from '../utils/uuid';
 
 export const MOCK_USERS: User[] = [
@@ -131,4 +131,87 @@ export const refreshMockToken = (refreshToken: string) => {
   
   const userId = match[1];
   return generateMockTokens(userId);
+};
+
+export const checkUsernameExists = (username: string): boolean => {
+  return MOCK_USERS.some(user => user.username === username);
+};
+
+export const checkEmailExists = (email: string): boolean => {
+  return MOCK_USERS.some(user => user.email === email);
+};
+
+export const getMockRegisterResponse = (userData: RegisterRequest): RegisterResponse => {
+  // Check if username already exists
+  if (checkUsernameExists(userData.username)) {
+    throw new Error('Username already exists');
+  }
+  
+  // Check if email already exists
+  if (checkEmailExists(userData.email)) {
+    throw new Error('Email already exists');
+  }
+  
+  // Create new user
+  const userId = generateMockUUID(`user-${userData.username}`);
+  const newUser: User = {
+    id: userId,
+    username: userData.username,
+    email: userData.email,
+    firstName: userData.firstName,
+    lastName: userData.lastName,
+    gender: userData.gender || 'male',
+    image: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150',
+    phone: userData.phone || '',
+    birthDate: '',
+    address: {
+      address: '',
+      city: '',
+      state: '',
+      postalCode: ''
+    }
+  };
+  
+  // Add to mock users (in real app, this would be saved to database)
+  MOCK_USERS.push(newUser);
+  
+  // Add credentials
+  MOCK_CREDENTIALS.push({
+    username: userData.username,
+    password: userData.password
+  });
+  
+  // Generate tokens
+  const { accessToken, refreshToken } = generateMockTokens(userId);
+  
+  return {
+    id: newUser.id,
+    username: newUser.username,
+    email: newUser.email,
+    firstName: newUser.firstName,
+    lastName: newUser.lastName,
+    gender: newUser.gender,
+    image: newUser.image,
+    accessToken,
+    refreshToken
+  };
+};
+
+export const getMockForgotPasswordResponse = (request: ForgotPasswordRequest): ForgotPasswordResponse => {
+  const { email } = request;
+  
+  // Check if email exists in mock users
+  const user = MOCK_USERS.find(u => u.email === email);
+  
+  if (!user) {
+    return {
+      message: 'If this email is registered, you will receive a password reset link.',
+      success: true // Always return success for security (don't reveal if email exists)
+    };
+  }
+  
+  return {
+    message: 'If this email is registered, you will receive a password reset link.',
+    success: true
+  };
 };

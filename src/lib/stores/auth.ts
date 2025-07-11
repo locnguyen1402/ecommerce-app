@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { authService } from '../api/auth';
-import type { LoginRequest, User } from '../api/types';
+import type { LoginRequest, RegisterRequest, ForgotPasswordRequest, User } from '../api/types';
 import {
   clearTokens,
   getAccessToken as getStoredAccessToken,
@@ -21,6 +21,8 @@ interface AuthState {
 
 interface AuthActions {
   login: (credentials: LoginRequest) => Promise<void>;
+  register: (userData: RegisterRequest) => Promise<void>;
+  forgotPassword: (request: ForgotPasswordRequest) => Promise<string>;
   logout: () => Promise<void>;
   clearError: () => void;
   setLoading: (loading: boolean) => void;
@@ -71,6 +73,61 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
         error: errorMessage,
         isLoading: false,
         isAuthenticated: false,
+      });
+      throw error;
+    }
+  },
+
+  register: async (userData: RegisterRequest) => {
+    try {
+      set({ isLoading: true, error: null });
+
+      const response = await authService.register(userData);
+
+      // Save tokens to storage
+      await saveAccessToken(response.accessToken);
+      if (response.refreshToken) {
+        await saveRefreshToken(response.refreshToken);
+      }
+
+      // Extract user data (exclude tokens)
+      const { accessToken, refreshToken, ...registeredUser } = response;
+
+      set({
+        user: registeredUser,
+        accessToken: response.accessToken,
+        refreshToken: response.refreshToken,
+        isAuthenticated: true,
+        isLoading: false,
+        error: null,
+      });
+    } catch (error) {
+      const errorMessage =
+        error instanceof Error ? error.message : 'Registration failed';
+      set({
+        error: errorMessage,
+        isLoading: false,
+        isAuthenticated: false,
+      });
+      throw error;
+    }
+  },
+
+  forgotPassword: async (request: ForgotPasswordRequest) => {
+    try {
+      set({ isLoading: true, error: null });
+
+      const response = await authService.forgotPassword(request);
+
+      set({ isLoading: false, error: null });
+
+      return response.message;
+    } catch (error) {
+      const errorMessage =
+        error instanceof Error ? error.message : 'Failed to send reset email';
+      set({
+        error: errorMessage,
+        isLoading: false,
       });
       throw error;
     }

@@ -12,8 +12,8 @@ import { Input } from '~/components/ui/input';
 import { Text } from '~/components/ui/text';
 
 export default function LoginScreen() {
-  const [username, setUsername] = useState('demo'); // Mock test user
-  const [password, setPassword] = useState('demo123'); // Mock test password
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
 
   // Use auth store
   const { login, isLoading, error, clearError } = useAuthStore();
@@ -40,73 +40,102 @@ export default function LoginScreen() {
   };
 
   return (
-    <ScrollView className='flex-1 bg-background'>
-      <View className='flex-1 px-6 py-8 justify-center min-h-screen'>
-        <Card className='mx-4'>
-          <CardHeader className='items-center pb-6'>
-            <View className='w-16 h-16 bg-primary rounded-full items-center justify-center mb-4'>
-              <Text className='text-primary-foreground text-xl font-bold'>
-                E
-              </Text>
+    <View className='flex-1 bg-background'>
+      <View className='flex-1 px-6 justify-center'>
+        <View className='max-w-sm mx-auto w-full'>
+          {/* Header */}
+          <View className='items-center mb-8'>
+            <View className='w-12 h-12 bg-foreground rounded mb-4 items-center justify-center'>
+              <Text className='text-background text-lg font-semibold'>E</Text>
             </View>
-            <CardTitle className='text-center text-xl'>{t('auth.loginTitle')}</CardTitle>
-            <Text className='text-center text-muted-foreground'>
+            <Text className='text-2xl font-semibold text-center mb-2'>
+              {t('auth.loginTitle')}
+            </Text>
+            <Text className='text-muted-foreground text-center text-sm'>
               {t('auth.loginSubtitle')}
             </Text>
-          </CardHeader>
+          </View>
 
-          <CardContent className='gap-4'>
-            {error && (
-              <View className='bg-destructive/10 border border-destructive rounded-md p-3'>
-                <Text className='text-destructive text-sm'>{error}</Text>
-              </View>
-            )}
+          {/* Error Message */}
+          {error && (
+            <View className='border border-destructive/50 rounded p-3 mb-4'>
+              <Text className='text-destructive text-sm text-center'>{error}</Text>
+            </View>
+          )}
 
-            <View className='gap-2'>
-              <Text className='text-sm font-medium'>{t('auth.username')}</Text>
+          {/* Demo Account Info */}
+          <View className='border border-primary/30 rounded p-3 mb-6'>
+            <Text className='text-xs text-muted-foreground text-center mb-1'>
+              Demo Account
+            </Text>
+            <Text className='text-xs text-center'>
+              Username: demo • Password: demo123
+            </Text>
+          </View>
+
+          {/* Form */}
+          <View className='space-y-4'>
+            <View>
               <Input
-                placeholder={t('auth.loginPlaceholder')}
+                placeholder={t('auth.username')}
                 value={username}
                 onChangeText={setUsername}
                 autoCapitalize='none'
+                className='h-12'
               />
             </View>
 
-            <View className='gap-2'>
-              <Text className='text-sm font-medium'>{t('auth.password')}</Text>
+            <View>
               <Input
-                placeholder={t('auth.passwordPlaceholder')}
+                placeholder={t('auth.password')}
                 value={password}
                 onChangeText={setPassword}
                 secureTextEntry
+                className='h-12'
               />
-            </View>
-
-            <Button
-              onPress={handleLogin}
-              className='w-full mt-4'
-              disabled={isLoading || !username || !password}
-            >
-              <Text>{isLoading ? t('auth.loginInProgress') : t('auth.loginButton')}</Text>
-            </Button>
-
-            <View className='flex-row justify-center items-center mt-4'>
-              <Text className='text-muted-foreground'>{t('auth.noAccount')}</Text>
-              <Button variant='link' className='p-0'>
-                <Text>{t('auth.registerButton')}</Text>
+              <Button
+                variant='link'
+                className='p-0 self-end mt-1'
+                onPress={() => router.push('/forgot-password')}
+              >
+                <Text className='text-xs text-muted-foreground'>
+                  {t('auth.forgotPassword')}
+                </Text>
               </Button>
             </View>
 
             <Button
-              variant='outline'
-              onPress={() => router.back()}
-              className='w-full mt-2'
+              onPress={handleLogin}
+              className='w-full h-12 mt-6'
+              disabled={isLoading || !username || !password}
             >
-              <Text>{t('common.back')}</Text>
+              <Text className='font-medium'>
+                {isLoading ? t('auth.loginInProgress') : t('auth.loginButton')}
+              </Text>
             </Button>
-          </CardContent>
-        </Card>
+          </View>
+
+          {/* Footer */}
+          <View className='mt-8 space-y-3'>
+            <View className='flex-row justify-center items-center'>
+              <Text className='text-muted-foreground text-sm'>
+                {t('auth.noAccount')}
+              </Text>
+              <Button variant='link' className='p-0' onPress={() => router.push('/register')}>
+                <Text className='text-sm font-medium'>{t('auth.registerButton')}</Text>
+              </Button>
+            </View>
+
+            <Button
+              variant='ghost'
+              onPress={() => router.back()}
+              className='w-full'
+            >
+              <Text className='text-sm'>{t('common.back')}</Text>
+            </Button>
+          </View>
+        </View>
       </View>
-    </ScrollView>
+    </View>
   );
 }

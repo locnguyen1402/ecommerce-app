@@ -5,6 +5,16 @@ export interface LoginRequest {
   expiresInMins?: number;
 }
 
+export interface RegisterRequest {
+  username: string;
+  email: string;
+  password: string;
+  firstName: string;
+  lastName: string;
+  gender?: string;
+  phone?: string;
+}
+
 export interface LoginResponse {
   id: string;
   username: string;
@@ -15,6 +25,27 @@ export interface LoginResponse {
   image: string;
   accessToken: string;
   refreshToken: string;
+}
+
+export interface RegisterResponse {
+  id: string;
+  username: string;
+  email: string;
+  firstName: string;
+  lastName: string;
+  gender: string;
+  image: string;
+  accessToken: string;
+  refreshToken: string;
+}
+
+export interface ForgotPasswordRequest {
+  email: string;
+}
+
+export interface ForgotPasswordResponse {
+  message: string;
+  success: boolean;
 }
 
 export interface RefreshTokenRequest {

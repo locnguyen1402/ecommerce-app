@@ -15,7 +15,7 @@ import { Button } from '~/components/ui/button';
 import { Input } from '~/components/ui/input';
 import { Text } from '~/components/ui/text';
 
-export default function HomepageScreen() {
+export default function HomeTab() {
   const { user, isAuthenticated } = useAuthStore();
   const { handleLogout } = useAppNavigation();
   const { t } = useLanguage();
@@ -197,7 +197,6 @@ export default function HomepageScreen() {
       </View>
 
       <ScrollView className='flex-1'>
-
         {/* Categories */}
         <View className='py-4'>
           <Text className='text-base font-medium px-4 mb-3'>
