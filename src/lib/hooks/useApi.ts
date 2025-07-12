@@ -1,17 +1,19 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { cartsService } from '../api/carts';
 import { productsService } from '../api/products';
+import { ordersService } from '../api/orders';
 import type {
   AddToCartRequest,
   PaginationParams,
   ProductSearchParams,
   UpdateCartRequest,
 } from '../api/types';
+import type { Order } from '../mock_data/orders';
 
 // Query Keys
 export const QUERY_KEYS = {
   products: ['products'],
-  product: (id: number) => ['products', id],
+  product: (id: string) => ['products', id],
   categories: ['categories'],
   productsByCategory: (category: string) => ['products', 'category', category],
   featuredProducts: ['products', 'featured'],
@@ -23,6 +25,9 @@ export const QUERY_KEYS = {
   carts: ['carts'],
   cart: (id: number) => ['carts', id],
   userCarts: (userId: number) => ['carts', 'user', userId],
+  orders: ['orders'],
+  order: (id: string) => ['orders', id],
+  userOrders: (userId: string) => ['orders', 'user', userId],
 } as const;
 
 // Products Hooks
@@ -34,7 +39,7 @@ export const useProducts = (params: PaginationParams = {}) => {
   });
 };
 
-export const useProduct = (id: number) => {
+export const useProduct = (id: string) => {
   return useQuery({
     queryKey: QUERY_KEYS.product(id),
     queryFn: () => productsService.getProduct(id),
@@ -151,6 +156,60 @@ export const useDeleteCart = () => {
       // Invalidate user carts to refresh the list
       queryClient.invalidateQueries({
         queryKey: ['carts', 'user'],
+      });
+    },
+  });
+};
+
+// Orders Hooks
+export const useUserOrders = (userId: string) => {
+  return useQuery({
+    queryKey: QUERY_KEYS.userOrders(userId),
+    queryFn: () => ordersService.getUserOrders(userId),
+    enabled: !!userId,
+    staleTime: 2 * 60 * 1000, // 2 minutes
+  });
+};
+
+export const useOrder = (orderId: string) => {
+  return useQuery({
+    queryKey: QUERY_KEYS.order(orderId),
+    queryFn: () => ordersService.getOrder(orderId),
+    enabled: !!orderId,
+    staleTime: 5 * 60 * 1000, // 5 minutes
+  });
+};
+
+// Order Mutations
+export const useCreateOrder = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (orderData: Omit<Order, 'id' | 'createdAt' | 'updatedAt'>) => 
+      ordersService.createOrder(orderData),
+    onSuccess: (data, variables) => {
+      // Add the new order to cache
+      queryClient.setQueryData(QUERY_KEYS.order(data.id), data);
+      // Invalidate user orders to refresh the list
+      queryClient.invalidateQueries({
+        queryKey: QUERY_KEYS.userOrders(variables.userId),
+      });
+    },
+  });
+};
+
+export const useUpdateOrderStatus = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({ orderId, status }: { orderId: string; status: Order['status'] }) =>
+      ordersService.updateOrderStatus(orderId, status),
+    onSuccess: (data, variables) => {
+      // Update the specific order in cache
+      queryClient.setQueryData(QUERY_KEYS.order(variables.orderId), data);
+      // Invalidate user orders to refresh the list
+      queryClient.invalidateQueries({
+        queryKey: ['orders', 'user'],
       });
     },
   });

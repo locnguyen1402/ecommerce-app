@@ -69,51 +69,57 @@ export default function HomepageScreen() {
 
   const renderProductCard = ({ item }: { item: ProductListItem }) => (
     <View className='flex-1 mx-1 mb-4'>
-      <View className='border border-border rounded bg-background'>
-        {item.thumbnail ? (
-          <Image
-            source={{ uri: item.thumbnail }}
-            className='h-36 w-full rounded-t'
-            resizeMode='cover'
-          />
-        ) : (
-          <View className='h-36 bg-muted rounded-t items-center justify-center'>
-            <Text className='text-muted-foreground text-xs'>No Image</Text>
-          </View>
-        )}
-        
-        <View className='p-3'>
-          <Text className='font-medium text-sm mb-2' numberOfLines={2}>
-            {item.title}
-          </Text>
+      <Button
+        variant='ghost'
+        onPress={() => router.push(`/product/${item.id}`)}
+        className='border border-border rounded bg-background p-0 h-auto'
+      >
+        <View className='w-full'>
+          {item.thumbnail ? (
+            <Image
+              source={{ uri: item.thumbnail }}
+              className='h-36 w-full rounded-t'
+              resizeMode='cover'
+            />
+          ) : (
+            <View className='h-36 bg-muted rounded-t items-center justify-center'>
+              <Text className='text-muted-foreground text-xs'>No Image</Text>
+            </View>
+          )}
           
-          <Text className='text-xs text-muted-foreground mb-2 capitalize'>
-            {item.category.replace(/[-_]/g, ' ')}
-          </Text>
-          
-          <View className='flex-row items-center justify-between mb-3'>
-            <Text className='font-semibold text-base'>
-              ${item.price}
+          <View className='p-3'>
+            <Text className='font-medium text-sm mb-2' numberOfLines={2}>
+              {item.title}
             </Text>
-            <Text className='text-xs text-muted-foreground'>
-              ★ {item.rating.toFixed(1)}
+            
+            <Text className='text-xs text-muted-foreground mb-2 capitalize'>
+              {item.category.replace(/[-_]/g, ' ')}
             </Text>
+            
+            <View className='flex-row items-center justify-between mb-3'>
+              <Text className='font-semibold text-base'>
+                ${item.price}
+              </Text>
+              <Text className='text-xs text-muted-foreground'>
+                ★ {item.rating.toFixed(1)}
+              </Text>
+            </View>
+            
+            <AddToCartButton
+              product={{
+                id: item.id,
+                title: item.title,
+                price: item.price,
+                thumbnail: item.thumbnail,
+                category: item.category,
+                discountPercentage: item.discountPercentage || 0,
+              }}
+              size='sm'
+              className='w-full'
+            />
           </View>
-          
-          <AddToCartButton
-            product={{
-              id: item.id,
-              title: item.title,
-              price: item.price,
-              thumbnail: item.thumbnail,
-              category: item.category,
-              discountPercentage: item.discountPercentage || 0,
-            }}
-            size='sm'
-            className='w-full'
-          />
         </View>
-      </View>
+      </Button>
     </View>
   );
 
@@ -129,34 +135,40 @@ export default function HomepageScreen() {
 
   const renderFeaturedProduct = ({ item }: { item: ProductListItem }) => (
     <View className='mr-4 w-48'>
-      <View className='border border-border rounded bg-background'>
-        {item.thumbnail ? (
-          <Image
-            source={{ uri: item.thumbnail }}
-            className='h-32 w-full rounded-t'
-            resizeMode='cover'
-          />
-        ) : (
-          <View className='h-32 bg-muted rounded-t items-center justify-center'>
-            <Text className='text-muted-foreground text-xs'>No Image</Text>
-          </View>
-        )}
-        
-        <View className='p-3'>
-          <Text className='font-medium text-sm mb-2' numberOfLines={2}>
-            {item.title}
-          </Text>
+      <Button
+        variant='ghost'
+        onPress={() => router.push(`/product/${item.id}`)}
+        className='border border-border rounded bg-background p-0 h-auto'
+      >
+        <View className='w-full'>
+          {item.thumbnail ? (
+            <Image
+              source={{ uri: item.thumbnail }}
+              className='h-32 w-full rounded-t'
+              resizeMode='cover'
+            />
+          ) : (
+            <View className='h-32 bg-muted rounded-t items-center justify-center'>
+              <Text className='text-muted-foreground text-xs'>No Image</Text>
+            </View>
+          )}
           
-          <View className='flex-row items-center justify-between'>
-            <Text className='font-semibold text-base'>
-              ${item.price}
+          <View className='p-3'>
+            <Text className='font-medium text-sm mb-2' numberOfLines={2}>
+              {item.title}
             </Text>
-            <Text className='text-xs text-muted-foreground'>
-              ★ {item.rating.toFixed(1)}
-            </Text>
+            
+            <View className='flex-row items-center justify-between'>
+              <Text className='font-semibold text-base'>
+                ${item.price}
+              </Text>
+              <Text className='text-xs text-muted-foreground'>
+                ★ {item.rating.toFixed(1)}
+              </Text>
+            </View>
           </View>
         </View>
-      </View>
+      </Button>
     </View>
   );
 

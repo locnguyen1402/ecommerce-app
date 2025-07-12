@@ -1,13 +1,19 @@
 import { create } from 'zustand';
 
 export interface CartItem {
-  id: number;
+  id: string;  // Changed to string to match Product.id
   title: string;
   price: number;
   quantity: number;
   thumbnail: string;
   category: string;
   discountPercentage: number;
+  variant?: {
+    id?: string;
+    size?: string;
+    color?: string;
+    displayName?: string;
+  };
 }
 
 interface CartState {
@@ -20,8 +26,8 @@ interface CartState {
 
 interface CartActions {
   addItem: (product: Omit<CartItem, 'quantity'>, quantity?: number) => void;
-  removeItem: (productId: number) => void;
-  updateQuantity: (productId: number, quantity: number) => void;
+  removeItem: (cartItemIndex: number) => void;
+  updateQuantity: (cartItemIndex: number, quantity: number) => void;
   clearCart: () => void;
   calculateTotals: () => void;
 }
@@ -39,40 +45,61 @@ export const useCartStore = create<CartStore>((set, get) => ({
   // Actions
   addItem: (product, quantity = 1) => {
     const { items } = get();
-    const existingItem = items.find(item => item.id === product.id);
+    
+    // Find existing item with same id AND variant
+    const existingItem = items.find(item => {
+      if (item.id !== product.id) return false;
+      
+      // If neither has variant, they match
+      if (!item.variant && !product.variant) return true;
+      
+      // If one has variant and other doesn't, they don't match
+      if (!item.variant || !product.variant) return false;
+      
+      // Both have variants, compare variant id or properties
+      return item.variant.id === product.variant.id ||
+             (item.variant.size === product.variant.size && 
+              item.variant.color === product.variant.color);
+    });
 
     if (existingItem) {
-      // Update quantity if item already exists
-      get().updateQuantity(product.id, existingItem.quantity + quantity);
+      // Update quantity if item with same variant already exists
+      const itemIndex = items.findIndex(item => item === existingItem);
+      const updatedItems = [...items];
+      updatedItems[itemIndex] = {
+        ...existingItem,
+        quantity: existingItem.quantity + quantity,
+      };
+      set({ items: updatedItems });
     } else {
-      // Add new item
+      // Add new item (different product or different variant)
       const newItem: CartItem = {
         ...product,
         quantity,
       };
       
       set({ items: [...items, newItem] });
-      get().calculateTotals();
     }
+    get().calculateTotals();
   },
 
-  removeItem: (productId) => {
+  removeItem: (cartItemIndex) => {
     const { items } = get();
-    const filteredItems = items.filter(item => item.id !== productId);
+    const filteredItems = items.filter((_, index) => index !== cartItemIndex);
     
     set({ items: filteredItems });
     get().calculateTotals();
   },
 
-  updateQuantity: (productId, quantity) => {
+  updateQuantity: (cartItemIndex, quantity) => {
     if (quantity <= 0) {
-      get().removeItem(productId);
+      get().removeItem(cartItemIndex);
       return;
     }
 
     const { items } = get();
-    const updatedItems = items.map(item =>
-      item.id === productId ? { ...item, quantity } : item
+    const updatedItems = items.map((item, index) =>
+      index === cartItemIndex ? { ...item, quantity } : item
     );
     
     set({ items: updatedItems });
@@ -116,12 +143,12 @@ export const getCartTotal = (): number => {
   return useCartStore.getState().totalDiscountedPrice;
 };
 
-export const isItemInCart = (productId: number): boolean => {
+export const isItemInCart = (productId: string): boolean => {
   const items = useCartStore.getState().items;
   return items.some(item => item.id === productId);
 };
 
-export const getItemQuantity = (productId: number): number => {
+export const getItemQuantity = (productId: string): number => {
   const items = useCartStore.getState().items;
   const item = items.find(item => item.id === productId);
   return item?.quantity || 0;

@@ -25,27 +25,27 @@ src/lib/
 ### **Pages Status & Priority**
 
 #### **🔥 CRITICAL - Phase 1 (Tuần 1-2)**
-- [x] ~~Login Page~~ - ⚠️ **NEED UI IMPROVEMENT**
-- [ ] **Register Page** - ❌ **MISSING**
-- [ ] **Forgot Password Page** - ❌ **MISSING**
-- [x] ~~Welcome Page~~ - ⚠️ **NEED UI IMPROVEMENT**
-- [x] ~~Homepage~~ - ⚠️ **NEED UI IMPROVEMENT**
-- [x] ~~Cart Page~~ - ⚠️ **NEED UI IMPROVEMENT**
-- [ ] **Product Details Page** - ❌ **MISSING**
+- [x] ~~Login Page~~ - ✅ **COMPLETED**
+- [x] ~~Register Page~~ - ✅ **COMPLETED**
+- [x] ~~Forgot Password Page~~ - ✅ **COMPLETED**
+- [x] ~~Welcome Page~~ - ✅ **COMPLETED**
+- [x] ~~Homepage~~ - ✅ **COMPLETED**
+- [x] ~~Cart Page~~ - ✅ **COMPLETED**
+- [x] ~~Product Details Page~~ - ✅ **COMPLETED**
 
 #### **🚨 HIGH PRIORITY - Phase 2 (Tuần 2-3)**
-- [ ] **Checkout Flow** - ❌ **MISSING**
-- [ ] **Order Confirmation** - ❌ **MISSING**
+- [x] ~~Checkout Flow~~ - ✅ **COMPLETED**
+- [x] ~~Order Confirmation~~ - ✅ **COMPLETED**
 - [ ] **User Profile** - ❌ **MISSING**
-- [ ] **Order History** - ❌ **MISSING**
+- [x] ~~Order History~~ - ✅ **COMPLETED**
 - [ ] **Address Management** - ❌ **MISSING**
-- [ ] **Enhanced Search** - ❌ **MISSING**
+- [📋] **Enhanced Search** - 📋 **PLANNED** (See Next Implementation section)
 - [ ] **Category Browse** - ❌ **MISSING**
 
 #### **⚡ MEDIUM PRIORITY - Phase 3 (Tuần 3-4)**
 - [ ] **Wishlist** - ❌ **MISSING**
 - [ ] **Settings** - ❌ **MISSING**
-- [ ] **Order Details** - ❌ **MISSING**
+- [x] ~~Order Details~~ - ✅ **COMPLETED**
 - [ ] **Payment Methods** - ❌ **MISSING**
 
 #### **🎯 LOW PRIORITY - Phase 4 (Tuần 4-5)**
@@ -175,7 +175,9 @@ src/lib/
 
 ## **Progress Tracking**
 
-### **✅ COMPLETED (Week 1 - Days 1-2)**
+### **✅ COMPLETED (Major Features Implemented)**
+
+#### **🎯 Core E-commerce Flow - 100% COMPLETE**
 - [x] **Remove DummyJSON API completely** - Loại bỏ hoàn toàn dependency
 - [x] **Create mock_data folder structure** - Tạo architecture với TypeScript interfaces
 - [x] **Setup environment config** - API_MODE toggle (mock/real) working
@@ -183,20 +185,56 @@ src/lib/
 - [x] **Implement service layer** - Products và Auth services support mock/real API switch
 - [x] **Refactor Product types** - Support variant system (ProductListItem vs ProductDetail)
 - [x] **Update IDs to UUID strings** - All entities now use UUID instead of numbers
+
+#### **🔐 Authentication System - 100% COMPLETE**
 - [x] **Register page** - Form validation and UI with minimalist design ✅
 - [x] **Forgot Password page** - Email reset flow with mock backend ✅
 - [x] **Login UI improvements** - Minimalist design system applied to all auth pages ✅
+
+#### **🏪 Shopping Experience - 100% COMPLETE**
 - [x] **Homepage redesign** - Minimalist style implementation ✅
+- [x] **Welcome page redesign** - Simple onboarding flow ✅
+- [x] **Cart page improvements** - Following design system ✅
+- [x] **Product Details page** - With image gallery and variant selection ✅
+- [x] **Variant selection UI** - Components for attribute selection ✅
+- [x] **Product navigation** - Clickable cards linking to details ✅
+
+#### **💳 Checkout & Orders - 100% COMPLETE**
+- [x] **Checkout Flow** - Multi-step process (address → payment → review) ✅
+- [x] **Order Confirmation** - Success page with order details ✅
+- [x] **Order Management** - Orders store with Zustand ✅
+- [x] **Order History** - Orders tab with list display ✅
+- [x] **Order Details** - Individual order view with tracking ✅
+- [x] **Order Status Tracking** - Visual progress indicators ✅
+
+#### **🎨 Design System - 100% COMPLETE**
 - [x] **Tab Navigation Setup** - Home, Orders, Search, Notifications, Account ✅
+- [x] **Minimalist design system** - Consistent 8px radius, monochromatic colors ✅
+- [x] **Typography system** - Inter font family, proper sizing ✅
+- [x] **Component consistency** - All UI follows design principles ✅
 
-### **🔄 IN PROGRESS**
-- [ ] **Welcome page redesign** - Simple onboarding flow
+#### **🔧 Technical Improvements - 100% COMPLETE**
+- [x] **Variant support in cart** - CartItem supports product variants ✅
+- [x] **Type consistency** - Fixed CartItem.id string type mismatch ✅
+- [x] **Cart logic enhancement** - Smart variant handling and deduplication ✅
 
-### **📋 PENDING (High Priority)**
-- [ ] **Cart page improvements** - Following design system
-- [ ] **Product Details page** - With image gallery and variant selection
-- [ ] **Variant selection UI** - Components for attribute selection
-- [ ] **Bottom sheet** - For variant selection from product list
+### **🔄 CURRENT STATUS**
+**App có complete shopping flow:** Homepage → Product Details → Add to Cart → Checkout → Order Confirmation → Order Management
+
+### **📋 NEXT IMPLEMENTATION - Enhanced Search System**
+- [ ] **Enhanced Search Feature** - Complete search system với advanced filtering
+  - [ ] **Phase 1:** Tab navigation + search input + basic results (6 hours)
+  - [ ] **Phase 2:** Filter drawer + search history + suggestions (9 hours)  
+  - [ ] **Phase 3:** Infinite scroll + analytics + performance optimization (6 hours)
+  - [ ] **Phase 4:** Polish + advanced features (3 hours)
+  - **Total Estimated:** 24 hours
+  - **Reference:** @SEARCH_FEATURE_SPEC.md
+
+### **📋 REMAINING (Lower Priority)**
+- [ ] **User Profile** - Account settings and profile management
+- [ ] **Category Browse** - Category-based product browsing (may overlap with search)
+- [ ] **Wishlist** - Save products for later
+- [ ] **Settings** - App preferences and configurations
 
 ## **Success Metrics**
 - [x] ~~Mock/Real API toggle working~~
