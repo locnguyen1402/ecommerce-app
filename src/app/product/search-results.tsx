@@ -3,7 +3,8 @@ import { Pressable, View } from 'react-native';
 import { router, useLocalSearchParams } from 'expo-router';
 import { ArrowLeft, Filter } from 'lucide-react-native';
 
-import { useSearchProducts } from '~/lib/hooks/useApi';
+import type { ProductListItem } from '~/lib/api/types';
+import { useSearchProductsWithFilters } from '~/lib/hooks/useApi';
 import { useSearchStore } from '~/lib/stores/search';
 
 import { Input } from '~/components/ui/input';
@@ -18,36 +19,46 @@ export default function ProductSearchResultsPage() {
   const [currentPage, setCurrentPage] = useState(1);
 
   const {
-    results,
     currentFilters,
-    setResults,
-    setLoading,
-    setLoadingMore,
     setFilters,
     addToHistory,
   } = useSearchStore();
 
+  // Use new search API with filters and pagination
   const {
     data: searchResults,
     isLoading: searchLoading,
-  } = useSearchProducts({ 
+    refetch: refetchSearch,
+  } = useSearchProductsWithFilters({ 
     q: query, 
-    limit: 20 
+    page: currentPage,
+    limit: 20,
+    filters: currentFilters,
   });
 
-  // Update search store when API results change
+  // State for managing load more functionality
+  const [allProducts, setAllProducts] = useState<ProductListItem[]>([]);
+  const [isLoadingMore, setIsLoadingMore] = useState(false);
+
+  // Reset products when query or filters change
+  useEffect(() => {
+    setAllProducts([]);
+    setCurrentPage(1);
+  }, [query, currentFilters]);
+
+  // Update products list when API results change
   useEffect(() => {
     if (searchResults?.products) {
-      const pagination = {
-        currentPage: 1,
-        totalPages: Math.ceil((searchResults.total || 20) / 20),
-        hasMore: (searchResults.products.length || 0) >= 20,
-        total: searchResults.total || searchResults.products.length,
-      };
-      setResults(searchResults.products, pagination);
+      if (currentPage === 1) {
+        // First page - replace all products
+        setAllProducts(searchResults.products);
+      } else {
+        // Subsequent pages - append to existing products
+        setAllProducts(prev => [...prev, ...searchResults.products]);
+      }
+      setIsLoadingMore(false);
     }
-    setLoading(searchLoading);
-  }, [searchResults, searchLoading, setResults, setLoading]);
+  }, [searchResults, currentPage]);
 
   // Add to history when query changes
   useEffect(() => {
@@ -64,8 +75,7 @@ export default function ProductSearchResultsPage() {
 
   const handleApplyFilters = (newFilters: typeof currentFilters) => {
     setFilters(newFilters);
-    setCurrentPage(1);
-    // TODO: Integrate with API search filters - would trigger new search with filters
+    // Reset pagination and refetch with new filters (handled by useEffect)
   };
 
   const handleResetFilters = () => {
@@ -75,21 +85,16 @@ export default function ProductSearchResultsPage() {
       minRating: 0,
     };
     setFilters(resetFilters);
-    setCurrentPage(1);
+    // Reset pagination and refetch (handled by useEffect)
   };
 
   const handleLoadMore = () => {
-    if (!results.pagination.hasMore || results.isLoadingMore) return;
+    if (!searchResults?.pagination.hasMore || isLoadingMore || searchLoading) return;
     
-    setLoadingMore(true);
+    setIsLoadingMore(true);
     const nextPage = currentPage + 1;
     setCurrentPage(nextPage);
-    
-    // TODO: In real app, make API call for next page
-    // For now, simulate loading more
-    setTimeout(() => {
-      setLoadingMore(false);
-    }, 1000);
+    // API call will be triggered by useEffect when currentPage changes
   };
 
   const getActiveFiltersCount = () => {
@@ -100,7 +105,7 @@ export default function ProductSearchResultsPage() {
     return count;
   };
 
-  const productsCount = results.products.length;
+  const productsCount = searchResults?.pagination.total || 0;
 
   return (
     <View className='flex-1 bg-background'>
@@ -140,7 +145,7 @@ export default function ProductSearchResultsPage() {
         {/* Results Count */}
         {query && (
           <Text className='text-sm text-muted-foreground'>
-            {results.isLoading ? 'Searching...' : `${productsCount} results for "${query}"`}
+            {searchLoading && currentPage === 1 ? 'Searching...' : `${productsCount} results for "${query}"`}
           </Text>
         )}
       </View>
@@ -148,10 +153,10 @@ export default function ProductSearchResultsPage() {
       {/* Search Results */}
       <View className='flex-1 px-4'>
         <ProductGrid
-          products={results.products}
-          isLoading={results.isLoading}
-          isLoadingMore={results.isLoadingMore}
-          hasMore={results.pagination.hasMore}
+          products={allProducts || []}
+          isLoading={searchLoading && currentPage === 1}
+          isLoadingMore={isLoadingMore}
+          hasMore={searchResults?.pagination.hasMore || false}
           onLoadMore={handleLoadMore}
         />
       </View>

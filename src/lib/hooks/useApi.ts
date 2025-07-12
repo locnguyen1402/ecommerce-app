@@ -2,7 +2,8 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { cartsService } from '../api/carts';
 import { productsService } from '../api/products';
 import { ordersService } from '../api/orders';
-import { getSearchSuggestions } from '../api/search';
+import { getSearchSuggestions, searchProducts } from '../api/search';
+import type { SearchProductsRequest } from '../api/search';
 import type {
   AddToCartRequest,
   PaginationParams,
@@ -30,6 +31,7 @@ export const QUERY_KEYS = {
   order: (id: string) => ['orders', id],
   userOrders: (userId: string) => ['orders', 'user', userId],
   searchSuggestions: (query: string) => ['search', 'suggestions', query],
+  searchProductsWithFilters: (request: SearchProductsRequest) => ['search', 'products', request],
 } as const;
 
 // Products Hooks
@@ -225,5 +227,15 @@ export const useSearchSuggestions = (query: string) => {
     enabled: query.length >= 2, // Only fetch when query has at least 2 characters
     staleTime: 5 * 60 * 1000, // 5 minutes
     gcTime: 10 * 60 * 1000, // 10 minutes garbage collection
+  });
+};
+
+export const useSearchProductsWithFilters = (request: SearchProductsRequest) => {
+  return useQuery({
+    queryKey: QUERY_KEYS.searchProductsWithFilters(request),
+    queryFn: () => searchProducts(request),
+    enabled: !!request.q && request.q.length >= 2, // Only fetch when query exists
+    staleTime: 2 * 60 * 1000, // 2 minutes
+    gcTime: 5 * 60 * 1000, // 5 minutes garbage collection
   });
 };
