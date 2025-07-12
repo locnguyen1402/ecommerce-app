@@ -18,18 +18,40 @@ EXPO_PUBLIC_API_MODE=mock (development)
 EXPO_PUBLIC_API_MODE=real (production)
 ```
 
-### 2. Folder Structure
+### 2. Organized Folder Structure
 ```
 src/
-├── app/                    # Expo Router pages
+├── app/                    # Expo Router pages (organized by feature)
+│   ├── (auth)/            # Authentication flow
+│   │   ├── register.tsx
+│   │   └── forgot-password.tsx
+│   ├── (ordering)/        # Checkout & order flow
+│   │   ├── checkout.tsx
+│   │   └── order-success.tsx
+│   ├── home/              # Main tab navigation
+│   │   ├── _layout.tsx
+│   │   ├── index.tsx      # Home tab
+│   │   ├── orders.tsx
+│   │   ├── search.tsx
+│   │   ├── notifications.tsx
+│   │   └── account.tsx
+│   ├── order/[id].tsx     # Dynamic order details
+│   ├── product/           # Product-related pages
+│   │   ├── [id].tsx
+│   │   └── search-results.tsx
+│   ├── login.tsx          # Login (standalone)
+│   ├── cart.tsx
+│   ├── index.tsx
+│   └── welcome.tsx
 ├── components/             # Reusable UI components
 │   └── ui/                # Base UI components
 ├── lib/
 │   ├── api/               # API services & types
-│   ├── stores/            # Zustand stores
+│   ├── stores/            # Zustand stores  
 │   ├── hooks/             # Custom hooks
 │   ├── mock_data/         # Mock data & helpers
 │   ├── i18n/              # Internationalization
+│   ├── providers/         # Context providers (AppProvider, QueryProvider)
 │   └── utils/             # Utility functions
 └── assets/                # Static assets
 ```
@@ -53,33 +75,54 @@ src/
 - **Border Radius**: 8px consistent
 - **Components**: Minimalist, no shadows/gradients
 
+### 6. Android Edge-to-Edge Support
+- **SafeAreaProvider**: Integrated into AppProvider for proper safe area handling
+- **StatusBar**: Configured with transparent background and translucent mode
+- **app.config.ts**: `edgeToEdgeEnabled: true` for modern Android compatibility
+- **Screen Implementation**: All major screens handle safe area insets properly
+- **Device Support**: Compatible with notches, navigation bars, and edge-to-edge displays
+
 ## Current Implementation Status
 
 ### ✅ Completed (Production Ready)
 - **Core Architecture**: Mock data with UUID system, API service layer with mock/real toggle
-- **Authentication**: Complete login/register/forgot password flow with mock backend
-- **Navigation**: Tab navigation (Home, Orders, Search, Notifications, Account) with proper routing
+- **Authentication**: Complete login/register/forgot password flow with mock backend  
+- **Organized File Structure**: Feature-grouped app folder with proper navigation routing
+- **Navigation**: Tab navigation (Home, Orders, Search, Notifications, Account) with organized structure
 - **Shopping Experience**: Homepage, product details, cart with variant support
 - **Product System**: Product listing, details view, image gallery, variant selection
 - **Cart Management**: Add/remove items, quantity updates, variant handling, persistent storage
 - **Checkout Flow**: Multi-step checkout (address → payment → review) with form validation
 - **Order Management**: Order creation, history, details view, status tracking
+- **Enhanced Search System**: Complete search with advanced filtering, analytics, infinite scroll
 - **Design System**: Minimalist UI with consistent 8px radius, monochromatic colors, Inter typography
+- **Android Edge-to-Edge**: Modern Android compatibility with safe area handling
 - **Technical**: Multi-language support (EN/VI), environment configuration, TypeScript interfaces
 - **State Management**: Zustand stores for auth, cart, orders with AsyncStorage persistence
 
 ### 🔄 Current Status
-**Complete e-commerce app** with full shopping flow ready for production deployment.
+**Production-ready e-commerce app** with complete shopping flow, organized structure, and modern Android support.
 
-### 🔄 Next Implementation
-- **Enhanced Search System** - Complete search với advanced filtering, analytics, infinite scroll
-  - Tab navigation integration
-  - Search input với suggestions và history
-  - Filter drawer (categories, price range, rating)
-  - Product search results với infinite scroll
-  - Full API-driven architecture với caching
-  - User behavior analytics tracking
-  - Reference: SEARCH_FEATURE_SPEC.md
+### 📁 Navigation Structure
+```
+Routes after reorganization:
+/ (root)
+├── /login
+├── /welcome
+├── /(auth)/register
+├── /(auth)/forgot-password
+├── /(ordering)/checkout
+├── /(ordering)/order-success
+├── /home (tab navigation)
+│   ├── /home (index - main tab)
+│   ├── /home/orders
+│   ├── /home/search
+│   ├── /home/notifications
+│   └── /home/account
+├── /cart
+├── /order/[id]
+└── /product/[id]
+```
 
 ### 📋 Remaining (Enhancement Features)
 - User profile & settings pages

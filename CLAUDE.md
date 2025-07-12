@@ -73,7 +73,7 @@ import type { Props } from '../types';
 - **Languages**: Vietnamese (default) + English
 - **API Mode**: Mock (development) - toggle via EXPO_PUBLIC_API_MODE
 
-## Current Status - ENHANCED SEARCH COMPLETE! 🎉
+## Current Status - PRODUCTION READY! 🎉
 - [x] Complete E-commerce Flow ✅
 - [x] Authentication System ✅  
 - [x] Shopping Experience ✅
@@ -82,46 +82,76 @@ import type { Props } from '../types';
 - [x] State Management ✅
 - [x] Product Variants Support ✅
 - [x] Enhanced Search System ✅
+- [x] Organized File Structure ✅
+- [x] Android Edge-to-Edge Support ✅
 
-**App is production-ready with full shopping flow + advanced search:**
+**App is production-ready with full shopping flow + optimized structure:**
 Homepage → Product Details → Cart → Checkout → Order Management
 Search Tab → Search Input + History/Suggestions → Results + Filters → Infinite Scroll
 
-## ✅ Enhanced Search System - COMPLETED
-- **Phase 1:** ✅ Tab navigation + search input + basic results
-- **Phase 2:** ✅ Filter drawer + search history + suggestions  
-- **Phase 3:** ✅ Infinite scroll + analytics + performance optimization
-- **Phase 4:** ✅ Polish + advanced features
-- **Reference:** @SEARCH_FEATURE_SPEC.md
+## ✅ Latest Updates - COMPLETED
 
-## 🔧 Critical API Pattern Fix - READY TO COMMIT
-**Status:** All missing config files created, API services fixed, ready to commit
+### 🏗️ File Structure Reorganization
+- **Auth files** grouped in `(auth)/` folder: `register.tsx`, `forgot-password.tsx`
+- **Ordering files** grouped in `(ordering)/` folder: `checkout.tsx`, `order-success.tsx`
+- **Tab navigation** renamed from `(tabs)` to `home` with `index.tsx` as main tab
+- **Navigation paths** updated throughout codebase
+- **Removed duplicate** `homepage.tsx` file
 
-### Fixed Issues:
-- ✅ Created missing files: `src/lib/api/config.ts`, `src/lib/config/index.ts`, `src/lib/api/client.ts`, `src/lib/utils/delay.ts`
-- ✅ Added complete mock/real toggle to `carts.ts` service with mock data
-- ✅ Fixed `orders.ts` to use consistent ENV config and proper delay calls
-- ✅ Updated `search.ts` to use apiClient instead of raw fetch calls
-- ✅ Replaced setTimeout in AddToCartButton with consistent delay utility
+### 📱 Android Edge-to-Edge Implementation
+- **SafeAreaProvider** integrated into AppProvider for better organization
+- **StatusBar** configured with transparent background and translucent mode
+- **Safe area handling** added to all major screens (Home, Login, Cart, Welcome)
+- **app.config.ts** configured with `edgeToEdgeEnabled: true`
+- **Full Android compatibility** with modern edge-to-edge devices
 
-### All API Services Now Consistent:
-- ✅ `auth.ts` - Using ENV, proper mock/real toggle
-- ✅ `products.ts` - Using ENV, proper mock/real toggle  
-- ✅ `orders.ts` - Using ENV, proper mock/real toggle, added delays
-- ✅ `carts.ts` - Using ENV, complete mock implementation added
-- ✅ `search.ts` - Using config, apiClient instead of fetch
+### 🔧 API Architecture Consistency
+- ✅ All API services follow consistent mock/real pattern
+- ✅ Complete configuration files: `config.ts`, `client.ts`, `delay.ts`
+- ✅ Unified error handling and delay utilities across services
+- ✅ Services: `auth.ts`, `products.ts`, `orders.ts`, `carts.ts`, `search.ts`
 
-### **NEXT STEP:** Commit all changes:
-```bash
-git add .
-git commit -m "fix: complete mock/real API pattern consistency across all services"
+## Updated File Structure
+
+### 📁 New App Organization
 ```
+src/app/
+├── (auth)/
+│   ├── register.tsx
+│   └── forgot-password.tsx
+├── (ordering)/
+│   ├── checkout.tsx
+│   └── order-success.tsx
+├── home/ (main tab navigation)
+│   ├── _layout.tsx
+│   ├── index.tsx (home tab)
+│   ├── orders.tsx
+│   ├── search.tsx
+│   ├── notifications.tsx
+│   └── account.tsx
+├── login.tsx
+├── cart.tsx
+├── index.tsx
+├── welcome.tsx
+├── order/[id].tsx
+└── product/
+    ├── [id].tsx
+    └── search-results.tsx
+```
+
+### 🔄 Navigation Updates
+- `/register` → `/(auth)/register`
+- `/forgot-password` → `/(auth)/forgot-password`
+- `/checkout` → `/(ordering)/checkout`
+- `/order-success` → `/(ordering)/order-success`
+- `/home` → Main tab navigation hub
 
 ## Common Tasks
 - `npm run start` - Start dev server
-- Auth files: `src/app/login.tsx`, `src/app/register.tsx`, `src/app/forgot-password.tsx`
-- Main files: `src/app/index.tsx`, `src/app/homepage.tsx`
-- Tab files: `src/app/(tabs)/home.tsx`, `src/app/(tabs)/orders.tsx`, `src/app/(tabs)/search.tsx`, `src/app/(tabs)/notifications.tsx`, `src/app/(tabs)/account.tsx`
-- API: `src/lib/api/auth.ts`, `src/lib/stores/auth.ts`
-- Mock data: `src/lib/mock_data/users.ts`
-- Translations: `src/lib/i18n/locales/`
+- **Auth files**: `src/app/(auth)/register.tsx`, `src/app/(auth)/forgot-password.tsx`, `src/app/login.tsx`
+- **Main files**: `src/app/index.tsx`, `src/app/welcome.tsx`
+- **Tab files**: `src/app/home/index.tsx`, `src/app/home/orders.tsx`, `src/app/home/search.tsx`, `src/app/home/notifications.tsx`, `src/app/home/account.tsx`
+- **Ordering files**: `src/app/(ordering)/checkout.tsx`, `src/app/(ordering)/order-success.tsx`
+- **API**: `src/lib/api/auth.ts`, `src/lib/stores/auth.ts`
+- **Mock data**: `src/lib/mock_data/users.ts`
+- **Translations**: `src/lib/i18n/locales/`

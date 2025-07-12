@@ -1,6 +1,7 @@
 import { router } from 'expo-router';
 import React, { useState } from 'react';
 import { FlatList, Image, ScrollView, View } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import type { ProductListItem } from '~/lib/api/types';
 import { useCategories, useFeaturedProducts, useProducts, useSearchProducts } from '~/lib/hooks/useApi';
@@ -19,6 +20,7 @@ export default function HomeTab() {
   const { user, isAuthenticated } = useAuthStore();
   const { handleLogout } = useAppNavigation();
   const { t } = useLanguage();
+  const insets = useSafeAreaInsets();
   
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
@@ -163,7 +165,7 @@ export default function HomeTab() {
   return (
     <View className='flex-1 bg-background'>
       {/* Header */}
-      <View className='px-4 py-4 border-b border-border'>
+      <View className='px-4 border-b border-border' style={{ paddingTop: insets.top + 16, paddingBottom: 16 }}>
         <View className='flex-row justify-between items-center mb-4'>
           <View className='flex-1'>
             <Text className='text-xl font-semibold'>

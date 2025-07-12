@@ -1,6 +1,7 @@
 import { router } from 'expo-router';
 import React, { useState } from 'react';
 import { View } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { useLanguage } from '~/lib/hooks/useLanguage';
 import { useAppNavigation } from '~/lib/hooks/useNavigation';
@@ -18,6 +19,7 @@ export default function LoginScreen() {
   const { login, isLoading, error, clearError } = useAuthStore();
   const { handleLoginSuccess } = useAppNavigation();
   const { t } = useLanguage();
+  const insets = useSafeAreaInsets();
 
   const handleLogin = async () => {
     try {
@@ -39,7 +41,7 @@ export default function LoginScreen() {
   };
 
   return (
-    <View className='flex-1 bg-background'>
+    <View className='flex-1 bg-background' style={{ paddingTop: insets.top }}>
       <View className='flex-1 px-6 justify-center'>
         <View className='max-w-sm mx-auto w-full'>
           {/* Header */}

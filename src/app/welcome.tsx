@@ -1,6 +1,7 @@
 import { router } from 'expo-router';
 import React from 'react';
 import { View } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { APP_CONFIG } from '~/lib/constants';
 import { useLanguage } from '~/lib/hooks/useLanguage';
@@ -12,9 +13,10 @@ import { Text } from '~/components/ui/text';
 export default function WelcomeScreen() {
   const { handleWelcomeContinue, handleWelcomeSkip } = useAppNavigation();
   const { t } = useLanguage();
+  const insets = useSafeAreaInsets();
   
   return (
-    <View className='flex-1 bg-background px-8 justify-center'>
+    <View className='flex-1 bg-background px-8 justify-center' style={{ paddingTop: insets.top, paddingBottom: insets.bottom }}>
       {/* Logo/Icon */}
       <View className='items-center mb-12'>
         <View className='w-20 h-20 border border-border rounded items-center justify-center mb-8'>

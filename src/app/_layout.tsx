@@ -39,7 +39,7 @@ export default function RootLayout() {
   return (
     <AppProvider>
       <PortalHost />
-      <StatusBar style={isDarkColorScheme ? 'light' : 'dark'} />
+      <StatusBar style={isDarkColorScheme ? 'light' : 'dark'} backgroundColor="transparent" translucent />
       <Slot />
     </AppProvider>
   );

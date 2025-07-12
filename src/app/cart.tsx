@@ -1,6 +1,7 @@
 import { router } from 'expo-router';
 import React from 'react';
 import { FlatList, Image, ScrollView, View } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { useLanguage } from '~/lib/hooks/useLanguage';
 import { useCartStore, type CartItem } from '~/lib/stores/cart';
@@ -10,6 +11,7 @@ import { Text } from '~/components/ui/text';
 
 export default function CartScreen() {
   const { t } = useLanguage();
+  const insets = useSafeAreaInsets();
   const {
     items,
     totalItems,
@@ -144,7 +146,7 @@ export default function CartScreen() {
   return (
     <View className='flex-1 bg-background'>
       {/* Header */}
-      <View className='px-4 py-4 border-b border-border'>
+      <View className='px-4 border-b border-border' style={{ paddingTop: insets.top + 16, paddingBottom: 16 }}>
         <View className='flex-row items-center justify-between'>
           <View className='flex-row items-center'>
             <Button variant='ghost' onPress={() => router.back()} className='mr-3 p-2'>
