@@ -87,7 +87,7 @@ export default function SearchTab() {
       addToHistory(finalQuery);
       setShowSuggestions(false);
       Keyboard.dismiss();
-      router.push(`/product-search-results?q=${encodeURIComponent(finalQuery)}`);
+      router.push(`/product/search-results?q=${encodeURIComponent(finalQuery)}`);
     }
   };
 

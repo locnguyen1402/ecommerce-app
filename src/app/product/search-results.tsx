@@ -3,9 +3,7 @@ import { Pressable, View } from 'react-native';
 import { router, useLocalSearchParams } from 'expo-router';
 import { ArrowLeft, Filter } from 'lucide-react-native';
 
-import type { ProductListItem } from '~/lib/api/types';
 import { useSearchProducts } from '~/lib/hooks/useApi';
-import { useLanguage } from '~/lib/hooks/useLanguage';
 import { useSearchStore } from '~/lib/stores/search';
 
 import { Input } from '~/components/ui/input';
@@ -14,7 +12,6 @@ import { FilterDrawer } from '~/components/search/FilterDrawer';
 import { ProductGrid } from '~/components/search/ProductGrid';
 
 export default function ProductSearchResultsPage() {
-  const { t } = useLanguage();
   const { q } = useLocalSearchParams<{ q: string }>();
   const [query, setQuery] = useState(q || '');
   const [showFilters, setShowFilters] = useState(false);
@@ -24,7 +21,6 @@ export default function ProductSearchResultsPage() {
     results,
     currentFilters,
     setResults,
-    appendResults,
     setLoading,
     setLoadingMore,
     setFilters,
