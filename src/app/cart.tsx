@@ -205,7 +205,7 @@ export default function CartScreen() {
           {/* Checkout Button */}
           <Button 
             className='w-full h-12 mb-6'
-            onPress={() => router.push('/checkout')}
+            onPress={() => router.push('/(ordering)/checkout')}
           >
             <Text className='font-medium'>Proceed to Checkout</Text>
           </Button>

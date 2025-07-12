@@ -1,13 +1,12 @@
 import { router } from 'expo-router';
 import React, { useState } from 'react';
-import { ScrollView, View } from 'react-native';
+import { View } from 'react-native';
 
 import { useLanguage } from '~/lib/hooks/useLanguage';
 import { useAppNavigation } from '~/lib/hooks/useNavigation';
 import { useAuthStore } from '~/lib/stores/auth';
 
 import { Button } from '~/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '~/components/ui/card';
 import { Input } from '~/components/ui/input';
 import { Text } from '~/components/ui/text';
 
@@ -59,7 +58,9 @@ export default function LoginScreen() {
           {/* Error Message */}
           {error && (
             <View className='border border-destructive/50 rounded p-3 mb-4'>
-              <Text className='text-destructive text-sm text-center'>{error}</Text>
+              <Text className='text-destructive text-sm text-center'>
+                {error}
+              </Text>
             </View>
           )}
 
@@ -96,7 +97,7 @@ export default function LoginScreen() {
               <Button
                 variant='link'
                 className='p-0 self-end mt-1'
-                onPress={() => router.push('/forgot-password')}
+                onPress={() => router.push('/(auth)/forgot-password')}
               >
                 <Text className='text-xs text-muted-foreground'>
                   {t('auth.forgotPassword')}
@@ -121,8 +122,14 @@ export default function LoginScreen() {
               <Text className='text-muted-foreground text-sm'>
                 {t('auth.noAccount')}
               </Text>
-              <Button variant='link' className='p-0' onPress={() => router.push('/register')}>
-                <Text className='text-sm font-medium'>{t('auth.registerButton')}</Text>
+              <Button
+                variant='link'
+                className='p-0'
+                onPress={() => router.push('/(auth)/register')}
+              >
+                <Text className='text-sm font-medium'>
+                  {t('auth.registerButton')}
+                </Text>
               </Button>
             </View>
 

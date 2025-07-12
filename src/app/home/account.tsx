@@ -40,7 +40,7 @@ export default function AccountTab() {
             <Button 
               variant='outline'
               className='w-full h-12'
-              onPress={() => router.push('/register')}
+              onPress={() => router.push('/(auth)/register')}
             >
               <Text>Create Account</Text>
             </Button>

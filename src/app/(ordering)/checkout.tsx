@@ -83,7 +83,7 @@ export default function CheckoutScreen() {
       setTimeout(() => {
         // Clear cart and navigate to confirmation
         clearCart();
-        router.replace('/order-confirmation');
+        router.replace('/(ordering)/order-success');
         setIsProcessing(false);
       }, 2000);
     } catch (error) {
@@ -380,7 +380,7 @@ export default function CheckoutScreen() {
           <Text className='text-muted-foreground text-center mb-6'>
             Add some items to your cart before checking out
           </Text>
-          <Button onPress={() => router.push('/homepage')} className='w-full h-12'>
+          <Button onPress={() => router.push('/home')} className='w-full h-12'>
             <Text className='font-medium'>Continue Shopping</Text>
           </Button>
         </View>

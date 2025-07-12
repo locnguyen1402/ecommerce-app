@@ -116,7 +116,7 @@ export default function OrdersTab() {
           </Text>
           <Button 
             variant='outline'
-            onPress={() => router.push('/homepage')}
+            onPress={() => router.push('/home')}
             className='w-full h-12'
           >
             <Text className='font-medium'>Start Shopping</Text>

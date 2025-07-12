@@ -24,7 +24,7 @@ export default function TabsLayout() {
       }}
     >
       <Tabs.Screen
-        name="home"
+        name='index'
         options={{
           title: 'Home',
           tabBarIcon: ({ color }) => (
@@ -33,7 +33,7 @@ export default function TabsLayout() {
         }}
       />
       <Tabs.Screen
-        name="orders"
+        name='orders'
         options={{
           title: 'Orders',
           tabBarIcon: ({ color }) => (
@@ -42,7 +42,7 @@ export default function TabsLayout() {
         }}
       />
       <Tabs.Screen
-        name="search"
+        name='search'
         options={{
           title: 'Search',
           tabBarIcon: ({ color }) => (
@@ -51,7 +51,7 @@ export default function TabsLayout() {
         }}
       />
       <Tabs.Screen
-        name="notifications"
+        name='notifications'
         options={{
           title: 'Notifications',
           tabBarIcon: ({ color }) => (
@@ -60,7 +60,7 @@ export default function TabsLayout() {
         }}
       />
       <Tabs.Screen
-        name="account"
+        name='account'
         options={{
           title: 'Account',
           tabBarIcon: ({ color }) => (

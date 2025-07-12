@@ -9,6 +9,8 @@ export const STORAGE_KEYS = {
 // App configuration
 export const APP_CONFIG = {
   REQUIRE_LOGIN: process.env.EXPO_PUBLIC_REQUIRE_LOGIN === 'true' || false,
+  LOGIN_SUCCESS_REDIRECT_URL:
+    process.env.EXPO_PUBLIC_LOGIN_SUCCESS_REDIRECT_URL || '/home',
 };
 
 export const NAV_THEME = {

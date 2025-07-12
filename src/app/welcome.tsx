@@ -42,7 +42,7 @@ export default function WelcomeScreen() {
 
         <Button
           variant='outline'
-          onPress={() => router.push('/register')}
+          onPress={() => router.push('/(auth)/register')}
           className='w-full h-12'
         >
           <Text className='font-medium'>{t('welcome.registerButton')}</Text>
