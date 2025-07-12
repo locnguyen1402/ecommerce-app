@@ -1,5 +1,6 @@
 import { config } from './config';
 import { delay } from '../utils/delay';
+import { apiClient } from './client';
 import type { ProductListItem } from './types';
 
 // Search suggestion response type
@@ -124,36 +125,24 @@ async function mockSearchProducts(request: SearchProductsRequest): Promise<Searc
 
 // Real API search products implementation
 async function realSearchProducts(request: SearchProductsRequest): Promise<SearchProductsResponse> {
-  const searchParams = new URLSearchParams({
+  const params: Record<string, string> = {
     q: request.q,
     page: String(request.page || 1),
     limit: String(request.limit || 20),
-  });
+  };
 
   if (request.filters?.categories?.length) {
-    searchParams.append('categories', request.filters.categories.join(','));
+    params.categories = request.filters.categories.join(',');
   }
   if (request.filters?.priceRange) {
-    searchParams.append('minPrice', String(request.filters.priceRange[0]));
-    searchParams.append('maxPrice', String(request.filters.priceRange[1]));
+    params.minPrice = String(request.filters.priceRange[0]);
+    params.maxPrice = String(request.filters.priceRange[1]);
   }
   if (request.filters?.minRating) {
-    searchParams.append('minRating', String(request.filters.minRating));
+    params.minRating = String(request.filters.minRating);
   }
 
-  const response = await fetch(`${config.apiUrl}/products/search?${searchParams}`, {
-    method: 'GET',
-    headers: {
-      'Content-Type': 'application/json',
-      // Add auth headers if needed
-    },
-  });
-
-  if (!response.ok) {
-    throw new Error(`Search products failed: ${response.status}`);
-  }
-
-  return response.json();
+  return apiClient.get('/products/search', { params });
 }
 
 // Mock suggestions implementation
@@ -172,19 +161,9 @@ async function mockGetSearchSuggestions(query: string): Promise<SearchSuggestion
 
 // Real API implementation
 async function realGetSearchSuggestions(query: string): Promise<SearchSuggestionsResponse> {
-  const response = await fetch(`${config.apiUrl}/search/suggestions?q=${encodeURIComponent(query)}`, {
-    method: 'GET',
-    headers: {
-      'Content-Type': 'application/json',
-      // Add auth headers if needed
-    },
+  return apiClient.get('/search/suggestions', {
+    params: { q: query }
   });
-
-  if (!response.ok) {
-    throw new Error(`Search suggestions failed: ${response.status}`);
-  }
-
-  return response.json();
 }
 
 // Exported service functions

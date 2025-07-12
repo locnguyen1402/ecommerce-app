@@ -4,6 +4,8 @@ import { Button } from '~/components/ui/button';
 import { Text } from '~/components/ui/text';
 import { useLanguage } from '~/lib/hooks/useLanguage';
 import { useCartStore, type CartItem } from '~/lib/stores/cart';
+import { delay } from '~/lib/utils/delay';
+import { ENV } from '~/lib/config/environment';
 
 interface AddToCartButtonProps {
   product: Omit<CartItem, 'quantity'>;
@@ -35,7 +37,7 @@ export const AddToCartButton: React.FC<AddToCartButtonProps> = ({
       addItem(product, quantity);
       
       // Add a small delay for better UX
-      await new Promise(resolve => setTimeout(resolve, 300));
+      await delay(ENV.MOCK_DELAY);
     } catch (error) {
       console.error('Error adding to cart:', error);
     } finally {

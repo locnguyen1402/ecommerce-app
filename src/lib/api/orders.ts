@@ -1,14 +1,16 @@
-import { API_CONFIG } from '../config';
+import { ENV } from '../config/environment';
 import { MOCK_ORDERS, type Order } from '../mock_data/orders';
+import { delay } from '../utils/delay';
 import { apiClient } from './client';
 
 export const ordersService = {
   // Get user orders
   getUserOrders: async (userId: string): Promise<Order[]> => {
-    if (API_CONFIG.API_MODE === 'mock') {
+    if (ENV.API_MODE === 'mock') {
+      await delay(ENV.MOCK_DELAY);
       // Return mock orders for the demo user
       const userOrders = MOCK_ORDERS.filter(order => order.userId === userId);
-      return Promise.resolve(userOrders);
+      return userOrders;
     }
     
     const response = await apiClient.get<{ orders: Order[] }>(`/users/${userId}/orders`);
@@ -17,12 +19,13 @@ export const ordersService = {
 
   // Get single order by ID
   getOrder: async (orderId: string): Promise<Order> => {
-    if (API_CONFIG.API_MODE === 'mock') {
+    if (ENV.API_MODE === 'mock') {
+      await delay(ENV.MOCK_DELAY);
       const order = MOCK_ORDERS.find(order => order.id === orderId);
       if (!order) {
         throw new Error('Order not found');
       }
-      return Promise.resolve(order);
+      return order;
     }
     
     const response = await apiClient.get<Order>(`/orders/${orderId}`);
@@ -31,7 +34,8 @@ export const ordersService = {
 
   // Create new order
   createOrder: async (orderData: Omit<Order, 'id' | 'createdAt' | 'updatedAt'>): Promise<Order> => {
-    if (API_CONFIG.API_MODE === 'mock') {
+    if (ENV.API_MODE === 'mock') {
+      await delay(ENV.MOCK_DELAY);
       // Simulate order creation
       const newOrder: Order = {
         ...orderData,
@@ -39,7 +43,7 @@ export const ordersService = {
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
       };
-      return Promise.resolve(newOrder);
+      return newOrder;
     }
     
     const response = await apiClient.post<Order>('/orders', orderData);
@@ -48,7 +52,8 @@ export const ordersService = {
 
   // Update order status
   updateOrderStatus: async (orderId: string, status: Order['status']): Promise<Order> => {
-    if (API_CONFIG.API_MODE === 'mock') {
+    if (ENV.API_MODE === 'mock') {
+      await delay(ENV.MOCK_DELAY);
       const order = MOCK_ORDERS.find(order => order.id === orderId);
       if (!order) {
         throw new Error('Order not found');
@@ -58,7 +63,7 @@ export const ordersService = {
         status,
         updatedAt: new Date().toISOString(),
       };
-      return Promise.resolve(updatedOrder);
+      return updatedOrder;
     }
     
     const response = await apiClient.patch<Order>(`/orders/${orderId}`, { status });

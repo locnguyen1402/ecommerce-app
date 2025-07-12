@@ -73,7 +73,7 @@ import type { Props } from '../types';
 - **Languages**: Vietnamese (default) + English
 - **API Mode**: Mock (development) - toggle via EXPO_PUBLIC_API_MODE
 
-## Current Status - MAJOR MILESTONE COMPLETE! 🎉
+## Current Status - ENHANCED SEARCH COMPLETE! 🎉
 - [x] Complete E-commerce Flow ✅
 - [x] Authentication System ✅  
 - [x] Shopping Experience ✅
@@ -81,16 +81,41 @@ import type { Props } from '../types';
 - [x] Minimalist Design System ✅
 - [x] State Management ✅
 - [x] Product Variants Support ✅
+- [x] Enhanced Search System ✅
 
-**App is production-ready with full shopping flow:**
+**App is production-ready with full shopping flow + advanced search:**
 Homepage → Product Details → Cart → Checkout → Order Management
+Search Tab → Search Input + History/Suggestions → Results + Filters → Infinite Scroll
 
-## Next Feature - Enhanced Search System
-- **Phase 1:** Tab navigation + search input + basic results
-- **Phase 2:** Filter drawer + search history + suggestions  
-- **Phase 3:** Infinite scroll + analytics + performance optimization
-- **Phase 4:** Polish + advanced features
+## ✅ Enhanced Search System - COMPLETED
+- **Phase 1:** ✅ Tab navigation + search input + basic results
+- **Phase 2:** ✅ Filter drawer + search history + suggestions  
+- **Phase 3:** ✅ Infinite scroll + analytics + performance optimization
+- **Phase 4:** ✅ Polish + advanced features
 - **Reference:** @SEARCH_FEATURE_SPEC.md
+
+## 🔧 Critical API Pattern Fix - READY TO COMMIT
+**Status:** All missing config files created, API services fixed, ready to commit
+
+### Fixed Issues:
+- ✅ Created missing files: `src/lib/api/config.ts`, `src/lib/config/index.ts`, `src/lib/api/client.ts`, `src/lib/utils/delay.ts`
+- ✅ Added complete mock/real toggle to `carts.ts` service with mock data
+- ✅ Fixed `orders.ts` to use consistent ENV config and proper delay calls
+- ✅ Updated `search.ts` to use apiClient instead of raw fetch calls
+- ✅ Replaced setTimeout in AddToCartButton with consistent delay utility
+
+### All API Services Now Consistent:
+- ✅ `auth.ts` - Using ENV, proper mock/real toggle
+- ✅ `products.ts` - Using ENV, proper mock/real toggle  
+- ✅ `orders.ts` - Using ENV, proper mock/real toggle, added delays
+- ✅ `carts.ts` - Using ENV, complete mock implementation added
+- ✅ `search.ts` - Using config, apiClient instead of fetch
+
+### **NEXT STEP:** Commit all changes:
+```bash
+git add .
+git commit -m "fix: complete mock/real API pattern consistency across all services"
+```
 
 ## Common Tasks
 - `npm run start` - Start dev server
