@@ -3,6 +3,7 @@ import { Pressable, View } from 'react-native';
 import { Search, TrendingUp } from 'lucide-react-native';
 
 import { useSearchStore } from '~/lib/stores/search';
+import { useSearchSuggestions } from '~/lib/hooks/useApi';
 
 import { Text } from '~/components/ui/text';
 
@@ -10,24 +11,25 @@ interface SearchSuggestionsProps {
   onSuggestionSelect: (query: string) => void;
 }
 
-// Mock popular searches - in real app would come from API
-const POPULAR_SEARCHES = [
-  'smartphone',
-  'laptop',
-  'headphones',
-  'watch',
-  'camera',
-];
-
 export function SearchSuggestions({ onSuggestionSelect }: SearchSuggestionsProps) {
-  const { suggestions, isLoadingSuggestions, query } = useSearchStore();
+  const { query } = useSearchStore();
+  
+  // Use API hook for suggestions
+  const { 
+    data: suggestionsData, 
+    isLoading: isLoadingSuggestions 
+  } = useSearchSuggestions(query);
+
+  // Extract suggestions and popular searches from API response
+  const suggestions = suggestionsData?.suggestions || [];
+  const popularSearches = suggestionsData?.popular || [];
 
   // Show suggestions if we have query-based suggestions
   // Otherwise show popular searches
   const showSuggestions = query.length > 0 && suggestions.length > 0;
-  const showPopular = query.length === 0;
+  const showPopular = query.length === 0 && popularSearches.length > 0;
 
-  if (isLoadingSuggestions) {
+  if (isLoadingSuggestions && query.length >= 2) {
     return (
       <View className='px-4 py-3'>
         <Text className='text-sm text-muted-foreground'>Loading suggestions...</Text>
@@ -59,7 +61,7 @@ export function SearchSuggestions({ onSuggestionSelect }: SearchSuggestionsProps
         <View>
           <Text className='text-sm font-medium text-muted-foreground mb-3'>Popular searches</Text>
           <View className='space-y-1'>
-            {POPULAR_SEARCHES.map((popular, index) => (
+            {popularSearches.map((popular, index) => (
               <Pressable
                 key={`popular-${index}`}
                 className='flex-row items-center gap-3 py-2'

@@ -2,6 +2,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { cartsService } from '../api/carts';
 import { productsService } from '../api/products';
 import { ordersService } from '../api/orders';
+import { getSearchSuggestions } from '../api/search';
 import type {
   AddToCartRequest,
   PaginationParams,
@@ -28,6 +29,7 @@ export const QUERY_KEYS = {
   orders: ['orders'],
   order: (id: string) => ['orders', id],
   userOrders: (userId: string) => ['orders', 'user', userId],
+  searchSuggestions: (query: string) => ['search', 'suggestions', query],
 } as const;
 
 // Products Hooks
@@ -212,5 +214,16 @@ export const useUpdateOrderStatus = () => {
         queryKey: ['orders', 'user'],
       });
     },
+  });
+};
+
+// Search Hooks
+export const useSearchSuggestions = (query: string) => {
+  return useQuery({
+    queryKey: QUERY_KEYS.searchSuggestions(query),
+    queryFn: () => getSearchSuggestions(query),
+    enabled: query.length >= 2, // Only fetch when query has at least 2 characters
+    staleTime: 5 * 60 * 1000, // 5 minutes
+    gcTime: 10 * 60 * 1000, // 10 minutes garbage collection
   });
 };

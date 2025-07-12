@@ -13,8 +13,6 @@ interface SearchFilters {
 interface SearchState {
   // Current search
   query: string;
-  suggestions: string[];
-  isLoadingSuggestions: boolean;
   
   // Search history (persisted)
   history: string[];
@@ -37,8 +35,6 @@ interface SearchState {
   
   // Actions
   setQuery: (query: string) => void;
-  setSuggestions: (suggestions: string[]) => void;
-  setLoadingSuggestions: (loading: boolean) => void;
   addToHistory: (query: string) => void;
   clearHistory: () => void;
   removeFromHistory: (query: string) => void;
@@ -74,8 +70,6 @@ export const useSearchStore = create<SearchState>()(
     (set, get) => ({
       // Initial state
       query: '',
-      suggestions: [],
-      isLoadingSuggestions: false,
       history: [],
       results: INITIAL_RESULTS,
       currentFilters: INITIAL_FILTERS,
@@ -83,14 +77,6 @@ export const useSearchStore = create<SearchState>()(
       // Actions
       setQuery: (query: string) => {
         set({ query });
-      },
-
-      setSuggestions: (suggestions: string[]) => {
-        set({ suggestions });
-      },
-
-      setLoadingSuggestions: (loading: boolean) => {
-        set({ isLoadingSuggestions: loading });
       },
 
       addToHistory: (query: string) => {
@@ -168,7 +154,6 @@ export const useSearchStore = create<SearchState>()(
       clearSearch: () => {
         set({
           query: '',
-          suggestions: [],
           results: INITIAL_RESULTS,
           currentFilters: INITIAL_FILTERS,
         });

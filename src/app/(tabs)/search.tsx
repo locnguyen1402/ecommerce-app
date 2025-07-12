@@ -2,7 +2,6 @@ import React, { useRef, useEffect, useState, useMemo } from 'react';
 import { Keyboard, ScrollView, TextInput, View } from 'react-native';
 import { router } from 'expo-router';
 
-import { useLanguage } from '~/lib/hooks/useLanguage';
 import { useSearchStore } from '~/lib/stores/search';
 
 import { Input } from '~/components/ui/input';
@@ -10,34 +9,12 @@ import { Text } from '~/components/ui/text';
 import { SearchHistory } from '~/components/search/SearchHistory';
 import { SearchSuggestions } from '~/components/search/SearchSuggestions';
 
-// Mock suggestions function - in real app would call API
-const getMockSuggestions = (query: string): string[] => {
-  const allSuggestions = [
-    'smartphone', 'smart watch', 'smartwatch',
-    'laptop', 'laptop bag', 'laptop stand',
-    'headphones', 'wireless headphones', 'gaming headphones',
-    'camera', 'camera lens', 'camera bag',
-    'tablet', 'tablet case', 'tablet stand',
-    'keyboard', 'wireless keyboard', 'gaming keyboard',
-    'mouse', 'wireless mouse', 'gaming mouse',
-    'monitor', 'gaming monitor', '4k monitor',
-    'speaker', 'bluetooth speaker', 'smart speaker',
-    'phone case', 'wireless charger', 'power bank',
-  ];
-
-  return allSuggestions
-    .filter(item => item.toLowerCase().includes(query.toLowerCase()))
-    .slice(0, 6);
-};
 
 export default function SearchTab() {
-  const { t } = useLanguage();
   const inputRef = useRef<TextInput>(null);
   const { 
     query, 
     setQuery, 
-    setSuggestions, 
-    setLoadingSuggestions, 
     addToHistory,
     clearSearch 
   } = useSearchStore();
@@ -58,26 +35,17 @@ export default function SearchTab() {
     clearSearch();
   }, [clearSearch]);
 
-  // Debounced suggestions
+  // Update global query when local query changes (debounced effect handled by API hook)
   useEffect(() => {
-    if (localQuery.length < 2) {
-      setSuggestions([]);
-      return;
-    }
-
-    setLoadingSuggestions(true);
     const timeoutId = setTimeout(() => {
-      const suggestions = getMockSuggestions(localQuery);
-      setSuggestions(suggestions);
-      setLoadingSuggestions(false);
+      setQuery(localQuery);
     }, 300);
 
     return () => clearTimeout(timeoutId);
-  }, [localQuery, setSuggestions, setLoadingSuggestions]);
+  }, [localQuery, setQuery]);
 
   const handleQueryChange = (text: string) => {
     setLocalQuery(text);
-    setQuery(text);
     setShowSuggestions(text.length > 0);
   };
 
