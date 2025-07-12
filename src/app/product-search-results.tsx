@@ -1,28 +1,35 @@
-import React, { useState } from 'react';
-import { FlatList, Image, Pressable, View } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { Pressable, View } from 'react-native';
 import { router, useLocalSearchParams } from 'expo-router';
 import { ArrowLeft, Filter } from 'lucide-react-native';
 
 import type { ProductListItem } from '~/lib/api/types';
 import { useSearchProducts } from '~/lib/hooks/useApi';
 import { useLanguage } from '~/lib/hooks/useLanguage';
+import { useSearchStore } from '~/lib/stores/search';
 
-import { AddToCartButton } from '~/components/AddToCartButton';
-import { Button } from '~/components/ui/button';
 import { Input } from '~/components/ui/input';
 import { Text } from '~/components/ui/text';
 import { FilterDrawer } from '~/components/search/FilterDrawer';
+import { ProductGrid } from '~/components/search/ProductGrid';
 
 export default function ProductSearchResultsPage() {
   const { t } = useLanguage();
   const { q } = useLocalSearchParams<{ q: string }>();
   const [query, setQuery] = useState(q || '');
   const [showFilters, setShowFilters] = useState(false);
-  const [filters, setFilters] = useState({
-    categories: [],
-    priceRange: [0, 1000] as [number, number],
-    minRating: 0,
-  });
+  const [currentPage, setCurrentPage] = useState(1);
+
+  const {
+    results,
+    currentFilters,
+    setResults,
+    appendResults,
+    setLoading,
+    setLoadingMore,
+    setFilters,
+    addToHistory,
+  } = useSearchStore();
 
   const {
     data: searchResults,
@@ -32,91 +39,72 @@ export default function ProductSearchResultsPage() {
     limit: 20 
   });
 
+  // Update search store when API results change
+  useEffect(() => {
+    if (searchResults?.products) {
+      const pagination = {
+        currentPage: 1,
+        totalPages: Math.ceil((searchResults.total || 20) / 20),
+        hasMore: (searchResults.products.length || 0) >= 20,
+        total: searchResults.total || searchResults.products.length,
+      };
+      setResults(searchResults.products, pagination);
+    }
+    setLoading(searchLoading);
+  }, [searchResults, searchLoading, setResults, setLoading]);
+
+  // Add to history when query changes
+  useEffect(() => {
+    if (q && q.trim()) {
+      addToHistory(q.trim());
+    }
+  }, [q, addToHistory]);
+
   const handleSearch = () => {
     if (query.trim() && query.trim() !== q) {
       router.setParams({ q: query.trim() });
     }
   };
 
-  const handleProductPress = (productId: string) => {
-    router.push(`/product/${productId}`);
-  };
-
-  const handleApplyFilters = (newFilters: typeof filters) => {
+  const handleApplyFilters = (newFilters: typeof currentFilters) => {
     setFilters(newFilters);
-    // TODO: Integrate with API search filters
+    setCurrentPage(1);
+    // TODO: Integrate with API search filters - would trigger new search with filters
   };
 
   const handleResetFilters = () => {
-    setFilters({
+    const resetFilters = {
       categories: [],
-      priceRange: [0, 1000],
+      priceRange: [0, 1000] as [number, number],
       minRating: 0,
-    });
+    };
+    setFilters(resetFilters);
+    setCurrentPage(1);
+  };
+
+  const handleLoadMore = () => {
+    if (!results.pagination.hasMore || results.isLoadingMore) return;
+    
+    setLoadingMore(true);
+    const nextPage = currentPage + 1;
+    setCurrentPage(nextPage);
+    
+    // TODO: In real app, make API call for next page
+    // For now, simulate loading more
+    setTimeout(() => {
+      setLoadingMore(false);
+    }, 1000);
   };
 
   const getActiveFiltersCount = () => {
     let count = 0;
-    if (filters.categories.length > 0) count++;
-    if (filters.priceRange[0] > 0 || filters.priceRange[1] < 1000) count++;
-    if (filters.minRating > 0) count++;
+    if (currentFilters.categories.length > 0) count++;
+    if (currentFilters.priceRange[0] > 0 || currentFilters.priceRange[1] < 1000) count++;
+    if (currentFilters.minRating > 0) count++;
     return count;
   };
 
-  const renderProductCard = ({ item }: { item: ProductListItem }) => (
-    <Pressable 
-      className='flex-1 mx-1 mb-4' 
-      onPress={() => handleProductPress(item.id)}
-    >
-      <View className='border border-border rounded bg-background'>
-        {item.thumbnail ? (
-          <Image
-            source={{ uri: item.thumbnail }}
-            className='h-36 w-full rounded-t'
-            resizeMode='cover'
-          />
-        ) : (
-          <View className='h-36 bg-muted rounded-t items-center justify-center'>
-            <Text className='text-muted-foreground text-xs'>No Image</Text>
-          </View>
-        )}
-        
-        <View className='p-3'>
-          <Text className='font-medium text-sm mb-2' numberOfLines={2}>
-            {item.title}
-          </Text>
-          
-          <Text className='text-xs text-muted-foreground mb-2 capitalize'>
-            {item.category.replace(/[-_]/g, ' ')}
-          </Text>
-          
-          <View className='flex-row items-center justify-between mb-3'>
-            <Text className='font-semibold text-base'>
-              ${item.price}
-            </Text>
-            <Text className='text-xs text-muted-foreground'>
-              ★ {item.rating.toFixed(1)}
-            </Text>
-          </View>
-          
-          <AddToCartButton
-            product={{
-              id: item.id,
-              title: item.title,
-              price: item.price,
-              thumbnail: item.thumbnail,
-              category: item.category,
-              discountPercentage: item.discountPercentage || 0,
-            }}
-            size='sm'
-            className='w-full'
-          />
-        </View>
-      </View>
-    </Pressable>
-  );
-
-  const productsCount = searchResults?.products?.length || 0;
+  const productsCount = results.products.length;
 
   return (
     <View className='flex-1 bg-background'>
@@ -156,46 +144,27 @@ export default function ProductSearchResultsPage() {
         {/* Results Count */}
         {query && (
           <Text className='text-sm text-muted-foreground'>
-            {searchLoading ? 'Searching...' : `${productsCount} results for "${query}"`}
+            {results.isLoading ? 'Searching...' : `${productsCount} results for "${query}"`}
           </Text>
         )}
       </View>
 
       {/* Search Results */}
       <View className='flex-1 px-4'>
-        {searchLoading ? (
-          <View className='flex-1 justify-center items-center'>
-            <Text className='text-muted-foreground'>Searching...</Text>
-          </View>
-        ) : productsCount === 0 ? (
-          <View className='flex-1 justify-center items-center'>
-            <View className='w-16 h-16 bg-muted rounded-full items-center justify-center mb-4'>
-              <Text className='text-2xl'>📭</Text>
-            </View>
-            <Text className='text-lg font-medium mb-2'>No results found</Text>
-            <Text className='text-muted-foreground text-center'>
-              Try adjusting your search criteria or browse our categories
-            </Text>
-          </View>
-        ) : (
-          <FlatList
-            data={searchResults?.products || []}
-            renderItem={renderProductCard}
-            keyExtractor={(item) => item.id}
-            numColumns={2}
-            columnWrapperStyle={{ justifyContent: 'space-between' }}
-            showsVerticalScrollIndicator={false}
-            ItemSeparatorComponent={() => <View className='h-4' />}
-            contentContainerStyle={{ paddingTop: 16, paddingBottom: 20 }}
-          />
-        )}
+        <ProductGrid
+          products={results.products}
+          isLoading={results.isLoading}
+          isLoadingMore={results.isLoadingMore}
+          hasMore={results.pagination.hasMore}
+          onLoadMore={handleLoadMore}
+        />
       </View>
 
       {/* Filter Drawer */}
       <FilterDrawer
         visible={showFilters}
         onClose={() => setShowFilters(false)}
-        filters={filters}
+        filters={currentFilters}
         onApplyFilters={handleApplyFilters}
         onResetFilters={handleResetFilters}
       />
