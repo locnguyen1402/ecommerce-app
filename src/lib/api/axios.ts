@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { ENV } from '../config/environment';
+import { ENV } from './config';
 
 const API_BASE_URL = ENV.API_BASE_URL;
 

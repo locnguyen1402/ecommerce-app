@@ -1,4 +1,4 @@
-import { ENV } from '../config/environment';
+import { ENV } from './config';
 import { MOCK_ORDERS, type Order } from '../mock_data/orders';
 import { delay } from '../utils/delay';
 import { apiClient } from './client';

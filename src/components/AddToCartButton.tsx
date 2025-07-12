@@ -5,7 +5,7 @@ import { Text } from '~/components/ui/text';
 import { useLanguage } from '~/lib/hooks/useLanguage';
 import { useCartStore, type CartItem } from '~/lib/stores/cart';
 import { delay } from '~/lib/utils/delay';
-import { ENV } from '~/lib/config/environment';
+import { ENV } from '~/lib/api/config';
 
 interface AddToCartButtonProps {
   product: Omit<CartItem, 'quantity'>;

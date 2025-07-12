@@ -1,4 +1,4 @@
-import { ENV } from '../config/environment';
+import { ENV } from './config';
 import { delay } from '../utils/delay';
 import apiClient from './axios';
 import type {

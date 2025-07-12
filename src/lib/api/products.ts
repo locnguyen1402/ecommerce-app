@@ -1,5 +1,5 @@
 import apiClient from './axios';
-import { ENV } from '../config/environment';
+import { ENV } from './config';
 import { 
   getMockCategoriesResponse,
   getMockCategoryListResponse,
