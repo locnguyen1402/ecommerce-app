@@ -11,11 +11,18 @@ import { AddToCartButton } from '~/components/AddToCartButton';
 import { Button } from '~/components/ui/button';
 import { Input } from '~/components/ui/input';
 import { Text } from '~/components/ui/text';
+import { FilterDrawer } from '~/components/search/FilterDrawer';
 
 export default function ProductSearchResultsPage() {
   const { t } = useLanguage();
   const { q } = useLocalSearchParams<{ q: string }>();
   const [query, setQuery] = useState(q || '');
+  const [showFilters, setShowFilters] = useState(false);
+  const [filters, setFilters] = useState({
+    categories: [],
+    priceRange: [0, 1000] as [number, number],
+    minRating: 0,
+  });
 
   const {
     data: searchResults,
@@ -33,6 +40,27 @@ export default function ProductSearchResultsPage() {
 
   const handleProductPress = (productId: string) => {
     router.push(`/product/${productId}`);
+  };
+
+  const handleApplyFilters = (newFilters: typeof filters) => {
+    setFilters(newFilters);
+    // TODO: Integrate with API search filters
+  };
+
+  const handleResetFilters = () => {
+    setFilters({
+      categories: [],
+      priceRange: [0, 1000],
+      minRating: 0,
+    });
+  };
+
+  const getActiveFiltersCount = () => {
+    let count = 0;
+    if (filters.categories.length > 0) count++;
+    if (filters.priceRange[0] > 0 || filters.priceRange[1] < 1000) count++;
+    if (filters.minRating > 0) count++;
+    return count;
   };
 
   const renderProductCard = ({ item }: { item: ProductListItem }) => (
@@ -110,8 +138,18 @@ export default function ProductSearchResultsPage() {
             />
           </View>
           
-          <Pressable className='p-2'>
+          <Pressable 
+            className='p-2 relative' 
+            onPress={() => setShowFilters(true)}
+          >
             <Filter size={20} className='text-muted-foreground' />
+            {getActiveFiltersCount() > 0 && (
+              <View className='absolute -top-1 -right-1 w-5 h-5 bg-primary rounded-full items-center justify-center'>
+                <Text className='text-xs text-primary-foreground font-medium'>
+                  {getActiveFiltersCount()}
+                </Text>
+              </View>
+            )}
           </Pressable>
         </View>
 
@@ -152,6 +190,15 @@ export default function ProductSearchResultsPage() {
           />
         )}
       </View>
+
+      {/* Filter Drawer */}
+      <FilterDrawer
+        visible={showFilters}
+        onClose={() => setShowFilters(false)}
+        filters={filters}
+        onApplyFilters={handleApplyFilters}
+        onResetFilters={handleResetFilters}
+      />
     </View>
   );
 }
