@@ -97,7 +97,7 @@ async function mockSearchProducts(request: SearchProductsRequest): Promise<Searc
   await delay(config.mockDelay);
   
   // Import products data
-  const { products: allProducts } = await import('../mock_data/products');
+  const { MOCK_PRODUCT_LIST: allProducts } = await import('../mock_data/products');
   
   // Apply filters
   const filteredProducts = filterProducts(allProducts, request);

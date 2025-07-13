@@ -96,6 +96,8 @@ export interface ProductListItem {
 export interface ProductAttribute {
   id: string;
   name: string;
+  value?: string;
+  displayName?: string;
 }
 
 export interface ProductVariant {
@@ -106,6 +108,7 @@ export interface ProductVariant {
   stock: number;
   attributes: ProductAttribute[];
   images: string[];
+  displayName?: string;
   weight?: number;
   dimensions?: {
     width: number;

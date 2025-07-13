@@ -10,11 +10,23 @@ class ApiClient {
     this.baseURL = baseURL;
   }
 
+  private buildUrl(endpoint: string, params?: Record<string, string>): string {
+    const url = this.baseURL ? `${this.baseURL}${endpoint}` : endpoint;
+    
+    if (!params || Object.keys(params).length === 0) {
+      return url;
+    }
+    
+    const searchParams = new URLSearchParams(params);
+    return `${url}?${searchParams.toString()}`;
+  }
+
   private async request<T>(
     endpoint: string,
-    options: RequestInit = {}
+    options: RequestInit & { params?: Record<string, string> } = {}
   ): Promise<T> {
-    const url = this.baseURL ? `${this.baseURL}${endpoint}` : endpoint;
+    const { params, ...fetchOptions } = options;
+    const url = this.buildUrl(endpoint, params);
     
     const defaultHeaders = {
       'Content-Type': 'application/json',
@@ -22,10 +34,10 @@ class ApiClient {
     };
 
     const response = await fetch(url, {
-      ...options,
+      ...fetchOptions,
       headers: {
         ...defaultHeaders,
-        ...options.headers,
+        ...fetchOptions.headers,
       },
     });
 
@@ -36,7 +48,7 @@ class ApiClient {
     return response.json();
   }
 
-  async get<T>(endpoint: string, options?: RequestInit): Promise<T> {
+  async get<T>(endpoint: string, options?: RequestInit & { params?: Record<string, string> }): Promise<T> {
     return this.request<T>(endpoint, { ...options, method: 'GET' });
   }
 
@@ -58,6 +70,14 @@ class ApiClient {
 
   async delete<T>(endpoint: string, options?: RequestInit): Promise<T> {
     return this.request<T>(endpoint, { ...options, method: 'DELETE' });
+  }
+
+  async patch<T>(endpoint: string, data?: any, options?: RequestInit): Promise<T> {
+    return this.request<T>(endpoint, {
+      ...options,
+      method: 'PATCH',
+      body: data ? JSON.stringify(data) : undefined,
+    });
   }
 }
 

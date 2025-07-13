@@ -1,11 +1,12 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { cartsService } from '../api/carts';
+import * as cartsService from '../api/carts';
 import { productsService } from '../api/products';
 import { ordersService } from '../api/orders';
 import { getSearchSuggestions, searchProducts } from '../api/search';
 import type { SearchProductsRequest } from '../api/search';
 import type {
   AddToCartRequest,
+  Cart,
   PaginationParams,
   ProductSearchParams,
   UpdateCartRequest,
@@ -25,8 +26,8 @@ export const QUERY_KEYS = {
     params,
   ],
   carts: ['carts'],
-  cart: (id: number) => ['carts', id],
-  userCarts: (userId: number) => ['carts', 'user', userId],
+  cart: (id: string) => ['carts', id],
+  userCarts: (userId: string) => ['carts', 'user', userId],
   orders: ['orders'],
   order: (id: string) => ['orders', id],
   userOrders: (userId: string) => ['orders', 'user', userId],
@@ -90,7 +91,7 @@ export const useFeaturedProducts = () => {
 };
 
 // Carts Hooks
-export const useUserCarts = (userId: number) => {
+export const useUserCarts = (userId: string) => {
   return useQuery({
     queryKey: QUERY_KEYS.userCarts(userId),
     queryFn: () => cartsService.getUserCarts(userId),
@@ -99,7 +100,7 @@ export const useUserCarts = (userId: number) => {
   });
 };
 
-export const useCart = (id: number) => {
+export const useCart = (id: string) => {
   return useQuery({
     queryKey: QUERY_KEYS.cart(id),
     queryFn: () => cartsService.getCart(id),
@@ -112,7 +113,7 @@ export const useCart = (id: number) => {
 export const useAddToCart = () => {
   const queryClient = useQueryClient();
 
-  return useMutation({
+  return useMutation<Cart, Error, AddToCartRequest>({
     mutationFn: (cartData: AddToCartRequest) => cartsService.addCart(cartData),
     onSuccess: (data, variables) => {
       // Invalidate and refetch user carts
@@ -133,7 +134,7 @@ export const useUpdateCart = () => {
       id,
       cartData,
     }: {
-      id: number;
+      id: string;
       cartData: UpdateCartRequest;
     }) => cartsService.updateCart(id, cartData),
     onSuccess: (data, variables) => {
@@ -151,7 +152,7 @@ export const useDeleteCart = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (id: number) => cartsService.deleteCart(id),
+    mutationFn: (id: string) => cartsService.deleteCart(id),
     onSuccess: (_, variables) => {
       // Remove the cart from cache
       queryClient.removeQueries({

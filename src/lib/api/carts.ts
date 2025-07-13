@@ -1,157 +1,219 @@
-import { ENV } from './config';
+import { config } from './config';
 import { delay } from '../utils/delay';
-import apiClient from './axios';
+import { apiClient } from './client';
+import { generateMockUUID } from '../utils/uuid';
 import type {
   AddToCartRequest,
   Cart,
+  CartItem,
   CartsResponse,
   PaginationParams,
   UpdateCartRequest,
 } from './types';
 
-// Mock carts data
-const mockCarts: Cart[] = [
+// Mock cart data
+const MOCK_CART_ITEMS: CartItem[] = [
   {
-    id: 1,
-    userId: 1,
-    date: '2024-01-01',
-    products: [
-      {
-        id: 'smartphone-pro-max',
-        quantity: 2,
-      },
-      {
-        id: 'wireless-headphones-premium',
-        quantity: 1,
-      },
-    ],
+    id: generateMockUUID('cart-item-1'),
+    productId: generateMockUUID('iphone-15-pro-max'),
+    title: 'iPhone 15 Pro Max',
+    price: 1199,
+    quantity: 1,
+    total: 1199,
+    discountPercentage: 5,
+    discountedTotal: 1139.05,
+    thumbnail: 'https://images.unsplash.com/photo-1592750475338-74b7b21085ab?w=300',
   },
   {
-    id: 2,
-    userId: 2,
-    date: '2024-01-02',
-    products: [
-      {
-        id: 'laptop-gaming-beast',
-        quantity: 1,
-      },
-    ],
+    id: generateMockUUID('cart-item-2'),
+    productId: generateMockUUID('ao-nam-cotton-premium'),
+    title: 'Áo Nam Cotton Premium',
+    price: 45,
+    quantity: 2,
+    total: 90,
+    discountPercentage: 15,
+    discountedTotal: 76.5,
+    thumbnail: 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=300',
   },
 ];
 
+const MOCK_CART: Cart = {
+  id: generateMockUUID('cart-1'),
+  products: MOCK_CART_ITEMS,
+  total: 1289,
+  discountedTotal: 1215.55,
+  userId: generateMockUUID('user-1'),
+  totalProducts: 2,
+  totalQuantity: 3,
+};
+
 // Mock implementations
-const mockCartsService = {
-  getCarts: async (params: PaginationParams = {}): Promise<CartsResponse> => {
-    await delay(ENV.MOCK_DELAY);
-    const { limit = 20, skip = 0 } = params;
-    const paginatedCarts = mockCarts.slice(skip, skip + limit);
-    
-    return {
-      carts: paginatedCarts,
-      total: mockCarts.length,
-      skip,
-      limit,
-    };
-  },
+async function mockGetCarts(params: PaginationParams = {}): Promise<CartsResponse> {
+  await delay(config.mockDelay);
+  const { limit = 20, skip = 0 } = params;
+  
+  return {
+    carts: [MOCK_CART],
+    total: 1,
+    skip,
+    limit,
+  };
+}
 
-  getCart: async (id: number): Promise<Cart> => {
-    await delay(ENV.MOCK_DELAY);
-    const cart = mockCarts.find(c => c.id === id);
-    if (!cart) {
-      throw new Error(`Cart with ID ${id} not found`);
-    }
-    return cart;
-  },
+async function mockGetCart(id: string): Promise<Cart> {
+  await delay(config.mockDelay);
+  
+  if (id !== MOCK_CART.id) {
+    throw new Error(`Cart with ID ${id} not found`);
+  }
+  
+  return MOCK_CART;
+}
 
-  getUserCarts: async (userId: number): Promise<CartsResponse> => {
-    await delay(ENV.MOCK_DELAY);
-    const userCarts = mockCarts.filter(c => c.userId === userId);
-    
-    return {
-      carts: userCarts,
-      total: userCarts.length,
-      skip: 0,
-      limit: userCarts.length,
-    };
-  },
+async function mockGetUserCarts(userId: string): Promise<CartsResponse> {
+  await delay(config.mockDelay);
+  
+  return {
+    carts: [MOCK_CART],
+    total: 1,
+    skip: 0,
+    limit: 1,
+  };
+}
 
-  addCart: async (cartData: AddToCartRequest): Promise<Cart> => {
-    await delay(ENV.MOCK_DELAY);
-    const newCart: Cart = {
-      id: Math.max(...mockCarts.map(c => c.id)) + 1,
-      userId: cartData.userId,
-      date: new Date().toISOString().split('T')[0],
-      products: cartData.products,
-    };
-    mockCarts.push(newCart);
-    return newCart;
-  },
+async function mockAddCart(cartData: AddToCartRequest): Promise<Cart> {
+  await delay(config.mockDelay);
+  
+  const newCart: Cart = {
+    id: generateMockUUID('new-cart'),
+    products: cartData.products.map(p => ({
+      id: generateMockUUID(`cart-item-${p.id}`),
+      productId: p.id,
+      title: `Product ${p.id}`,
+      price: 100,
+      quantity: p.quantity,
+      total: 100 * p.quantity,
+      discountPercentage: 0,
+      discountedTotal: 100 * p.quantity,
+      thumbnail: 'https://images.unsplash.com/photo-1592750475338-74b7b21085ab?w=300',
+    })),
+    total: cartData.products.reduce((sum, p) => sum + (100 * p.quantity), 0),
+    discountedTotal: cartData.products.reduce((sum, p) => sum + (100 * p.quantity), 0),
+    userId: cartData.userId,
+    totalProducts: cartData.products.length,
+    totalQuantity: cartData.products.reduce((sum, p) => sum + p.quantity, 0),
+  };
+  
+  return newCart;
+}
 
-  updateCart: async (id: number, cartData: UpdateCartRequest): Promise<Cart> => {
-    await delay(ENV.MOCK_DELAY);
-    const cartIndex = mockCarts.findIndex(c => c.id === id);
-    if (cartIndex === -1) {
-      throw new Error(`Cart with ID ${id} not found`);
-    }
-    
-    const updatedCart = {
-      ...mockCarts[cartIndex],
-      ...cartData,
-    };
-    mockCarts[cartIndex] = updatedCart;
-    return updatedCart;
-  },
+async function mockUpdateCart(id: string, cartData: UpdateCartRequest): Promise<Cart> {
+  await delay(config.mockDelay);
+  
+  const updatedCart: Cart = {
+    ...MOCK_CART,
+    products: cartData.products.map(p => ({
+      id: generateMockUUID(`cart-item-${p.id}`),
+      productId: p.id,
+      title: `Product ${p.id}`,
+      price: 100,
+      quantity: p.quantity,
+      total: 100 * p.quantity,
+      discountPercentage: 0,
+      discountedTotal: 100 * p.quantity,
+      thumbnail: 'https://images.unsplash.com/photo-1592750475338-74b7b21085ab?w=300',
+    })),
+    total: cartData.products.reduce((sum, p) => sum + (100 * p.quantity), 0),
+    discountedTotal: cartData.products.reduce((sum, p) => sum + (100 * p.quantity), 0),
+    totalProducts: cartData.products.length,
+    totalQuantity: cartData.products.reduce((sum, p) => sum + p.quantity, 0),
+  };
+  
+  return updatedCart;
+}
 
-  deleteCart: async (id: number): Promise<{ isDeleted: boolean; deletedOn: string }> => {
-    await delay(ENV.MOCK_DELAY);
-    const cartIndex = mockCarts.findIndex(c => c.id === id);
-    if (cartIndex === -1) {
-      throw new Error(`Cart with ID ${id} not found`);
-    }
-    
-    mockCarts.splice(cartIndex, 1);
-    return {
-      isDeleted: true,
-      deletedOn: new Date().toISOString(),
-    };
-  },
-};
+async function mockDeleteCart(id: string): Promise<{ isDeleted: boolean; deletedOn: string }> {
+  await delay(config.mockDelay);
+  
+  return {
+    isDeleted: true,
+    deletedOn: new Date().toISOString(),
+  };
+}
 
-// Real API implementations  
-const realCartsService = {
-  getCarts: async (params: PaginationParams = {}): Promise<CartsResponse> => {
-    const { limit = 20, skip = 0 } = params;
-    const response = await apiClient.get<CartsResponse>('/carts', {
-      params: { limit, skip },
-    });
-    return response.data;
-  },
+// Real API implementations
+async function realGetCarts(params: PaginationParams = {}): Promise<CartsResponse> {
+  const { limit = 20, skip = 0 } = params;
+  return apiClient.get<CartsResponse>('/carts', {
+    params: { limit: String(limit), skip: String(skip) },
+  });
+}
 
-  getCart: async (id: number): Promise<Cart> => {
-    const response = await apiClient.get<Cart>(`/carts/${id}`);
-    return response.data;
-  },
+async function realGetCart(id: string): Promise<Cart> {
+  return apiClient.get<Cart>(`/carts/${id}`);
+}
 
-  getUserCarts: async (userId: number): Promise<CartsResponse> => {
-    const response = await apiClient.get<CartsResponse>(`/carts/user/${userId}`);
-    return response.data;
-  },
+async function realGetUserCarts(userId: string): Promise<CartsResponse> {
+  return apiClient.get<CartsResponse>(`/carts/user/${userId}`);
+}
 
-  addCart: async (cartData: AddToCartRequest): Promise<Cart> => {
-    const response = await apiClient.post<Cart>('/carts/add', cartData);
-    return response.data;
-  },
+async function realAddCart(cartData: AddToCartRequest): Promise<Cart> {
+  return apiClient.post<Cart>('/carts/add', cartData);
+}
 
-  updateCart: async (id: number, cartData: UpdateCartRequest): Promise<Cart> => {
-    const response = await apiClient.put<Cart>(`/carts/${id}`, cartData);
-    return response.data;
-  },
+async function realUpdateCart(id: string, cartData: UpdateCartRequest): Promise<Cart> {
+  return apiClient.put<Cart>(`/carts/${id}`, cartData);
+}
 
-  deleteCart: async (id: number): Promise<{ isDeleted: boolean; deletedOn: string }> => {
-    const response = await apiClient.delete(`/carts/${id}`);
-    return response.data;
-  },
-};
+async function realDeleteCart(id: string): Promise<{ isDeleted: boolean; deletedOn: string }> {
+  return apiClient.delete(`/carts/${id}`);
+}
 
-// Export service based on environment
-export const cartsService = ENV.API_MODE === 'mock' ? mockCartsService : realCartsService;
+// Exported service functions
+export async function getCarts(params: PaginationParams = {}): Promise<CartsResponse> {
+  if (config.useMockApi) {
+    return mockGetCarts(params);
+  } else {
+    return realGetCarts(params);
+  }
+}
+
+export async function getCart(id: string): Promise<Cart> {
+  if (config.useMockApi) {
+    return mockGetCart(id);
+  } else {
+    return realGetCart(id);
+  }
+}
+
+export async function getUserCarts(userId: string): Promise<CartsResponse> {
+  if (config.useMockApi) {
+    return mockGetUserCarts(userId);
+  } else {
+    return realGetUserCarts(userId);
+  }
+}
+
+export async function addCart(cartData: AddToCartRequest): Promise<Cart> {
+  if (config.useMockApi) {
+    return mockAddCart(cartData);
+  } else {
+    return realAddCart(cartData);
+  }
+}
+
+export async function updateCart(id: string, cartData: UpdateCartRequest): Promise<Cart> {
+  if (config.useMockApi) {
+    return mockUpdateCart(id, cartData);
+  } else {
+    return realUpdateCart(id, cartData);
+  }
+}
+
+export async function deleteCart(id: string): Promise<{ isDeleted: boolean; deletedOn: string }> {
+  if (config.useMockApi) {
+    return mockDeleteCart(id);
+  } else {
+    return realDeleteCart(id);
+  }
+}

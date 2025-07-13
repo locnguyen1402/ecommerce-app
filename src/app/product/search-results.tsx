@@ -1,16 +1,16 @@
-import React, { useState, useEffect } from 'react';
-import { Pressable, View } from 'react-native';
 import { router, useLocalSearchParams } from 'expo-router';
 import { ArrowLeft, Filter } from 'lucide-react-native';
+import React, { useEffect, useState } from 'react';
+import { Pressable, View } from 'react-native';
 
 import type { ProductListItem } from '~/lib/api/types';
 import { useSearchProductsWithFilters } from '~/lib/hooks/useApi';
 import { useSearchStore } from '~/lib/stores/search';
 
-import { Input } from '~/components/ui/input';
-import { Text } from '~/components/ui/text';
 import { FilterDrawer } from '~/components/search/FilterDrawer';
 import { ProductGrid } from '~/components/search/ProductGrid';
+import { Input } from '~/components/ui/input';
+import { Text } from '~/components/ui/text';
 
 export default function ProductSearchResultsPage() {
   const { q } = useLocalSearchParams<{ q: string }>();
@@ -18,19 +18,15 @@ export default function ProductSearchResultsPage() {
   const [showFilters, setShowFilters] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
 
-  const {
-    currentFilters,
-    setFilters,
-    addToHistory,
-  } = useSearchStore();
+  const { currentFilters, setFilters, addToHistory } = useSearchStore();
 
   // Use new search API with filters and pagination
   const {
     data: searchResults,
     isLoading: searchLoading,
     refetch: refetchSearch,
-  } = useSearchProductsWithFilters({ 
-    q: query, 
+  } = useSearchProductsWithFilters({
+    q: query,
     page: currentPage,
     limit: 20,
     filters: currentFilters,
@@ -54,7 +50,7 @@ export default function ProductSearchResultsPage() {
         setAllProducts(searchResults.products);
       } else {
         // Subsequent pages - append to existing products
-        setAllProducts(prev => [...prev, ...searchResults.products]);
+        setAllProducts((prev) => [...prev, ...searchResults.products]);
       }
       setIsLoadingMore(false);
     }
@@ -89,8 +85,9 @@ export default function ProductSearchResultsPage() {
   };
 
   const handleLoadMore = () => {
-    if (!searchResults?.pagination.hasMore || isLoadingMore || searchLoading) return;
-    
+    if (!searchResults?.pagination.hasMore || isLoadingMore || searchLoading)
+      return;
+
     setIsLoadingMore(true);
     const nextPage = currentPage + 1;
     setCurrentPage(nextPage);
@@ -100,7 +97,8 @@ export default function ProductSearchResultsPage() {
   const getActiveFiltersCount = () => {
     let count = 0;
     if (currentFilters.categories.length > 0) count++;
-    if (currentFilters.priceRange[0] > 0 || currentFilters.priceRange[1] < 1000) count++;
+    if (currentFilters.priceRange[0] > 0 || currentFilters.priceRange[1] < 1000)
+      count++;
     if (currentFilters.minRating > 0) count++;
     return count;
   };
@@ -115,7 +113,7 @@ export default function ProductSearchResultsPage() {
           <Pressable onPress={() => router.back()}>
             <ArrowLeft size={24} className='text-foreground' />
           </Pressable>
-          
+
           <View className='flex-1'>
             <Input
               placeholder='Search products...'
@@ -126,9 +124,9 @@ export default function ProductSearchResultsPage() {
               className='h-10'
             />
           </View>
-          
-          <Pressable 
-            className='p-2 relative' 
+
+          <Pressable
+            className='p-2 relative'
             onPress={() => setShowFilters(true)}
           >
             <Filter size={20} className='text-muted-foreground' />
@@ -145,7 +143,9 @@ export default function ProductSearchResultsPage() {
         {/* Results Count */}
         {query && (
           <Text className='text-sm text-muted-foreground'>
-            {searchLoading && currentPage === 1 ? 'Searching...' : `${productsCount} results for "${query}"`}
+            {searchLoading && currentPage === 1
+              ? 'Searching...'
+              : `${productsCount} results for "${query}"`}
           </Text>
         )}
       </View>
