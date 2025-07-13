@@ -1,5 +1,6 @@
 import React from 'react';
 import { ScrollView, View } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { useAuthStore } from '~/lib/stores/auth';
 
@@ -7,6 +8,7 @@ import { Button } from '~/components/ui/button';
 import { Text } from '~/components/ui/text';
 
 export default function NotificationsTab() {
+  const insets = useSafeAreaInsets();
   const { isAuthenticated } = useAuthStore();
 
   if (!isAuthenticated) {
@@ -26,7 +28,10 @@ export default function NotificationsTab() {
   }
 
   return (
-    <ScrollView className='flex-1 bg-background'>
+    <ScrollView 
+      className='flex-1 bg-background'
+      contentContainerStyle={{ paddingTop: insets.top }}
+    >
       <View className='px-4 py-6'>
         <Text className='text-xl font-semibold mb-6'>Notifications</Text>
         

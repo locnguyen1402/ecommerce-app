@@ -1,6 +1,7 @@
 import { router } from 'expo-router';
 import React, { useState } from 'react';
 import { ScrollView, View } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { useLanguage } from '~/lib/hooks/useLanguage';
 import { useCartStore } from '~/lib/stores/cart';
@@ -13,6 +14,7 @@ import { Input } from '~/components/ui/input';
 import { Text } from '~/components/ui/text';
 
 export default function CheckoutScreen() {
+  const insets = useSafeAreaInsets();
   const { t } = useLanguage();
   const { items, totalPrice, totalDiscountedPrice, clearCart } = useCartStore();
   const { user } = useAuthStore();
@@ -367,7 +369,10 @@ export default function CheckoutScreen() {
   if (items.length === 0) {
     return (
       <View className='flex-1 bg-background'>
-        <View className='px-4 py-4 border-b border-border'>
+        <View 
+        className='px-4 py-4 border-b border-border'
+        style={{ paddingTop: insets.top + 16 }}
+      >
           <View className='flex-row items-center'>
             <Button variant='ghost' onPress={() => router.back()} className='mr-3 p-2'>
               <Text className='text-lg'>←</Text>
@@ -391,7 +396,10 @@ export default function CheckoutScreen() {
   return (
     <View className='flex-1 bg-background'>
       {/* Header */}
-      <View className='px-4 py-4 border-b border-border'>
+      <View 
+        className='px-4 py-4 border-b border-border'
+        style={{ paddingTop: insets.top + 16 }}
+      >
         <View className='flex-row items-center'>
           <Button variant='ghost' onPress={() => router.back()} className='mr-3 p-2'>
             <Text className='text-lg'>←</Text>

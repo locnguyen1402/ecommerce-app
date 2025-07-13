@@ -22,5 +22,14 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
         origin: 'https://n',
       },
     ],
+    [
+      'react-native-edge-to-edge',
+      {
+        android: {
+          parentTheme: 'Material3',
+          enforceNavigationBarContrast: true,
+        },
+      },
+    ],
   ],
 });

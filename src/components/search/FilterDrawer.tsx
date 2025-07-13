@@ -71,6 +71,8 @@ export function FilterDrawer({
       animationType="slide"
       presentationStyle="pageSheet"
       onRequestClose={onClose}
+      statusBarTranslucent={true}
+      navigationBarTranslucent={true}
     >
       <View className='flex-1 bg-background'>
         {/* Header */}

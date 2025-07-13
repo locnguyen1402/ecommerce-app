@@ -1,6 +1,7 @@
 import { router } from 'expo-router';
 import React from 'react';
 import { FlatList, ScrollView, View } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { useLanguage } from '~/lib/hooks/useLanguage';
 import { useAuthStore } from '~/lib/stores/auth';
@@ -11,6 +12,7 @@ import { Button } from '~/components/ui/button';
 import { Text } from '~/components/ui/text';
 
 export default function OrdersTab() {
+  const insets = useSafeAreaInsets();
   const { isAuthenticated, user } = useAuthStore();
   const { t } = useLanguage();
   const { getUserOrders } = useOrdersStore();
@@ -100,7 +102,10 @@ export default function OrdersTab() {
   return (
     <View className='flex-1 bg-background'>
       {/* Header */}
-      <View className='px-4 py-4 border-b border-border'>
+      <View 
+        className='px-4 py-4 border-b border-border'
+        style={{ paddingTop: insets.top + 16 }}
+      >
         <Text className='text-xl font-semibold'>Orders</Text>
       </View>
 

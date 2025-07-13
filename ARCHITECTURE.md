@@ -82,6 +82,12 @@ src/
 - **Screen Implementation**: All major screens handle safe area insets properly
 - **Device Support**: Compatible with notches, navigation bars, and edge-to-edge displays
 
+### 7. Navigation Architecture Issues ⚠️
+- **Current Problem**: Manual header implementation per screen with inconsistent safe area handling
+- **Technical Debt**: Each screen implements its own header with `useSafeAreaInsets` + manual padding calculations
+- **Solution Required**: Refactor to single Stack navigator with built-in header safe area handling
+- **Benefits**: Consistent headers, automatic safe area, better UX, less duplicate code
+
 ## Current Implementation Status
 
 ### ✅ Completed (Production Ready)
@@ -123,6 +129,13 @@ Routes after reorganization:
 ├── /order/[id]
 └── /product/[id]
 ```
+
+### 🚨 Critical Next Task (High Priority)
+- **Navigation Architecture Refactor**: Replace manual headers with single Stack navigator
+  - Wrap entire app in Stack with proper header configuration
+  - Enable `headerShown` toggle per screen while maintaining consistency
+  - Eliminate manual `useSafeAreaInsets` calculations in favor of built-in Stack header
+  - Improve navigation UX with Stack animations and automatic back button handling
 
 ### 📋 Remaining (Enhancement Features)
 - User profile & settings pages

@@ -2,9 +2,9 @@ import '../global.css';
 
 import { PortalHost } from '@rn-primitives/portal';
 import { Slot } from 'expo-router';
-import { StatusBar } from 'expo-status-bar';
 import * as React from 'react';
 import { Platform } from 'react-native';
+import { SystemBars } from 'react-native-edge-to-edge';
 
 import { AppProvider } from '~/lib/providers/AppProvider';
 import { useColorScheme } from '~/lib/useColorScheme';
@@ -39,7 +39,7 @@ export default function RootLayout() {
   return (
     <AppProvider>
       <PortalHost />
-      <StatusBar style={isDarkColorScheme ? 'light' : 'dark'} backgroundColor="transparent" translucent />
+      <SystemBars style={isDarkColorScheme ? 'light' : 'dark'} />
       <Slot />
     </AppProvider>
   );

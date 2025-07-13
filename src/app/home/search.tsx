@@ -1,6 +1,7 @@
 import React, { useRef, useEffect, useState, useMemo } from 'react';
 import { Keyboard, ScrollView, TextInput, View } from 'react-native';
 import { router } from 'expo-router';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { useSearchStore } from '~/lib/stores/search';
 
@@ -11,6 +12,7 @@ import { SearchSuggestions } from '~/components/search/SearchSuggestions';
 
 
 export default function SearchTab() {
+  const insets = useSafeAreaInsets();
   const inputRef = useRef<TextInput>(null);
   const { 
     query, 
@@ -85,7 +87,10 @@ export default function SearchTab() {
   return (
     <View className='flex-1 bg-background'>
       {/* Header */}
-      <View className='px-4 py-6 border-b border-border'>
+      <View 
+        className='px-4 py-6 border-b border-border'
+        style={{ paddingTop: insets.top + 24 }}
+      >
         <Text className='text-2xl font-semibold mb-6'>Search</Text>
         
         {/* Search Input */}

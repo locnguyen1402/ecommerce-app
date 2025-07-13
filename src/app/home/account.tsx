@@ -1,6 +1,7 @@
 import { router } from 'expo-router';
 import React from 'react';
 import { ScrollView, View } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { useLanguage } from '~/lib/hooks/useLanguage';
 import { useAppNavigation } from '~/lib/hooks/useNavigation';
@@ -11,6 +12,7 @@ import { Button } from '~/components/ui/button';
 import { Text } from '~/components/ui/text';
 
 export default function AccountTab() {
+  const insets = useSafeAreaInsets();
   const { user, isAuthenticated } = useAuthStore();
   const { handleLogout } = useAppNavigation();
   const { t } = useLanguage();
@@ -51,7 +53,10 @@ export default function AccountTab() {
   }
 
   return (
-    <ScrollView className='flex-1 bg-background'>
+    <ScrollView 
+      className='flex-1 bg-background'
+      contentContainerStyle={{ paddingTop: insets.top }}
+    >
       <View className='px-4 py-6'>
         {/* Profile Header */}
         <View className='items-center mb-8'>

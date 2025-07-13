@@ -99,7 +99,7 @@ export default function LoginScreen() {
               <Button
                 variant='link'
                 className='p-0 self-end mt-1'
-                onPress={() => router.push('/(auth)/forgot-password')}
+                onPress={() => router.push('/edge-to-edge-test')}
               >
                 <Text className='text-xs text-muted-foreground'>
                   {t('auth.forgotPassword')}

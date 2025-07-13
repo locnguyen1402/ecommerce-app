@@ -1,6 +1,7 @@
 import { router, useLocalSearchParams } from 'expo-router';
 import React, { useState } from 'react';
 import { FlatList, Image, ScrollView, View } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { useLanguage } from '~/lib/hooks/useLanguage';
 import { useProduct } from '~/lib/hooks/useApi';
@@ -12,6 +13,7 @@ import { Button } from '~/components/ui/button';
 import { Text } from '~/components/ui/text';
 
 export default function ProductDetailScreen() {
+  const insets = useSafeAreaInsets();
   const { id } = useLocalSearchParams<{ id: string }>();
   const { t } = useLanguage();
   const { addItem } = useCartStore();
@@ -28,7 +30,10 @@ export default function ProductDetailScreen() {
   if (isLoading) {
     return (
       <View className='flex-1 bg-background'>
-        <View className='px-4 py-4 border-b border-border'>
+        <View 
+          className='px-4 py-4 border-b border-border'
+          style={{ paddingTop: insets.top + 16 }}
+        >
           <View className='flex-row items-center'>
             <Button variant='ghost' onPress={() => router.back()} className='mr-3 p-2'>
               <Text className='text-lg'>←</Text>
@@ -46,7 +51,10 @@ export default function ProductDetailScreen() {
   if (error || !product) {
     return (
       <View className='flex-1 bg-background'>
-        <View className='px-4 py-4 border-b border-border'>
+        <View 
+          className='px-4 py-4 border-b border-border'
+          style={{ paddingTop: insets.top + 16 }}
+        >
           <View className='flex-row items-center'>
             <Button variant='ghost' onPress={() => router.back()} className='mr-3 p-2'>
               <Text className='text-lg'>←</Text>
@@ -100,7 +108,10 @@ export default function ProductDetailScreen() {
   return (
     <View className='flex-1 bg-background'>
       {/* Header */}
-      <View className='px-4 py-4 border-b border-border'>
+      <View 
+        className='px-4 py-4 border-b border-border'
+        style={{ paddingTop: insets.top + 16 }}
+      >
         <View className='flex-row items-center'>
           <Button variant='ghost' onPress={() => router.back()} className='mr-3 p-2'>
             <Text className='text-lg'>←</Text>

@@ -1,6 +1,7 @@
 import { router } from 'expo-router';
 import React, { useState } from 'react';
 import { ScrollView, View } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { useLanguage } from '~/lib/hooks/useLanguage';
 import { useAppNavigation } from '~/lib/hooks/useNavigation';
@@ -12,6 +13,7 @@ import { Input } from '~/components/ui/input';
 import { Text } from '~/components/ui/text';
 
 export default function RegisterScreen() {
+  const insets = useSafeAreaInsets();
   const [formData, setFormData] = useState({
     username: '',
     email: '',
@@ -91,7 +93,10 @@ export default function RegisterScreen() {
   };
 
   return (
-    <ScrollView className='flex-1 bg-background'>
+    <ScrollView 
+      className='flex-1 bg-background'
+      contentContainerStyle={{ paddingTop: insets.top }}
+    >
       <View className='flex-1 px-6 py-8 justify-center'>
         <View className='max-w-sm mx-auto w-full'>
           {/* Header */}

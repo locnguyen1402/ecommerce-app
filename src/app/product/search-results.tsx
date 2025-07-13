@@ -2,6 +2,7 @@ import { router, useLocalSearchParams } from 'expo-router';
 import { ArrowLeft, Filter } from 'lucide-react-native';
 import React, { useEffect, useState } from 'react';
 import { Pressable, View } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import type { ProductListItem } from '~/lib/api/types';
 import { useSearchProductsWithFilters } from '~/lib/hooks/useApi';
@@ -13,6 +14,7 @@ import { Input } from '~/components/ui/input';
 import { Text } from '~/components/ui/text';
 
 export default function ProductSearchResultsPage() {
+  const insets = useSafeAreaInsets();
   const { q } = useLocalSearchParams<{ q: string }>();
   const [query, setQuery] = useState(q || '');
   const [showFilters, setShowFilters] = useState(false);
@@ -108,7 +110,10 @@ export default function ProductSearchResultsPage() {
   return (
     <View className='flex-1 bg-background'>
       {/* Header */}
-      <View className='px-4 py-4 border-b border-border'>
+      <View
+        className='px-4 py-4 border-b border-border'
+        style={{ paddingTop: insets.top + 16 }}
+      >
         <View className='flex-row items-center gap-4 mb-4'>
           <Pressable onPress={() => router.back()}>
             <ArrowLeft size={24} className='text-foreground' />

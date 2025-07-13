@@ -22,7 +22,13 @@ export default function CartScreen() {
     clearCart,
   } = useCartStore();
 
-  const renderCartItem = ({ item, index }: { item: CartItem; index: number }) => (
+  const renderCartItem = ({
+    item,
+    index,
+  }: {
+    item: CartItem;
+    index: number;
+  }) => (
     <View className='border border-border rounded p-4 mb-4 bg-background'>
       <View className='flex-row'>
         {/* Product Image */}
@@ -45,17 +51,17 @@ export default function CartScreen() {
           <Text className='font-medium text-base mb-1' numberOfLines={2}>
             {item.title}
           </Text>
-          
+
           <Text className='text-xs text-muted-foreground mb-1 capitalize'>
             {item.category.replace(/[-_]/g, ' ')}
           </Text>
 
           {item.variant && (
             <Text className='text-xs text-muted-foreground mb-2'>
-              {item.variant.displayName || 
-               `${item.variant.size ? `Size: ${item.variant.size}` : ''}${
-                 item.variant.size && item.variant.color ? ', ' : ''
-               }${item.variant.color ? `Color: ${item.variant.color}` : ''}`}
+              {item.variant.displayName ||
+                `${item.variant.size ? `Size: ${item.variant.size}` : ''}${
+                  item.variant.size && item.variant.color ? ', ' : ''
+                }${item.variant.color ? `Color: ${item.variant.color}` : ''}`}
             </Text>
           )}
 
@@ -70,9 +76,14 @@ export default function CartScreen() {
                 </Text>
               )}
             </View>
-            
+
             <Text className='text-sm text-muted-foreground'>
-              ${((item.price * (1 - item.discountPercentage / 100)) * item.quantity).toFixed(2)}
+              $
+              {(
+                item.price *
+                (1 - item.discountPercentage / 100) *
+                item.quantity
+              ).toFixed(2)}
             </Text>
           </View>
 
@@ -86,9 +97,11 @@ export default function CartScreen() {
               >
                 <Text className='text-base'>−</Text>
               </Button>
-              
-              <Text className='mx-4 font-medium text-base min-w-8 text-center'>{item.quantity}</Text>
-              
+
+              <Text className='mx-4 font-medium text-base min-w-8 text-center'>
+                {item.quantity}
+              </Text>
+
               <Button
                 variant='outline'
                 onPress={() => updateQuantity(index, item.quantity + 1)}
@@ -103,7 +116,9 @@ export default function CartScreen() {
               onPress={() => removeItem(index)}
               className='px-3 h-10'
             >
-              <Text className='text-sm text-muted-foreground'>{t('cart.removeItem')}</Text>
+              <Text className='text-sm text-muted-foreground'>
+                {t('cart.removeItem')}
+              </Text>
             </Button>
           </View>
         </View>
@@ -117,7 +132,11 @@ export default function CartScreen() {
         {/* Header */}
         <View className='px-4 py-4 border-b border-border'>
           <View className='flex-row items-center'>
-            <Button variant='ghost' onPress={() => router.back()} className='mr-3 p-2'>
+            <Button
+              variant='ghost'
+              onPress={() => router.back()}
+              className='mr-3 p-2'
+            >
               <Text className='text-lg'>←</Text>
             </Button>
             <Text className='text-xl font-semibold'>{t('cart.cart')}</Text>
@@ -129,7 +148,9 @@ export default function CartScreen() {
           <View className='w-16 h-16 border border-border rounded items-center justify-center mb-6'>
             <Text className='text-2xl'>🛒</Text>
           </View>
-          <Text className='text-xl font-semibold mb-3'>{t('cart.emptyCart')}</Text>
+          <Text className='text-xl font-semibold mb-3'>
+            {t('cart.emptyCart')}
+          </Text>
           <Text className='text-muted-foreground text-center mb-8 max-w-sm'>
             Looks like you haven't added anything to your cart yet
           </Text>
@@ -146,17 +167,24 @@ export default function CartScreen() {
   return (
     <View className='flex-1 bg-background'>
       {/* Header */}
-      <View className='px-4 border-b border-border' style={{ paddingTop: insets.top + 16, paddingBottom: 16 }}>
+      <View
+        className='px-4 border-b border-border'
+        style={{ paddingTop: insets.top + 16, paddingBottom: 16 }}
+      >
         <View className='flex-row items-center justify-between'>
           <View className='flex-row items-center'>
-            <Button variant='ghost' onPress={() => router.back()} className='mr-3 p-2'>
+            <Button
+              variant='ghost'
+              onPress={() => router.back()}
+              className='mr-3 p-2'
+            >
               <Text className='text-lg'>←</Text>
             </Button>
             <Text className='text-xl font-semibold'>
               {t('cart.cart')} ({totalItems})
             </Text>
           </View>
-          
+
           <Button variant='ghost' onPress={clearCart} className='px-3'>
             <Text className='text-sm text-muted-foreground'>Clear All</Text>
           </Button>
@@ -179,23 +207,31 @@ export default function CartScreen() {
           {/* Cart Summary */}
           <View className='border border-border rounded p-4 mb-4'>
             <Text className='text-lg font-semibold mb-4'>Order Summary</Text>
-            
+
             <View className='gap-3'>
               <View className='flex-row justify-between'>
-                <Text className='text-muted-foreground'>{t('cart.subtotal')}</Text>
+                <Text className='text-muted-foreground'>
+                  {t('cart.subtotal')}
+                </Text>
                 <Text className='font-medium'>${totalPrice.toFixed(2)}</Text>
               </View>
-              
+
               {savings > 0 && (
                 <View className='flex-row justify-between'>
-                  <Text className='text-muted-foreground'>{t('cart.discount')}</Text>
-                  <Text className='font-medium text-primary'>-${savings.toFixed(2)}</Text>
+                  <Text className='text-muted-foreground'>
+                    {t('cart.discount')}
+                  </Text>
+                  <Text className='font-medium text-primary'>
+                    -${savings.toFixed(2)}
+                  </Text>
                 </View>
               )}
-              
+
               <View className='border-t border-border pt-3'>
                 <View className='flex-row justify-between'>
-                  <Text className='font-semibold text-lg'>{t('cart.total')}</Text>
+                  <Text className='font-semibold text-lg'>
+                    {t('cart.total')}
+                  </Text>
                   <Text className='font-semibold text-lg'>
                     ${totalDiscountedPrice.toFixed(2)}
                   </Text>
@@ -205,7 +241,7 @@ export default function CartScreen() {
           </View>
 
           {/* Checkout Button */}
-          <Button 
+          <Button
             className='w-full h-12 mb-6'
             onPress={() => router.push('/(ordering)/checkout')}
           >

@@ -1,6 +1,7 @@
 import { router } from 'expo-router';
 import React from 'react';
 import { View } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { useLanguage } from '~/lib/hooks/useLanguage';
 import { generateMockUUID } from '~/lib/utils/uuid';
@@ -9,6 +10,7 @@ import { Button } from '~/components/ui/button';
 import { Text } from '~/components/ui/text';
 
 export default function OrderConfirmationScreen() {
+  const insets = useSafeAreaInsets();
   const { t } = useLanguage();
   
   // Generate a mock order ID for display
@@ -18,7 +20,10 @@ export default function OrderConfirmationScreen() {
   return (
     <View className='flex-1 bg-background'>
       {/* Header */}
-      <View className='px-4 py-4 border-b border-border'>
+      <View 
+        className='px-4 py-4 border-b border-border'
+        style={{ paddingTop: insets.top + 16 }}
+      >
         <Text className='text-xl font-semibold'>Order Confirmation</Text>
       </View>
 

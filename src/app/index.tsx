@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { View } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { useLanguage } from '~/lib/hooks/useLanguage';
 import { useAppNavigation } from '~/lib/hooks/useNavigation';
@@ -8,6 +9,7 @@ import { useAuthStore } from '~/lib/stores/auth';
 import { Text } from '~/components/ui/text';
 
 export default function Page() {
+  const insets = useSafeAreaInsets();
   const { initializeAuth, isLoading, isInitialized } = useAuthStore();
   const { determineInitialRoute } = useAppNavigation();
   const { t, initialize: initializeLanguage } = useLanguage();
@@ -32,7 +34,15 @@ export default function Page() {
   }, [isInitialized, isLoading, determineInitialRoute]);
 
   return (
-    <View className='flex flex-1 justify-center items-center bg-background'>
+    <View 
+      className='flex flex-1 justify-center items-center bg-background'
+      style={{ 
+        paddingTop: insets.top,
+        paddingBottom: insets.bottom,
+        paddingLeft: insets.left,
+        paddingRight: insets.right,
+      }}
+    >
       <View className='w-16 h-16 bg-foreground rounded mb-6 items-center justify-center'>
         <Text className='text-background text-xl font-semibold'>E</Text>
       </View>
