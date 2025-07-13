@@ -1,7 +1,6 @@
 import { router } from 'expo-router';
 import React from 'react';
 import { FlatList, Image, ScrollView, View } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { useLanguage } from '~/lib/hooks/useLanguage';
 import { useCartStore, type CartItem } from '~/lib/stores/cart';
@@ -11,15 +10,12 @@ import { Text } from '~/components/ui/text';
 
 export default function CartScreen() {
   const { t } = useLanguage();
-  const insets = useSafeAreaInsets();
   const {
     items,
-    totalItems,
     totalPrice,
     totalDiscountedPrice,
     removeItem,
     updateQuantity,
-    clearCart,
   } = useCartStore();
 
   const renderCartItem = ({
@@ -166,46 +162,20 @@ export default function CartScreen() {
 
   return (
     <View className='flex-1 bg-background'>
-      {/* Header */}
-      <View
-        className='px-4 border-b border-border'
-        style={{ paddingTop: insets.top + 16, paddingBottom: 16 }}
-      >
-        <View className='flex-row items-center justify-between'>
-          <View className='flex-row items-center'>
-            <Button
-              variant='ghost'
-              onPress={() => router.back()}
-              className='mr-3 p-2'
-            >
-              <Text className='text-lg'>←</Text>
-            </Button>
-            <Text className='text-xl font-semibold'>
-              {t('cart.cart')} ({totalItems})
-            </Text>
-          </View>
-
-          <Button variant='ghost' onPress={clearCart} className='px-3'>
-            <Text className='text-sm text-muted-foreground'>Clear All</Text>
-          </Button>
-        </View>
-      </View>
-
-      <ScrollView className='flex-1'>
-        <View className='px-4'>
-          {/* Cart Items */}
-          <View className='py-4'>
-            <FlatList
+      <ScrollView className='flex-1 px-4'>
+        {/* Cart Items */}
+        <View className='py-4'>
+          <FlatList
               data={items}
               renderItem={({ item, index }) => renderCartItem({ item, index })}
               keyExtractor={(item, index) => `${item.id}-${index}`}
               scrollEnabled={false}
               showsVerticalScrollIndicator={false}
             />
-          </View>
+        </View>
 
-          {/* Cart Summary */}
-          <View className='border border-border rounded p-4 mb-4'>
+        {/* Cart Summary */}
+        <View className='border border-border rounded p-4 mb-4'>
             <Text className='text-lg font-semibold mb-4'>Order Summary</Text>
 
             <View className='gap-3'>
@@ -240,14 +210,13 @@ export default function CartScreen() {
             </View>
           </View>
 
-          {/* Checkout Button */}
-          <Button
-            className='w-full h-12 mb-6'
-            onPress={() => router.push('/(ordering)/checkout')}
-          >
-            <Text className='font-medium'>Proceed to Checkout</Text>
-          </Button>
-        </View>
+        {/* Checkout Button */}
+        <Button
+          className='w-full h-12 mb-6'
+          onPress={() => router.push('/(ordering)/checkout')}
+        >
+          <Text className='font-medium'>Proceed to Checkout</Text>
+        </Button>
       </ScrollView>
     </View>
   );

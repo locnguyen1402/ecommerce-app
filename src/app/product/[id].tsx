@@ -1,7 +1,6 @@
 import { router, useLocalSearchParams } from 'expo-router';
 import React, { useState } from 'react';
 import { FlatList, Image, ScrollView, View } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { useLanguage } from '~/lib/hooks/useLanguage';
 import { useProduct } from '~/lib/hooks/useApi';
@@ -13,7 +12,6 @@ import { Button } from '~/components/ui/button';
 import { Text } from '~/components/ui/text';
 
 export default function ProductDetailScreen() {
-  const insets = useSafeAreaInsets();
   const { id } = useLocalSearchParams<{ id: string }>();
   const { t } = useLanguage();
   const { addItem } = useCartStore();
@@ -29,48 +27,22 @@ export default function ProductDetailScreen() {
 
   if (isLoading) {
     return (
-      <View className='flex-1 bg-background'>
-        <View 
-          className='px-4 py-4 border-b border-border'
-          style={{ paddingTop: insets.top + 16 }}
-        >
-          <View className='flex-row items-center'>
-            <Button variant='ghost' onPress={() => router.back()} className='mr-3 p-2'>
-              <Text className='text-lg'>←</Text>
-            </Button>
-            <Text className='text-xl font-semibold'>Product Details</Text>
-          </View>
-        </View>
-        <View className='flex-1 items-center justify-center'>
-          <Text className='text-muted-foreground'>Loading product...</Text>
-        </View>
+      <View className='flex-1 bg-background items-center justify-center'>
+        <Text className='text-muted-foreground'>Loading product...</Text>
       </View>
     );
   }
 
   if (error || !product) {
     return (
-      <View className='flex-1 bg-background'>
-        <View 
-          className='px-4 py-4 border-b border-border'
-          style={{ paddingTop: insets.top + 16 }}
-        >
-          <View className='flex-row items-center'>
-            <Button variant='ghost' onPress={() => router.back()} className='mr-3 p-2'>
-              <Text className='text-lg'>←</Text>
-            </Button>
-            <Text className='text-xl font-semibold'>Product Details</Text>
-          </View>
-        </View>
-        <View className='flex-1 items-center justify-center px-8'>
-          <Text className='text-xl font-semibold mb-3'>Product Not Found</Text>
-          <Text className='text-muted-foreground text-center mb-6'>
-            Sorry, we couldn't find the product you're looking for.
-          </Text>
-          <Button onPress={() => router.back()} className='w-full h-12'>
-            <Text className='font-medium'>Go Back</Text>
-          </Button>
-        </View>
+      <View className='flex-1 bg-background items-center justify-center px-8'>
+        <Text className='text-xl font-semibold mb-3'>Product Not Found</Text>
+        <Text className='text-muted-foreground text-center mb-6'>
+          Sorry, we couldn't find the product you're looking for.
+        </Text>
+        <Button onPress={() => router.back()} className='w-full h-12'>
+          <Text className='font-medium'>Go Back</Text>
+        </Button>
       </View>
     );
   }
@@ -107,19 +79,6 @@ export default function ProductDetailScreen() {
 
   return (
     <View className='flex-1 bg-background'>
-      {/* Header */}
-      <View 
-        className='px-4 py-4 border-b border-border'
-        style={{ paddingTop: insets.top + 16 }}
-      >
-        <View className='flex-row items-center'>
-          <Button variant='ghost' onPress={() => router.back()} className='mr-3 p-2'>
-            <Text className='text-lg'>←</Text>
-          </Button>
-          <Text className='text-xl font-semibold'>Product Details</Text>
-        </View>
-      </View>
-
       <ScrollView className='flex-1'>
         <View className='px-4'>
           {/* Main Product Image */}

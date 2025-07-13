@@ -1,25 +1,19 @@
-import React, { useRef, useEffect, useState, useMemo } from 'react';
-import { Keyboard, ScrollView, TextInput, View } from 'react-native';
 import { router } from 'expo-router';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
+import { Keyboard, ScrollView, TextInput, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { useSearchStore } from '~/lib/stores/search';
 
-import { Input } from '~/components/ui/input';
-import { Text } from '~/components/ui/text';
 import { SearchHistory } from '~/components/search/SearchHistory';
 import { SearchSuggestions } from '~/components/search/SearchSuggestions';
-
+import { Input } from '~/components/ui/input';
+import { Text } from '~/components/ui/text';
 
 export default function SearchTab() {
   const insets = useSafeAreaInsets();
   const inputRef = useRef<TextInput>(null);
-  const { 
-    query, 
-    setQuery, 
-    addToHistory,
-    clearSearch 
-  } = useSearchStore();
+  const { query, setQuery, addToHistory, clearSearch } = useSearchStore();
 
   const [localQuery, setLocalQuery] = useState(query);
   const [showSuggestions, setShowSuggestions] = useState(false);
@@ -57,7 +51,9 @@ export default function SearchTab() {
       addToHistory(finalQuery);
       setShowSuggestions(false);
       Keyboard.dismiss();
-      router.push(`/product/search-results?q=${encodeURIComponent(finalQuery)}`);
+      router.push(
+        `/product/search-results?q=${encodeURIComponent(finalQuery)}`,
+      );
     }
   };
 
@@ -87,12 +83,9 @@ export default function SearchTab() {
   return (
     <View className='flex-1 bg-background'>
       {/* Header */}
-      <View 
-        className='px-4 py-6 border-b border-border'
-        style={{ paddingTop: insets.top + 24 }}
-      >
+      <View className='px-4 py-6 border-b border-border'>
         <Text className='text-2xl font-semibold mb-6'>Search</Text>
-        
+
         {/* Search Input */}
         <Input
           ref={inputRef}
@@ -115,13 +108,15 @@ export default function SearchTab() {
         ) : (
           <ScrollView showsVerticalScrollIndicator={false}>
             <SearchHistory onHistorySelect={handleHistorySelect} />
-            
+
             {/* Default State */}
             <View className='flex-1 justify-center items-center px-4 py-16'>
               <View className='w-20 h-20 bg-muted rounded-full items-center justify-center mb-6'>
                 <Text className='text-3xl'>🔍</Text>
               </View>
-              <Text className='text-xl font-medium mb-3'>Find what you need</Text>
+              <Text className='text-xl font-medium mb-3'>
+                Find what you need
+              </Text>
               <Text className='text-muted-foreground text-center leading-6'>
                 Search for products by name, category, or description
               </Text>

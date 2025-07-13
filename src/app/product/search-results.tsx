@@ -110,10 +110,7 @@ export default function ProductSearchResultsPage() {
   return (
     <View className='flex-1 bg-background'>
       {/* Header */}
-      <View
-        className='px-4 py-4 border-b border-border'
-        style={{ paddingTop: insets.top + 16 }}
-      >
+      <View className='px-4 py-6 border-b border-border'>
         <View className='flex-row items-center gap-4 mb-4'>
           <Pressable onPress={() => router.back()}>
             <ArrowLeft size={24} className='text-foreground' />

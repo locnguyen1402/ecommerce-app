@@ -225,7 +225,7 @@ export const useSearchSuggestions = (query: string) => {
   return useQuery({
     queryKey: QUERY_KEYS.searchSuggestions(query),
     queryFn: () => getSearchSuggestions(query),
-    enabled: query.length >= 2, // Only fetch when query has at least 2 characters
+    enabled: query.length >= 1, // Fetch when query has at least 1 character
     staleTime: 5 * 60 * 1000, // 5 minutes
     gcTime: 10 * 60 * 1000, // 10 minutes garbage collection
   });
@@ -235,7 +235,7 @@ export const useSearchProductsWithFilters = (request: SearchProductsRequest) => 
   return useQuery({
     queryKey: QUERY_KEYS.searchProductsWithFilters(request),
     queryFn: () => searchProducts(request),
-    enabled: !!request.q && request.q.length >= 2, // Only fetch when query exists
+    enabled: !!request.q && request.q.length >= 1, // Only fetch when query exists
     staleTime: 2 * 60 * 1000, // 2 minutes
     gcTime: 5 * 60 * 1000, // 5 minutes garbage collection
   });

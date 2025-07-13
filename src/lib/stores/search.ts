@@ -81,7 +81,7 @@ export const useSearchStore = create<SearchState>()(
 
       addToHistory: (query: string) => {
         const trimmedQuery = query.trim();
-        if (!trimmedQuery || trimmedQuery.length < 2) return;
+        if (!trimmedQuery) return;
 
         set((state) => {
           const newHistory = [

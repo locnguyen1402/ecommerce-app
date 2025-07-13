@@ -1,7 +1,6 @@
 import { router } from 'expo-router';
 import React from 'react';
 import { View } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { useLanguage } from '~/lib/hooks/useLanguage';
 import { generateMockUUID } from '~/lib/utils/uuid';
@@ -10,7 +9,6 @@ import { Button } from '~/components/ui/button';
 import { Text } from '~/components/ui/text';
 
 export default function OrderConfirmationScreen() {
-  const insets = useSafeAreaInsets();
   const { t } = useLanguage();
   
   // Generate a mock order ID for display
@@ -18,17 +16,7 @@ export default function OrderConfirmationScreen() {
   const estimatedDelivery = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toLocaleDateString();
 
   return (
-    <View className='flex-1 bg-background'>
-      {/* Header */}
-      <View 
-        className='px-4 py-4 border-b border-border'
-        style={{ paddingTop: insets.top + 16 }}
-      >
-        <Text className='text-xl font-semibold'>Order Confirmation</Text>
-      </View>
-
-      {/* Success Content */}
-      <View className='flex-1 items-center justify-center px-8'>
+    <View className='flex-1 bg-background items-center justify-center px-8'>
         {/* Success Icon */}
         <View className='w-20 h-20 border border-primary rounded items-center justify-center mb-8'>
           <Text className='text-3xl text-primary'>✓</Text>
@@ -89,10 +77,9 @@ export default function OrderConfirmationScreen() {
         </View>
 
         {/* Help Text */}
-        <Text className='text-xs text-muted-foreground text-center mt-6 leading-5'>
-          Need help with your order? Contact our support team or check your order status in the Orders tab.
-        </Text>
-      </View>
+      <Text className='text-xs text-muted-foreground text-center mt-6 leading-5'>
+        Need help with your order? Contact our support team or check your order status in the Orders tab.
+      </Text>
     </View>
   );
 }
