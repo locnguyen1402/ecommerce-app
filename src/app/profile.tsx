@@ -11,7 +11,7 @@ import { Text } from '~/components/ui/text';
 
 export default function ProfileScreen() {
   const { t } = useLanguage();
-  const { user, updateProfile } = useAuthStore();
+  const { user, updateProfile, deleteAccount } = useAuthStore();
   const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState({
     firstName: user?.firstName || '',
@@ -37,6 +37,15 @@ export default function ProfileScreen() {
       phone: user?.phone || '',
     });
     setIsEditing(false);
+  };
+
+  const handleDeleteAccount = async () => {
+    try {
+      await deleteAccount();
+      router.replace('/welcome');
+    } catch (error) {
+      console.error('Failed to delete account:', error);
+    }
   };
 
   return (
@@ -172,10 +181,7 @@ export default function ProfileScreen() {
           <Button 
             variant='outline' 
             className='w-full h-12 border-destructive'
-            onPress={() => {
-              // TODO: Implement delete account
-              console.log('Delete account requested');
-            }}
+            onPress={handleDeleteAccount}
           >
             <Text className='text-destructive'>Delete Account</Text>
           </Button>

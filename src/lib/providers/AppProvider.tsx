@@ -7,6 +7,8 @@ import {
 import React from 'react';
 import { I18nextProvider } from 'react-i18next';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
+
+import { ErrorBoundary } from '~/components/ErrorBoundary';
 import { NAV_THEME } from '~/lib/constants';
 import i18n from '~/lib/i18n/config';
 import { useColorScheme } from '~/lib/useColorScheme';
@@ -30,14 +32,16 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
   const { isDarkColorScheme } = useColorScheme();
 
   return (
-    <SafeAreaProvider>
-      <I18nextProvider i18n={i18n}>
-        <QueryProvider>
-          <ThemeProvider value={isDarkColorScheme ? DARK_THEME : LIGHT_THEME}>
-            {children}
-          </ThemeProvider>
-        </QueryProvider>
-      </I18nextProvider>
-    </SafeAreaProvider>
+    <ErrorBoundary>
+      <SafeAreaProvider>
+        <I18nextProvider i18n={i18n}>
+          <QueryProvider>
+            <ThemeProvider value={isDarkColorScheme ? DARK_THEME : LIGHT_THEME}>
+              {children}
+            </ThemeProvider>
+          </QueryProvider>
+        </I18nextProvider>
+      </SafeAreaProvider>
+    </ErrorBoundary>
   );
 };

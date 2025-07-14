@@ -105,6 +105,45 @@ export const authService = {
     return response.data;
   },
 
+  // Update user profile
+  updateProfile: async (profileData: Partial<User>): Promise<User> => {
+    if (ENV.API_MODE === 'mock') {
+      await simulateApiDelay(ENV.MOCK_DELAY);
+      // In mock mode, we'll update the current user data and return it
+      const { getAccessToken } = await import('../stores/auth');
+      const token = getAccessToken();
+      if (!token) {
+        throw new Error('No access token');
+      }
+      const currentUser = getMockCurrentUser(token);
+      if (!currentUser) {
+        throw new Error('Invalid token');
+      }
+      
+      // Merge updated profile data
+      const updatedUser = { ...currentUser, ...profileData };
+      
+      // In a real scenario, we'd update the user in the mock database
+      // For now, we'll just return the updated user
+      return updatedUser;
+    }
+    
+    const response = await apiClient.patch<User>('/auth/profile', profileData);
+    return response.data;
+  },
+
+  // Delete user account
+  deleteAccount: async (): Promise<void> => {
+    if (ENV.API_MODE === 'mock') {
+      await simulateApiDelay(ENV.MOCK_DELAY);
+      // In mock mode, we'll just simulate account deletion
+      return Promise.resolve();
+    }
+    
+    const response = await apiClient.delete('/auth/account');
+    return response.data;
+  },
+
   // Logout (client-side only)
   logout: async (): Promise<void> => {
     // Clear tokens from storage

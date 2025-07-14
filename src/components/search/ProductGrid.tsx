@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo, useCallback } from 'react';
 import { ActivityIndicator, FlatList, Image, Pressable, View } from 'react-native';
 import { router } from 'expo-router';
 
@@ -15,21 +15,16 @@ interface ProductGridProps {
   onLoadMore: () => void;
 }
 
-export function ProductGrid({ 
-  products, 
-  isLoading, 
-  isLoadingMore, 
-  hasMore, 
-  onLoadMore 
-}: ProductGridProps) {
-  const handleProductPress = (productId: string) => {
-    router.push(`/product/${productId}`);
-  };
+// Memoized Product Card Component
+const ProductCard = memo(({ item }: { item: ProductListItem }) => {
+  const handleProductPress = useCallback(() => {
+    router.push(`/product/${item.id}`);
+  }, [item.id]);
 
-  const renderProductCard = ({ item }: { item: ProductListItem }) => (
+  return (
     <Pressable 
       className='flex-1 mx-1 mb-4' 
-      onPress={() => handleProductPress(item.id)}
+      onPress={handleProductPress}
     >
       <View className='border border-border rounded bg-background'>
         {item.thumbnail ? (
@@ -78,6 +73,29 @@ export function ProductGrid({
       </View>
     </Pressable>
   );
+}, (prevProps, nextProps) => {
+  // Custom comparison to prevent unnecessary re-renders
+  return (
+    prevProps.item.id === nextProps.item.id &&
+    prevProps.item.title === nextProps.item.title &&
+    prevProps.item.price === nextProps.item.price &&
+    prevProps.item.thumbnail === nextProps.item.thumbnail &&
+    prevProps.item.rating === nextProps.item.rating &&
+    prevProps.item.category === nextProps.item.category &&
+    prevProps.item.discountPercentage === nextProps.item.discountPercentage
+  );
+});
+
+export function ProductGrid({ 
+  products, 
+  isLoading, 
+  isLoadingMore, 
+  hasMore, 
+  onLoadMore 
+}: ProductGridProps) {
+  const renderProductCard = useCallback(({ item }: { item: ProductListItem }) => (
+    <ProductCard item={item} />
+  ), []);
 
   const renderFooter = () => {
     if (!isLoadingMore) return null;

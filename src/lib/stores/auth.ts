@@ -25,6 +25,7 @@ interface AuthActions {
   forgotPassword: (request: ForgotPasswordRequest) => Promise<string>;
   logout: () => Promise<void>;
   updateProfile: (profileData: Partial<User>) => Promise<void>;
+  deleteAccount: () => Promise<void>;
   clearError: () => void;
   setLoading: (loading: boolean) => void;
   initializeAuth: () => Promise<void>;
@@ -172,11 +173,8 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
         throw new Error('No user logged in');
       }
 
-      // Update user profile (mock implementation)
-      const updatedUser = { ...currentUser, ...profileData };
-      
-      // TODO: Replace with actual API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      // Update user profile via API
+      const updatedUser = await authService.updateProfile(profileData);
 
       set({
         user: updatedUser,
@@ -186,6 +184,40 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
     } catch (error) {
       const errorMessage =
         error instanceof Error ? error.message : 'Failed to update profile';
+      set({
+        error: errorMessage,
+        isLoading: false,
+      });
+      throw error;
+    }
+  },
+
+  deleteAccount: async () => {
+    try {
+      set({ isLoading: true, error: null });
+
+      const currentUser = get().user;
+      if (!currentUser) {
+        throw new Error('No user logged in');
+      }
+
+      // Delete user account via API
+      await authService.deleteAccount();
+
+      // Clear all user data and tokens
+      await clearTokens();
+
+      set({
+        user: null,
+        accessToken: null,
+        refreshToken: null,
+        isAuthenticated: false,
+        isLoading: false,
+        error: null,
+      });
+    } catch (error) {
+      const errorMessage =
+        error instanceof Error ? error.message : 'Failed to delete account';
       set({
         error: errorMessage,
         isLoading: false,

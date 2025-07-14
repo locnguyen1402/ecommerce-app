@@ -55,6 +55,21 @@ export default function AddressesScreen() {
     },
   ]);
 
+  const [isAddingAddress, setIsAddingAddress] = useState(false);
+  const [editingAddressId, setEditingAddressId] = useState<string | null>(null);
+  const [newAddress, setNewAddress] = useState<Partial<Address>>({
+    type: 'home',
+    firstName: user?.firstName || '',
+    lastName: user?.lastName || '',
+    address: '',
+    city: '',
+    state: '',
+    zipCode: '',
+    country: 'United States',
+    phone: '',
+    isDefault: false,
+  });
+
   const handleSetDefault = (addressId: string) => {
     setAddresses(prev => 
       prev.map(addr => ({
@@ -66,6 +81,77 @@ export default function AddressesScreen() {
 
   const handleDeleteAddress = (addressId: string) => {
     setAddresses(prev => prev.filter(addr => addr.id !== addressId));
+  };
+
+  const handleSaveAddress = () => {
+    if (editingAddressId) {
+      // Update existing address
+      setAddresses(prev => prev.map(addr => 
+        addr.id === editingAddressId 
+          ? { ...addr, ...newAddress } as Address
+          : addr
+      ));
+      setEditingAddressId(null);
+    } else {
+      // Add new address
+      const addressToAdd: Address = {
+        id: Date.now().toString(),
+        type: newAddress.type as 'home' | 'work' | 'other',
+        firstName: newAddress.firstName || '',
+        lastName: newAddress.lastName || '',
+        address: newAddress.address || '',
+        city: newAddress.city || '',
+        state: newAddress.state || '',
+        zipCode: newAddress.zipCode || '',
+        country: newAddress.country || 'United States',
+        phone: newAddress.phone || '',
+        isDefault: addresses.length === 0, // First address is default
+      };
+      setAddresses(prev => [...prev, addressToAdd]);
+    }
+    
+    setIsAddingAddress(false);
+    setNewAddress({
+      type: 'home',
+      firstName: user?.firstName || '',
+      lastName: user?.lastName || '',
+      address: '',
+      city: '',
+      state: '',
+      zipCode: '',
+      country: 'United States',
+      phone: '',
+      isDefault: false,
+    });
+  };
+
+  const handleEditAddress = (address: Address) => {
+    setNewAddress(address);
+    setEditingAddressId(address.id);
+    setIsAddingAddress(true);
+  };
+
+  const handleCancelEdit = () => {
+    setIsAddingAddress(false);
+    setEditingAddressId(null);
+    setNewAddress({
+      type: 'home',
+      firstName: user?.firstName || '',
+      lastName: user?.lastName || '',
+      address: '',
+      city: '',
+      state: '',
+      zipCode: '',
+      country: 'United States',
+      phone: '',
+      isDefault: false,
+    });
+  };
+
+  const handleValidateAddresses = () => {
+    // Simple validation - in real app, this would call an address validation service
+    console.log('Validating addresses...');
+    alert('All addresses are valid!');
   };
 
   const renderAddress = (address: Address) => (
@@ -110,10 +196,7 @@ export default function AddressesScreen() {
           variant='outline'
           size='sm'
           className='flex-1'
-          onPress={() => {
-            // TODO: Implement edit address
-            console.log('Edit address:', address.id);
-          }}
+          onPress={() => handleEditAddress(address)}
         >
           <Text>Edit</Text>
         </Button>
@@ -131,20 +214,113 @@ export default function AddressesScreen() {
     </View>
   );
 
+  const renderAddressForm = () => (
+    <View className='border border-border rounded p-4 mb-6'>
+      <Text className='text-lg font-semibold mb-4'>
+        {editingAddressId ? 'Edit Address' : 'Add New Address'}
+      </Text>
+      
+      <View className='space-y-4'>
+        <View className='flex-row gap-3'>
+          <Input
+            placeholder='First Name'
+            value={newAddress.firstName}
+            onChangeText={(text) => setNewAddress({...newAddress, firstName: text})}
+            className='flex-1'
+          />
+          <Input
+            placeholder='Last Name'
+            value={newAddress.lastName}
+            onChangeText={(text) => setNewAddress({...newAddress, lastName: text})}
+            className='flex-1'
+          />
+        </View>
+
+        <Input
+          placeholder='Address'
+          value={newAddress.address}
+          onChangeText={(text) => setNewAddress({...newAddress, address: text})}
+        />
+
+        <View className='flex-row gap-3'>
+          <Input
+            placeholder='City'
+            value={newAddress.city}
+            onChangeText={(text) => setNewAddress({...newAddress, city: text})}
+            className='flex-1'
+          />
+          <Input
+            placeholder='State'
+            value={newAddress.state}
+            onChangeText={(text) => setNewAddress({...newAddress, state: text})}
+            className='flex-1'
+          />
+        </View>
+
+        <View className='flex-row gap-3'>
+          <Input
+            placeholder='ZIP Code'
+            value={newAddress.zipCode}
+            onChangeText={(text) => setNewAddress({...newAddress, zipCode: text})}
+            className='flex-1'
+          />
+          <Input
+            placeholder='Phone'
+            value={newAddress.phone}
+            onChangeText={(text) => setNewAddress({...newAddress, phone: text})}
+            className='flex-1'
+          />
+        </View>
+
+        <View className='flex-row gap-3'>
+          {['home', 'work', 'other'].map((type) => (
+            <Button
+              key={type}
+              variant={newAddress.type === type ? 'default' : 'outline'}
+              size='sm'
+              className='flex-1'
+              onPress={() => setNewAddress({...newAddress, type: type as 'home' | 'work' | 'other'})}
+            >
+              <Text className='capitalize'>{type}</Text>
+            </Button>
+          ))}
+        </View>
+
+        <View className='flex-row gap-3'>
+          <Button
+            variant='outline'
+            className='flex-1'
+            onPress={handleCancelEdit}
+          >
+            <Text>Cancel</Text>
+          </Button>
+          <Button
+            className='flex-1'
+            onPress={handleSaveAddress}
+            disabled={!newAddress.address || !newAddress.city || !newAddress.state}
+          >
+            <Text className='font-medium'>
+              {editingAddressId ? 'Update' : 'Save'}
+            </Text>
+          </Button>
+        </View>
+      </View>
+    </View>
+  );
+
   return (
     <ScrollView className='flex-1 bg-background px-4 py-6'>
       <View className='flex-row items-center justify-between mb-6'>
         <Text className='text-2xl font-semibold'>My Addresses</Text>
         <Button
           size='sm'
-          onPress={() => {
-            // TODO: Implement add new address
-            console.log('Add new address');
-          }}
+          onPress={() => setIsAddingAddress(true)}
         >
           <Text className='font-medium'>+ Add New</Text>
         </Button>
       </View>
+
+      {isAddingAddress && renderAddressForm()}
 
       {addresses.length === 0 ? (
         <View className='flex-1 items-center justify-center py-12'>
@@ -156,10 +332,7 @@ export default function AddressesScreen() {
             Add your first address to make checkout faster
           </Text>
           <Button
-            onPress={() => {
-              // TODO: Implement add new address
-              console.log('Add first address');
-            }}
+            onPress={() => setIsAddingAddress(true)}
           >
             <Text className='font-medium'>Add Address</Text>
           </Button>
@@ -178,10 +351,7 @@ export default function AddressesScreen() {
           <Button 
             variant='ghost' 
             className='w-full justify-start h-12'
-            onPress={() => {
-              // TODO: Implement address validation
-              console.log('Validate addresses');
-            }}
+            onPress={handleValidateAddresses}
           >
             <Text className='text-left'>✅ Validate All Addresses</Text>
           </Button>

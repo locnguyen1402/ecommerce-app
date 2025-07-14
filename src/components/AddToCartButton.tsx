@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, memo } from 'react';
 import { View } from 'react-native';
 import { Button } from '~/components/ui/button';
 import { Text } from '~/components/ui/text';
@@ -16,7 +16,7 @@ interface AddToCartButtonProps {
   className?: string;
 }
 
-export const AddToCartButton: React.FC<AddToCartButtonProps> = ({
+const AddToCartButtonComponent: React.FC<AddToCartButtonProps> = ({
   product,
   quantity = 1,
   size = 'default',
@@ -77,3 +77,19 @@ export const AddToCartButton: React.FC<AddToCartButtonProps> = ({
     </Button>
   );
 };
+
+// Memoized version with custom comparison
+export const AddToCartButton = memo(AddToCartButtonComponent, (prevProps, nextProps) => {
+  // Custom comparison to prevent unnecessary re-renders
+  return (
+    prevProps.product.id === nextProps.product.id &&
+    prevProps.product.title === nextProps.product.title &&
+    prevProps.product.price === nextProps.product.price &&
+    prevProps.product.thumbnail === nextProps.product.thumbnail &&
+    prevProps.quantity === nextProps.quantity &&
+    prevProps.size === nextProps.size &&
+    prevProps.variant === nextProps.variant &&
+    prevProps.disabled === nextProps.disabled &&
+    prevProps.className === nextProps.className
+  );
+});

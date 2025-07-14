@@ -1,5 +1,5 @@
 import { router } from 'expo-router';
-import React from 'react';
+import React, { memo, useCallback } from 'react';
 import { FlatList, Image, ScrollView, View } from 'react-native';
 
 import { useLanguage } from '~/lib/hooks/useLanguage';
@@ -8,23 +8,33 @@ import { useCartStore, type CartItem } from '~/lib/stores/cart';
 import { Button } from '~/components/ui/button';
 import { Text } from '~/components/ui/text';
 
-export default function CartScreen() {
+// Memoized Cart Item Component
+const CartItemComponent = memo(({
+  item,
+  index,
+  onUpdateQuantity,
+  onRemoveItem,
+}: {
+  item: CartItem;
+  index: number;
+  onUpdateQuantity: (index: number, quantity: number) => void;
+  onRemoveItem: (index: number) => void;
+}) => {
   const { t } = useLanguage();
-  const {
-    items,
-    totalPrice,
-    totalDiscountedPrice,
-    removeItem,
-    updateQuantity,
-  } = useCartStore();
+  
+  const handleDecrement = useCallback(() => {
+    onUpdateQuantity(index, item.quantity - 1);
+  }, [index, item.quantity, onUpdateQuantity]);
 
-  const renderCartItem = ({
-    item,
-    index,
-  }: {
-    item: CartItem;
-    index: number;
-  }) => (
+  const handleIncrement = useCallback(() => {
+    onUpdateQuantity(index, item.quantity + 1);
+  }, [index, item.quantity, onUpdateQuantity]);
+
+  const handleRemove = useCallback(() => {
+    onRemoveItem(index);
+  }, [index, onRemoveItem]);
+
+  return (
     <View className='border border-border rounded p-4 mb-4 bg-background'>
       <View className='flex-row'>
         {/* Product Image */}
@@ -88,7 +98,7 @@ export default function CartScreen() {
             <View className='flex-row items-center'>
               <Button
                 variant='outline'
-                onPress={() => updateQuantity(index, item.quantity - 1)}
+                onPress={handleDecrement}
                 className='w-10 h-10 p-0'
               >
                 <Text className='text-base'>−</Text>
@@ -100,7 +110,7 @@ export default function CartScreen() {
 
               <Button
                 variant='outline'
-                onPress={() => updateQuantity(index, item.quantity + 1)}
+                onPress={handleIncrement}
                 className='w-10 h-10 p-0'
               >
                 <Text className='text-base'>+</Text>
@@ -109,7 +119,7 @@ export default function CartScreen() {
 
             <Button
               variant='ghost'
-              onPress={() => removeItem(index)}
+              onPress={handleRemove}
               className='px-3 h-10'
             >
               <Text className='text-sm text-muted-foreground'>
@@ -121,6 +131,43 @@ export default function CartScreen() {
       </View>
     </View>
   );
+}, (prevProps, nextProps) => {
+  // Custom comparison to prevent unnecessary re-renders
+  return (
+    prevProps.item.id === nextProps.item.id &&
+    prevProps.item.quantity === nextProps.item.quantity &&
+    prevProps.item.price === nextProps.item.price &&
+    prevProps.item.title === nextProps.item.title &&
+    prevProps.item.thumbnail === nextProps.item.thumbnail &&
+    prevProps.item.discountPercentage === nextProps.item.discountPercentage &&
+    prevProps.index === nextProps.index
+  );
+});
+
+export default function CartScreen() {
+  const { t } = useLanguage();
+  const {
+    items,
+    totalPrice,
+    totalDiscountedPrice,
+    removeItem,
+    updateQuantity,
+  } = useCartStore();
+
+  const renderCartItem = useCallback(({
+    item,
+    index,
+  }: {
+    item: CartItem;
+    index: number;
+  }) => (
+    <CartItemComponent
+      item={item}
+      index={index}
+      onUpdateQuantity={updateQuantity}
+      onRemoveItem={removeItem}
+    />
+  ), [updateQuantity, removeItem]);
 
   if (items.length === 0) {
     return (
