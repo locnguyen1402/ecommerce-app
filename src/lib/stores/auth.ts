@@ -24,6 +24,7 @@ interface AuthActions {
   register: (userData: RegisterRequest) => Promise<void>;
   forgotPassword: (request: ForgotPasswordRequest) => Promise<string>;
   logout: () => Promise<void>;
+  updateProfile: (profileData: Partial<User>) => Promise<void>;
   clearError: () => void;
   setLoading: (loading: boolean) => void;
   initializeAuth: () => Promise<void>;
@@ -159,6 +160,37 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
         isLoading: false,
         error: null,
       });
+    }
+  },
+
+  updateProfile: async (profileData: Partial<User>) => {
+    try {
+      set({ isLoading: true, error: null });
+
+      const currentUser = get().user;
+      if (!currentUser) {
+        throw new Error('No user logged in');
+      }
+
+      // Update user profile (mock implementation)
+      const updatedUser = { ...currentUser, ...profileData };
+      
+      // TODO: Replace with actual API call
+      await new Promise(resolve => setTimeout(resolve, 1000));
+
+      set({
+        user: updatedUser,
+        isLoading: false,
+        error: null,
+      });
+    } catch (error) {
+      const errorMessage =
+        error instanceof Error ? error.message : 'Failed to update profile';
+      set({
+        error: errorMessage,
+        isLoading: false,
+      });
+      throw error;
     }
   },
 

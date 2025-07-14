@@ -2,17 +2,12 @@ import { router } from 'expo-router';
 import React from 'react';
 import { View } from 'react-native';
 
-import { useLanguage } from '~/lib/hooks/useLanguage';
-import { generateMockUUID } from '~/lib/utils/uuid';
-
 import { Button } from '~/components/ui/button';
 import { Text } from '~/components/ui/text';
 
 export default function OrderConfirmationScreen() {
-  const { t } = useLanguage();
-  
   // Generate a mock order ID for display
-  const orderId = generateMockUUID('order').slice(0, 8).toUpperCase();
+  const orderId = Math.random().toString(36).substr(2, 8).toUpperCase();
   const estimatedDelivery = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toLocaleDateString();
 
   return (
@@ -61,7 +56,7 @@ export default function OrderConfirmationScreen() {
         {/* Action Buttons */}
         <View className='w-full gap-3'>
           <Button 
-            onPress={() => router.push('/(tabs)/orders')}
+            onPress={() => router.push('/home/orders')}
             className='w-full h-12'
           >
             <Text className='font-medium'>Track Your Order</Text>

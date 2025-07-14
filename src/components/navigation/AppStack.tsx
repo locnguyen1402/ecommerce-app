@@ -98,6 +98,50 @@ export default function AppStack() {
           headerTintColor: '#000',
         }} 
       />
+      
+      {/* Profile & Settings */}
+      <Stack.Screen 
+        name="profile" 
+        options={{ 
+          title: "Profile",
+          headerStyle: {
+            backgroundColor: 'white',
+          },
+          headerTitleStyle: {
+            fontWeight: '600',
+            fontSize: 18,
+          },
+          headerTintColor: '#000',
+        }} 
+      />
+      <Stack.Screen 
+        name="addresses" 
+        options={{ 
+          title: "Addresses",
+          headerStyle: {
+            backgroundColor: 'white',
+          },
+          headerTitleStyle: {
+            fontWeight: '600',
+            fontSize: 18,
+          },
+          headerTintColor: '#000',
+        }} 
+      />
+      <Stack.Screen 
+        name="help" 
+        options={{ 
+          title: "Help & Support",
+          headerStyle: {
+            backgroundColor: 'white',
+          },
+          headerTitleStyle: {
+            fontWeight: '600',
+            fontSize: 18,
+          },
+          headerTintColor: '#000',
+        }} 
+      />
     </Stack>
   );
 }

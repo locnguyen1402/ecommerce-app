@@ -4,7 +4,6 @@ import { FlatList, Image, ScrollView, View } from 'react-native';
 
 import { useLanguage } from '~/lib/hooks/useLanguage';
 import { useProduct } from '~/lib/hooks/useApi';
-import { useCartStore } from '~/lib/stores/cart';
 import type { ProductVariant } from '~/lib/api/types';
 
 import { AddToCartButton } from '~/components/AddToCartButton';
@@ -14,7 +13,6 @@ import { Text } from '~/components/ui/text';
 export default function ProductDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const { t } = useLanguage();
-  const { addItem } = useCartStore();
   
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const [selectedVariant, setSelectedVariant] = useState<ProductVariant | null>(null);

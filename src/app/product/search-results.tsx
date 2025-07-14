@@ -2,7 +2,6 @@ import { router, useLocalSearchParams } from 'expo-router';
 import { ArrowLeft, Filter } from 'lucide-react-native';
 import React, { useEffect, useState } from 'react';
 import { Pressable, View } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import type { ProductListItem } from '~/lib/api/types';
 import { useSearchProductsWithFilters } from '~/lib/hooks/useApi';
@@ -14,7 +13,6 @@ import { Input } from '~/components/ui/input';
 import { Text } from '~/components/ui/text';
 
 export default function ProductSearchResultsPage() {
-  const insets = useSafeAreaInsets();
   const { q } = useLocalSearchParams<{ q: string }>();
   const [query, setQuery] = useState(q || '');
   const [showFilters, setShowFilters] = useState(false);
